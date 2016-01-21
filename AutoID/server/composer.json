@@ -1,0 +1,24 @@
+{
+    "name": "shinc/auto-id-server",
+    "description": "Auto ID Server",
+    "type": "project",
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "http://packagist.phpcomposer.com"
+        }
+    },
+    "require": {
+        "laravel/framework": "4.2.*"
+    },
+    "autoload": {
+        "classmap": [
+            "app/commands",
+            "app/controllers",
+            "app/models",
+            "app/database/migrations",
+            "app/database/seeds",
+            "app/tests/TestCase.php"
+        ]
+    }
+}

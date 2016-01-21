@@ -1,0 +1,8 @@
+/AutoID/server/bootstrap/compiled.php
+/AutoID/server/vendor
+server/composer.phar
+server/composer.lock
+.env.*.php
+.env.php
+.DS_Store
+Thumbs.db
