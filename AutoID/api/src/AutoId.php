@@ -7,8 +7,7 @@ use Seld\JsonLint\JsonParser;
 class AutoId extends Api
 {
     const TEST = "TEST";
-    //const AUTO_ID_HOST = "auto.id.host";
-    const AUTO_ID_HOST = "127.0.0.1:20001/server.php";
+    const AUTO_ID_HOST = "auto.id.host:20100";
 
     public function __construct()
     {

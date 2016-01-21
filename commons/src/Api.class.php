@@ -38,7 +38,7 @@ class Api
         }
     }
 
-    public function str2json($str)
+    private function str2json($str)
     {
         return json_decode($str,true);
     }
