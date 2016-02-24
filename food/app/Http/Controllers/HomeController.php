@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 use \Api\Server\UserServer;
 use \Api\Server\AutoId;
+use \Api\Server\AdvertServer\Banner;
 use \App\Libraries\Curl;
 use App\Http\Controllers\Controller;
 
@@ -23,7 +24,10 @@ class HomeController extends Controller
 
     public function showWelcome()
     {
-      $id = $this->autoIdServer->get(AutoId::TEST);
+
+        $server = new Banner();
+		$id = $server->get(1);
+      //$id = $this->autoIdServer->get(AutoId::TEST);
         return $id;
     }
 

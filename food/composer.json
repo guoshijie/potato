@@ -6,7 +6,9 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.1.*"
+        "laravel/framework": "5.1.*",
+		"dingo/api": "1.0.*@dev"
+
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -19,6 +21,7 @@
             "database",
             "../commons",
             "../AutoID/api",
+            "../AdvertServer/api",
             "../UserServer/api"
         ],
         "psr-4": {
@@ -50,23 +53,5 @@
     },
     "config": {
         "preferred-install": "dist"
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "http://packagist.phpcomposer.com"
-        },
-        "commons": {
-            "type": "path",
-            "url": "../commons"
-        },
-        "AutoID": {
-            "type": "path",
-            "url": "../AutoID/api"
-        },
-        "UserServer": {
-            "type": "path",
-            "url": "../UserServer/api"
-        }
     }
 }

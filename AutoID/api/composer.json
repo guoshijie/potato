@@ -1,5 +1,5 @@
 {
-    "name": "shinc/auto-id-api",
+    "name": "potato/auto-id-api",
     "description": "Auto ID API",
     "type": "library",
     "version": "1.0",
@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "shinc/commons": "1.0"
+        "potato/commons": "1.0"
     },
     "autoload": {
         "classmap": [

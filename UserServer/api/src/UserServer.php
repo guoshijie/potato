@@ -7,7 +7,7 @@ use App\Libraries\Curl;
 class UserServer extends Api
 {
     const TEST = "TEST";
-    const HOST = "user.server.host:20200";
+    const HOST = "user.server.potato";
 
     private $curl;
 
