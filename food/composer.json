@@ -19,7 +19,8 @@
             "database",
             "../commons",
             "../AutoID/api",
-            "../UserServer/api"
+            "../UserServer/api",
+            "../ProductServer/api"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -67,6 +68,10 @@
         "UserServer": {
             "type": "path",
             "url": "../UserServer/api"
+        },
+        "ProductServer": {
+            "type": "path",
+            "url": "../ProductServer/api"
         }
     }
 }
