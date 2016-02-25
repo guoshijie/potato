@@ -21,13 +21,9 @@
             "database",
             "../commons",
             "../AutoID/api",
-<<<<<<< HEAD
             "../AdvertServer/api",
-            "../UserServer/api"
-=======
             "../UserServer/api",
-            "../ProductServer/api"
->>>>>>> c174b9495829eff666f2f28be88594b854a09c56
+            "../GoodsServer/api"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -58,30 +54,11 @@
     },
     "config": {
         "preferred-install": "dist"
-<<<<<<< HEAD
-=======
     },
     "repositories": {
         "packagist": {
             "type": "composer",
             "url": "http://packagist.phpcomposer.com"
-        },
-        "commons": {
-            "type": "path",
-            "url": "../commons"
-        },
-        "AutoID": {
-            "type": "path",
-            "url": "../AutoID/api"
-        },
-        "UserServer": {
-            "type": "path",
-            "url": "../UserServer/api"
-        },
-        "ProductServer": {
-            "type": "path",
-            "url": "../ProductServer/api"
         }
->>>>>>> c174b9495829eff666f2f28be88594b854a09c56
     }
 }
