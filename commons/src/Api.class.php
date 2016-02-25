@@ -19,11 +19,28 @@ class Api
     public function getData($uri)
     {
         $out = $this->curl->get($this->pathSuffix.$uri);
+        echo $out;die;
+        if(is_null(json_decode($out))){
+            if(env('APP_DEBUG')){
+                var_dump($out);
+            }
+            throw new \Exception('error: is not json');
+        }
+
         $json = $this->str2json($out);
+
+        if ( !isset($json["code"])) {
+            if(env('APP_DEBUG')){
+                echo $out;
+            }
+            throw new \Exception('error:not find json[code]');
+
+        }
+
         if ($json["code"] == 200) {
             return $json["data"];
         } else {
-            throw new \Exception($json["message"]);
+            throw new \Exception($json["msg"]);
         }
     }
 
@@ -34,7 +51,7 @@ class Api
         if ($json["code"] == 200) {
             return $json["data"];
         } else {
-            throw new \Exception($json["message"]);
+            throw new \Exception($json["msg"]);
         }
     }
 

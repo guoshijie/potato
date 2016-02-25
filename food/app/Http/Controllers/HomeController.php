@@ -18,7 +18,7 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        $this->userServer = new UserServer();
+        //$this->userServer = new UserServer();
         $this->autoIdServer = new AutoId();
     }
 

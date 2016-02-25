@@ -6,7 +6,7 @@ use Seld\JsonLint\JsonParser;
 
 class Banner extends Api
 {
-    const HOST = "advert.server.potato";
+    const HOST = "http://advert.server.potato";
 
     public function __construct()
     {

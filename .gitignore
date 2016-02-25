@@ -1,7 +1,7 @@
 composer.phar
 composer.lock
 vendor
-
+*.swp
 .env.*.php
 .env.php
 .DS_Store

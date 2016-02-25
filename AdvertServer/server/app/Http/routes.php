@@ -11,5 +11,5 @@
 |
 */
 
-$app->get('/api/banner',"BannerController@get");
+$app->get('/api/banner',"BannerController@index");
 
