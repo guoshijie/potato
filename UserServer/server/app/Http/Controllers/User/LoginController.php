@@ -72,7 +72,7 @@ class LoginController extends ApiController
 
 		$userKey = $loginM->encryptKey($password, $token);
 		if($key!=$userKey){
-//			return $this->response('10020');
+			return $this->response('10020');
 		}
 
 		unset($userInfo->password);

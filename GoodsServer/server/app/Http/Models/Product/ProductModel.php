@@ -29,6 +29,9 @@ class ProductModel extends Model{
 		//标签
 		$list  = $this->goodTags($datas[0],$datas[1]);
 
+		//最低库存数量（未写）
+
+
 		return $list;
 	}
 
@@ -56,6 +59,8 @@ class ProductModel extends Model{
 		foreach($list as $good){
 			$good->pic = $pics;
 		}
+
+		//最低库存数量（未写）
 
 		return $list;
 

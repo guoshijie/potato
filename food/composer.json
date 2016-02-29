@@ -23,7 +23,8 @@
             "../AutoID/api",
             "../AdvertServer/api",
             "../UserServer/api",
-            "../GoodsServer/api"
+            "../GoodsServer/api",
+			"../OrderServer/api"
         ],
         "psr-4": {
             "App\\": "app/"

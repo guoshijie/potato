@@ -32,7 +32,6 @@ class ResetController extends ApiController
 		if (!$request->has('tel')){
 			return $this->response(10015);
 		}
-		$userModel = new NewUserModel();
 
 		if (!$this->commontMdel->checkUser($request->get('tel'))){
 			return $this->response(10022);

@@ -12,7 +12,7 @@
 */
 
 $app->get('/', function () use ($app) {
-    abort(404);
+    $app->abort(404);
 });
 
 
@@ -28,7 +28,18 @@ $app->get('/', function () use ($app) {
 
 $app->get('/user/register/send-register-verify',"User\RegisterController@sendVerifyCode");   //获取验证码
 
+//{
+//    "code": 1,
+//    "msg": "成功"
+//}
+
+
 $app->get('/user/register/check-verify',"User\RegisterController@checkVerify");  //校验验证码
+
+//{
+//    "code": 20210,
+//    "msg": "验证码正确"
+//}
 
 $app->get('/user/register/register',"User\RegisterController@register"); //用户注册
 
