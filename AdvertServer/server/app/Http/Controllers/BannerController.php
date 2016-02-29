@@ -7,14 +7,22 @@ use Illuminate\Support\Facades\DB;
 
 class BannerController extends ApiController
 {
+
+		
     /**
      * 显示列表.
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-		$list = DB::table('banner')->where('type', '!=' ,2)->orderBy('sort', 'asc')->get();
+		$table = DB::table('banner');
+		if($request->has('type')){
+			$list = $table->select('pic_url')->where('type', $request->get('type'))->get();
+			if($request->get('type')==2){
+				$list = $list[0];
+			}
+		}
 		$response = $this->response(1, '成功' ,$list);
 		return json_encode($response);
     }

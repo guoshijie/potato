@@ -23,8 +23,14 @@ class Banner extends Api
      * @param $type 自增ID的类型
      * @return int 自增ID
      */
-    public function get($type)
+    public function hello()
     {
-        return $this->getData("/api/banner");
+        return $this->getData("/api/banner?type=2");
     }
+
+    public function intro()
+    {
+        return $this->getData("/api/banner?type=5");
+    }
+
 }
