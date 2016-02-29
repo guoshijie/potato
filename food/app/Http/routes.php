@@ -10,5 +10,8 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get("/", "HomeController@showWelcome");
+//Route::get("/", "HomeController@showWelcome");
+Route::resource('/user','UserController');
+Route::put('/user/login','UserController@login');
+Route::get('/user/logout','UserController@logout');
 

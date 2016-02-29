@@ -19,7 +19,10 @@ class Api
     public function getData($uri)
     {
         $out = $this->curl->get($this->pathSuffix.$uri);
-        echo $out;die;
+
+        if ($this->curl->http_code != 200) {
+            throw new \Exception("error: can't connect server");
+        }
         if(is_null(json_decode($out))){
             if(env('APP_DEBUG')){
                 var_dump($out);
@@ -37,11 +40,7 @@ class Api
 
         }
 
-        if ($json["code"] == 200) {
-            return $json["data"];
-        } else {
-            throw new \Exception($json["msg"]);
-        }
+        return $out;
     }
 
     public function postData($uri, $vars = array())

@@ -4,7 +4,7 @@
  * @author: KevinChen
  */
 class Curl{
-    var $callback,$user_agent,$cookie,$proxy,$timeout;
+    var $callback,$user_agent,$cookie,$proxy,$timeout,$http_code;
 
     public function __construct(){
         $this->callback = false;
@@ -110,8 +110,11 @@ class Curl{
             $result['http_code'] = curl_getinfo($ch , CURLINFO_HTTP_CODE);
             $result['last_url'] = curl_getinfo($ch , CURLINFO_EFFECTIVE_URL);
             $result['last_sent']=curl_getinfo($ch ,CURLINFO_HEADER_OUT );
+
             //$data = $result;
             $data = $result['body'];
+
+            $this->http_code = $result['http_code'];
 
             if ($this->callback)
             {

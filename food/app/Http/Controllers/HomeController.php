@@ -8,9 +8,9 @@ use \Api\Server\UserServer;
 use \Api\Server\AutoId;
 use \Api\Server\AdvertServer\Banner;
 use \App\Libraries\Curl;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
-class HomeController extends Controller
+class HomeController extends ApiController
 {
 
     var $userServer;
@@ -24,11 +24,10 @@ class HomeController extends Controller
 
     public function showWelcome()
     {
-
         $server = new Banner();
 		$id = $server->get(1);
       //$id = $this->autoIdServer->get(AutoId::TEST);
-        return $id;
+        return Response::json($this->response(1,''));
     }
 
     public function getUser()
