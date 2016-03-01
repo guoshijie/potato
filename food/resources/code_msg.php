@@ -33,6 +33,7 @@
 			10019=>array("en"=>"create token Failed","zh"=>"令牌未生成"),
 			10020=>array("en"=>"User has not token","zh"=>"令牌无效"),
 			10021=>array("en"=>"User has not token","zh"=>"交易失败"),
+			10022=>array("en"=>"phone is error","zh"=>"请输入正确的手机号码"),
 				/*
 				|--------------------------------------------------------------------------
 				| 服务级错误

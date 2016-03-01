@@ -22,13 +22,16 @@ class ApiController extends Controller
 			if( !array_key_exists( $code, $codeMsg ) ) {
 				return 'code is non-existent';
 			}
-			$msg = $codeMsg[ $code ]['en'];
+			$msg = $codeMsg[ $code ]['zh'];
 		}
 
         $ret = new \stdClass();
         $ret->code  = (int)$code;
         $ret->msg   = (string)$msg;
-        $ret->data  = $data;
+
+	    if(!empty($data)){
+		    $ret->data  = $data;
+	    }
         return $ret;
     }
 
