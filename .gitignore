@@ -1,11 +1,20 @@
-composer.phar
+.env
 composer.lock
-vendor
-*.swp
-.env.*.php
-.env.php
 .DS_Store
 Thumbs.db
-
 .idea/
+/node_modules
+Homestead.yaml
+Homestead.json
 
+*.swo
+*.swp
+*.swn
+*.DS_Store
+.project
+.buildpath
+.settings
+org.eclipse.php.core.prefs
+org.eclipse.core.resources.prefs
+.metadata/
+/nbproject
