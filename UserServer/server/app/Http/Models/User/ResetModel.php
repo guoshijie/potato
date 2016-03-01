@@ -94,4 +94,8 @@ class ResetModel extends Model{
 					->update(array( 'head_pic' => $head_pic ) );
 	}
 
+	public function findByUserId($user_id) {
+		return DB::table('user')->where('id',$user_id)->first();
+	}
+
 }

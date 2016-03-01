@@ -22,7 +22,7 @@ class UserController extends ApiController
 		$this->userServer = new UserServer();
 		//$this->autoIdServer = new AutoId();
 	}
-	
+
 
 	public function verify(){
 
@@ -38,7 +38,7 @@ class UserController extends ApiController
 			return Response::json($this->response(10022));
 		}
 
-		return $this->userServer->getVerify($tel);
+		return $this->userServer->getVerify($tel_input);
 
 	}
 
@@ -73,7 +73,7 @@ class UserController extends ApiController
 	}
 
 	public function login(){
-		if (!Request::has('tel') || !Request::has('password') || !Request::has('key') || !Request::has('form_token')){
+		if (!Request::has('tel') || !Request::has('password') ){
 			return Response::json($this->response(10005));
 		}
 
@@ -81,10 +81,8 @@ class UserController extends ApiController
 
 		$tel        =   Request::get('tel');
 		$password   =   Request::get('password');
-		$key        =   Request::get('key');
-		$form_token =   Request::get('form_token');
 
-		$list       =  $this->userServer->login($tel,$password,$key,$form_token);
+		$list       =  $this->userServer->login($tel,$password);
 
 		//return $list;
 		$list_array       =   json_decode($list);
@@ -118,8 +116,174 @@ class UserController extends ApiController
 			return Response::json($list_array);
 		}
 
-
 	}
+
+
+
+	public function resetVerify(){
+		if(!Request::has('tel')){
+			return Response::json($this->response(10005));
+		}
+
+		$tel_input    =   Request::get('tel');
+
+		$tel          =   $this->isMobile($tel_input);
+
+		if(!$tel){
+			return Response::json($this->response(10022));
+		}
+
+		return $this->userServer->resetVerify($tel_input);
+	}
+
+
+	public function reset(){
+		if(!Request::has('password')){
+			return Response::json($this->response(10005));
+		}
+
+		if(!Session::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		$tel        =   Session::get('user.tel');
+		$password   =   Request::get('password');
+
+		return $this->userServer->reset($tel,$password);
+	}
+
+
+	public function headPic(){
+		if(!Request::has('head_pic') || !Request::has('head_pic')){
+			return Response::json($this->response(10005));
+		}
+
+		if(!Session::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   Session::get('user.id');
+
+		$head_pic   =   Request::get('head_pic');
+
+		return $this->userServer->editHeadPic($head_pic,$user_id);
+	}
+
+
+	public function addAddress(){
+		if(!Request::has('name') || !Request::has('tel') || !Request::has('district') || !Request::has('address') || !Request::has('head_name') || !Request::has('code')){
+			return Response::json($this->response(10005));
+		}
+
+		if(!Session::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   Session::get('user.id');
+		$name       =   Request::get('name');
+		$tel        =   Request::get('tel');
+		$district   =   Request::get('district');
+		$address    =   Request::get('address');
+		$head_name  =   Request::get('head_name');
+		$code       =   Request::get('code');
+
+		return $this->userServer->add_address($user_id,$name,$tel,$district,$address,$head_name,$code);
+	}
+
+
+	public function showShopList(){
+		if(!Session::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		if(!Request::has('page')){
+			return Response::json($this->response(10005));
+		}
+
+		$user_id    =   Session::get('user.id');
+		$page       =   Request::get('page');
+
+
+		return $this->userServer->showShopList($user_id,$page);
+	}
+
+
+	public function editShop(){
+		if(!Request::has('name') || !Request::has('tel') || !Request::has('district') || !Request::has('address') || !Request::has('head_name') || !Request::has('code') || !Request::has('is_default') || !Request::has('id')){
+			return Response::json($this->response(10005));
+		}
+
+		if(!Session::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   Session::get('user.id');
+		$name       =   Request::get('name');
+		$tel        =   Request::get('tel');
+		$district   =   Request::get('district');
+		$address    =   Request::get('address');
+		$head_name  =   Request::get('head_name');
+		$code       =   Request::get('code');
+		$is_default =   Request::get('is_default');
+		$id         =   Request::get('id');
+
+
+		return $this->userServer->editShop($id,$user_id,$name,$tel,$district,$address,$head_name,$code,$is_default);
+	}
+
+
+	public function destroyShop(){
+		if(!Request::has('address_id')){
+			return Response::json($this->response(10005));
+		}
+
+		if(!Session::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   Session::get('user.id');
+
+		$address_id   =   Request::get('address_id');
+
+		return $this->userServer->destroyShop($address_id,$user_id);
+	}
+
+
+	public function getAddressDefault(){
+
+		if(!Session::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id   =   Session::get('user.id');
+
+		return $this->userServer->getAddressDefault($user_id);
+	}
+
+
+
+	/**
+	 * 退出登录
+	 *
+	 */
+	public function  logout() {
+
+		if( !Request::has('uid') ) {
+
+			return Response::json( $this->response( '10005' ) );
+		}
+
+		$userId = Request::get( 'uid' );
+
+		$userM = new UserModel();
+		//clear session
+		$this->clearSession();
+		//记录日志
+		$userM->writeUserLog($userId, 'logout', 'success');
+
+		return Response::json( $this->response( 1 ) );
+	}
+
 
 	 /**
 	 * 验证手机号是否正确
@@ -141,6 +305,16 @@ class UserController extends ApiController
 		echo "</pre>";
 
 	}
+
+
+
+	/**
+	 * 清理session
+	 */
+	public function clearSession() {
+		Session::flush();
+	}
+
 
 
 

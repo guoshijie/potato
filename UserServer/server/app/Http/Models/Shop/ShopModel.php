@@ -18,7 +18,7 @@ class ShopModel extends Model
 
 
 	public function __construct(){
-		$this->table = 'shop_system';
+		$this->table = 'user_address';
 	}
 
 	/**
@@ -55,8 +55,8 @@ class ShopModel extends Model
 
 		$data = array(
 			'user_id'    => $user_id,
-			'linkman'        => $name,
-			'shop_name'  => $head_name,
+			'consignee'        => $name,
+			'store_name'  => $head_name,
 			'district'   => $district,
 			'address'    => $address,
 			'tel'        => $tel,
@@ -112,7 +112,7 @@ class ShopModel extends Model
 
 		if (!$address) {
 			$oneData = DB::table($this->table)
-				->select('id')
+				->select('address_id')
 				->where('user_id', $ch_user_id)
 				->where('is_default', 0)
 				->get();
@@ -124,7 +124,7 @@ class ShopModel extends Model
 
 			$dataUp = array(
 				'is_default' => 1,
-				'id' => $oneData->address_id,
+				'address_id' => $oneData->address_id,
 				'update_time'=> date('Y-m-d H:i:s')
 			);
 
@@ -155,10 +155,12 @@ class ShopModel extends Model
 	 * @param user_id   用户id
 	 * @return    json
 	 */
-	public function getAddressList($userId)
+	public function getAddressList($userId,$offset,$length)
 	{
 		return DB::table($this->table)
 			->where('user_id', $userId)
+			->skip($offset)
+			->take($length)
 			->orderBy('is_default', '1')
 			->get();
 	}
@@ -176,15 +178,15 @@ class ShopModel extends Model
 	public function editAddressByAddressId($user_id, $address_id, $name, $mobile, $area, $address, $isDefault, $store)
 	{
 		$data = array(
-			'linkman'  => $name,
-			'shop_name' => $store,
+			'user_id'    => $user_id,
+			'consignee'  => $name,
+			'store_name' => $store,
 			'district'   => $area,
 			'address'    => $address,
-			'tel'     => $mobile,
-			'is_default' => $isDefault,
+			'tel'        => $mobile,
+			'is_default' => 1,
 			'update_time'=> date('Y-m-d H:i:s')
 		);
-
 
 		//设置默认
 		if ($isDefault == 1) {
@@ -199,7 +201,7 @@ class ShopModel extends Model
 		}
 
 		return DB::table($this->table)
-			->where('id', $address_id)
+			->where('address_id', $address_id)
 			->update($data);
 	}
 
@@ -208,7 +210,7 @@ class ShopModel extends Model
 	 */
 	public function isAddressById($address_id)
 	{
-		$data = DB::table($this->table)->where('id', $address_id)->first();
+		$data = DB::table($this->table)->where('address_id', $address_id)->first();
 		return $data ? true : false;
 	}
 
@@ -219,7 +221,7 @@ class ShopModel extends Model
 	public function issetAddressPhone($address_id, $mobile, $user_id)
 	{
 		$issetTel = DB::table($this->table)
-			->where('id', '!=', $address_id)
+			->where('address_id', '!=', $address_id)
 			->where('tel', $mobile)
 			->where('user_id', $user_id)
 			->first();
@@ -235,7 +237,7 @@ class ShopModel extends Model
 	public function DeleteAddressByAddressId($address_id, $user_id)
 	{
 		return DB::table($this->table)
-			->where('id', $address_id)
+			->where('address_id', $address_id)
 			->where('user_id', $user_id)
 			->delete();
 	}

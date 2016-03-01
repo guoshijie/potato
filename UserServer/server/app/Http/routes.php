@@ -73,3 +73,5 @@ $app->get('/user/shop/get-shop',"Shop\ShopController@showShopList");      //获�
 $app->get('/user/shop/edit-shop',"Shop\ShopController@editShop");      //修改收货信息
 
 $app->get('/user/shop/delete-shop',"Shop\ShopController@destroyShop");      //删除收货信息
+
+$app->get('/user/shop/get-shop-default',"Shop\ShopController@getShopDefault");      //删除收货信息

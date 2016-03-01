@@ -36,8 +36,36 @@ class UserModel extends Model {
 		return DB::table( 'user' )
 			->leftJoin('user_info','user_info.sh_user_id','=','user.id')
 			->where( 'tel', $tel )
-			->select( 'user.id','user.tel', 'user.real_name', 'user.nick_name', 'user.locked', 'user.sh_id','user.signature','user.head_pic','session_id','is_new_user','ip_address','ip','os_type' )
+			->select( 'user.id','user.tel', 'user.real_name', 'user.nick_name', 'user.locked', 'user.sh_id','user.signature','user.head_pic','session_id as token','is_new_user','ip_address','ip','os_type' )
 			->get();
+	}
+
+
+	/**
+	 * 记录用户登录信息
+	 *
+	 * @param int $userId 用户id
+	 * @param string $action 用户动作
+	 * @param string $node 动作注解
+	 * @return boolean true/false
+	 */
+	public function writeUserLog($userId, $action, $node='' ) {
+		date_default_timezone_set( 'PRC' );
+		$createTime = time();
+		$data = array(
+			'sh_user_id' => $userId,
+			'action' => $action,
+			'note' => $node,
+			'create_time' => $createTime,
+		);
+
+		$ret = DB::table( 'user_log' )->insert( $data );
+
+		if( !$ret ) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

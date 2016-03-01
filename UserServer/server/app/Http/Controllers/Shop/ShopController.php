@@ -91,6 +91,24 @@ class ShopController extends ApiController
 		}
 	}
 
+	/*
+	 * 获取默认收货地址
+	 */
+	public function getShopDefault(Request $request)
+	{
+		if (!$request->has('user_id')) {
+			return $this->response(10018);
+		}
+
+		$userId = $request->get('user_id');
+		$data = $this->_model->getDefaultAddress($userId);
+		if ($data) {
+			return $this->response(1, '获取成功', $data);
+		} else {
+			return $this->response(0, '获取失败');
+		}
+	}
+
 
 	/**
 	 * 根据用户id获取收货地址列表
@@ -102,8 +120,12 @@ class ShopController extends ApiController
 		if (!$request->has('user_id')) {
 			return $this->response(10018);
 		}
+
+		$pageinfo = $this->pageinfo($request);
+
+
 		$userId = $request->get('user_id');
-		$data = $this->_model->getAddressList($userId);
+		$data = $this->_model->getAddressList($userId,$pageinfo->offset , $pageinfo->length);
 		if ($data) {
 			return $this->response(1, '获取成功', $data);
 		} else {
@@ -126,6 +148,10 @@ class ShopController extends ApiController
 		if (!$request->has('id') || !$request->has('name') || !$request->has('tel') || !$request->has('district') || !$request->has('address') || !$request->has('isDefault') || !$request->has('head_name') || !$request->has('user_id') || !$request->has('code')) {
 			return $this->response(10005);
 		}
+
+		//name=梁枫&tel=18612579961&district=北京市&address=澶阳区都第三季&head_name=世和科技&code=458991&is_default=1&id=210
+
+		//$user_id,$name,$tel,$district,$address,$head_name,$code,$is_default,$id
 		$user_id    = $request->get('user_id');
 		$address_id = $request->get('id');
 		$name       = $request->get('name');
@@ -182,6 +208,20 @@ class ShopController extends ApiController
 		} else {
 			return $this->response(0, '删除失败');
 		}
+	}
+
+
+	//分页
+	private function pageinfo($request,$length=20){
+		$pageinfo               = new \stdClass;
+		$pageinfo->length       = $request->has('length') ? $request->get('length') : $length;;
+		$pageinfo->page         = $request->has('page') ? $request->get('page') : 1;
+		$pageinfo->offset		= $pageinfo->page<=1 ? 0 : ($pageinfo->page-1) * $pageinfo->length;
+		//$page->totalNum     = (int)Product::getInstance()->getPurchaseTotalNum();
+		$pageinfo->totalNum     = 0;
+		$pageinfo->totalPage    = ceil($pageinfo->totalNum/$pageinfo->length);
+
+		return $pageinfo;
 	}
 
 

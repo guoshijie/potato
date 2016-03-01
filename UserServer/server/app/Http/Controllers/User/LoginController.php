@@ -30,13 +30,11 @@ class LoginController extends ApiController
 	 */
 	public function loginTel(Request $request) {
 
-		if( !$request->has( 'tel' ) ||  !$request->has( 'password' ) || !$request->has( 'key' ) || !$request->has( 'form_token' ) ) {
+		if( !$request->has( 'tel' ) ||  !$request->has( 'password' ) ) {
 			return $this->response('10005');
 		}
 		$tel        = $request->get( 'tel' );
 		$password   = $request->get( 'password' );
-		$token      = $request->get( 'form_token' );
-		$key        = $request->get( 'key' );
 
 		$loginM     = new LoginModel();
 
@@ -70,10 +68,6 @@ class LoginController extends ApiController
 			return $this->response('20202');
 		}
 
-		$userKey = $loginM->encryptKey($password, $token);
-		if($key!=$userKey){
-			return $this->response('10020');
-		}
 
 		unset($userInfo->password);
 		unset($userInfo->salt);
