@@ -10,12 +10,14 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/', function () {
+$version = '/v1';
+
+Route::get($version.'/', function () {
 	return view('welcome');
 });
 
-Route::get('/welcome/hello', "WelcomeController@hello");
-Route::get('/welcome/intro', "WelcomeController@intro");
+Route::get($version.'/welcome/hello', "WelcomeController@hello");
+Route::get($version.'/welcome/intro', "WelcomeController@intro");
 
 
 Route::get('/sms','UserController@verify');                 //http://food.laraver.com/sms?tel=13661162115
