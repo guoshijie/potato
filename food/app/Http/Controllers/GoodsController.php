@@ -24,7 +24,20 @@ class GoodsController extends ApiController
 
 		$page    =   Request::get('page');
 
-		return $this->goodsServer->index($page);
+		return Response::json($this->goodsServer->index($page));
+
+	}
+
+
+	public function detail(){
+
+		if(!Request::has('goods_id')){
+			return Response::json($this->response(10005));
+		}
+
+		$goods_id    =   Request::get('goods_id');
+
+		return Response::json($this->goodsServer->detail($goods_id));
 
 	}
 

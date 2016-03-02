@@ -31,8 +31,8 @@ class Goods extends Api
 	/*
 	 * 获取商品详情页
 	 */
-	public function detail($good_id){
-		return $this->getData("/product/product/detail?good_id=" . $good_id);
+	public function detail($goods_id){
+		return $this->getData("/product/product/detail?goods_id=" . $goods_id);
 	}
 
 
