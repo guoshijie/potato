@@ -36,12 +36,12 @@ class ProductController extends ApiController
 	 * 根据商品ID获取商品详情
 	 */
 	public function detail(Request $request){
-		if(!$request->has('good_id')){
+		if(!$request->has('goods_id')){
 			return $this->response(10005);
 		}
-		$good_id    =   $request->get('good_id');
+		$goods_id    =   $request->get('goods_id');
 
-		$data       =   $this->_model->getProductById($good_id);
+		$data       =   $this->_model->getProductById($goods_id);
 		if($data){
 			return $this->response('1','获取成功',$data);
 		}else{
