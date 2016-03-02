@@ -12,8 +12,8 @@ class ProductModel extends Model{
 	 */
 	public function getProductList($offset,$length){
 		$data   =  DB::table('goods')
-			->select('id','sh_category_id','goods_name','provider_name','goods_num','shop_price',
-				'suppliers_id','specs','model','goods_thumb','goods_img')
+			->select('id','sh_category_id','goods_name','goods_num','shop_price',
+				'suppliers_id','specs','goods_img')
 			->where('is_down',0)
 			->skip($offset)
 			->take($length)
@@ -29,6 +29,21 @@ class ProductModel extends Model{
 		//标签
 		$list  = $this->goodTags($datas[0],$datas[1]);
 
+		//供应商
+		$suppliers_ids = array();
+		foreach($list as $goods_list){
+			$suppliers_ids[] = $goods_list->suppliers_id;
+		}
+
+		$suplliers = DB::table('suppliers')->whereIn('id',$suppliers_ids)->where('status',0)->get();
+
+		foreach($list as $goods_info_list){
+			foreach($suplliers as $suppilers_list){
+				if($goods_info_list->suppliers_id == $suppilers_list->id){
+					$goods_info_list->suppilers_name = $suppilers_list->suppliers_name;
+				}
+			}
+		}
 		return $list;
 	}
 
