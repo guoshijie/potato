@@ -24,7 +24,7 @@ class GoodsController extends ApiController
 
 		$page    =   Request::get('page');
 
-		return Response::json($this->goodsServer->index($page));
+		return $this->goodsServer->index($page);
 
 	}
 

@@ -10,7 +10,7 @@ use Seld\JsonLint\JsonParser;
 class User extends Api
 {
 	const TEST = "TEST";
-	const USER_HOST = "user.server.com";
+	const USER_HOST = "user.server.potato";
 
 	public function __construct()
 	{
