@@ -25,7 +25,7 @@ class ProductController extends ApiController
 
 		$data =  $this->_model->getProductList($pageinfo->offset , $pageinfo->length);
 		if($data){
-			return json_encode($this->response('1','获取成功',$data));
+			return json_encode($this->response('1','获取成功',array('product_list'=>$data)));
 		}else{
 			return $this->response(0);
 		}
@@ -43,7 +43,7 @@ class ProductController extends ApiController
 
 		$data       =   $this->_model->getProductById($goods_id);
 		if($data){
-			return $this->response('1','获取成功',$data);
+			return $this->response(1,'获取成功',$data);
 		}else{
 			return $this->response(0);
 		}

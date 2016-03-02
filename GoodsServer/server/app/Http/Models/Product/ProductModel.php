@@ -23,28 +23,46 @@ class ProductModel extends Model{
 			return false;
 		}
 
-		//分类
-		$datas = $this->goodCategory($data);
 
-		//标签
-		$list  = $this->goodTags($datas[0],$datas[1]);
-
-		//供应商
 		$suppliers_ids = array();
-		foreach($list as $goods_list){
+		$goods_ids = array();
+		foreach($data as $goods_list){
+			$goods_ids[] = $goods_list->id;
 			$suppliers_ids[] = $goods_list->suppliers_id;
 		}
 
-		$suplliers = DB::table('suppliers')->whereIn('id',$suppliers_ids)->where('status',0)->get();
 
-		foreach($list as $goods_info_list){
-			foreach($suplliers as $suppilers_list){
+		//分类
+		$cateogrys  = $this->goodsCategory($goods_ids);
+
+		//标签
+		$tags      = $this->goodsTags($goods_ids);
+
+		//供应商
+		$suppliers  = $this->suppliers($suppliers_ids);
+
+
+
+		foreach($data as $goods_info_list){
+
+			$goods_info_list->product_tags = array();
+
+			foreach($suppliers as $suppilers_list){
 				if($goods_info_list->suppliers_id == $suppilers_list->id){
 					$goods_info_list->suppilers_name = $suppilers_list->suppliers_name;
 				}
 			}
+
+			foreach($cateogrys as $cateogry_list){
+				if($goods_info_list->sh_category_id == $cateogry_list->id){
+					$goods_info_list->category_name = $cateogry_list->cat_name;
+				}
+			}
+
+			$goods_info_list->tag = isset($tags[$goods_info_list->id]) ? $tags[$goods_info_list->id] : [];
+
 		}
-		return $list;
+		return $data;
 	}
 
 
@@ -57,22 +75,25 @@ class ProductModel extends Model{
 				'suppliers_id','goods_desc','specs','model','goods_thumb','goods_img')
 			->where('is_down',0)
 			->where('id',$good_id)
-			->get();
+			->first();
 
-		//分类
-		$datas = $this->goodCategory($data);
-
-		//标签
-		$list  = $this->goodTags($datas[0],$datas[1]);
-
-		//图片
-		$pics = $this->goodPics($datas[1]);
-
-		foreach($list as $good){
-			$good->pic = $pics;
+		if(empty($data)){
+			return false;
 		}
 
-		return $list;
+		//分类
+		$cateogry = $this->goodsCategory(array($data->id));
+
+		//标签
+		$tag      = $this->goodsTags(array($data->id));
+
+		//图片
+		$pics     = $this->goodsPics(array($data->id));
+
+		$data->cateogry = $cateogry[0]->cat_name;
+		$data->tag      = $tag;
+		$data->pics     = $pics;
+		return $data;
 
 
 	}
@@ -82,58 +103,50 @@ class ProductModel extends Model{
 	/*
 	 * 商品分类
 	 */
-	private function goodCategory($data){
-		$category   = DB::table('goods_category')->where('is_delete',0)->get();
+	private function goodsCategory($goods_ids){
+		return DB::table('goods_category')->whereIn('id',$goods_ids)->where('is_delete',0)->select('id','cat_name')->get();
 
-		$goods_ids = array();
-		foreach($data as $key=>$value){
-			$goods_ids[]    = $value->id;
-			$value->category = '';
-			foreach($category as $cate_K=>$cate_V){
-				if($value->sh_category_id == $cate_V->id){
-					$value->category = $cate_V->cat_name;
-				}
-			}
-		}
-
-		return array($data,$goods_ids);
 	}
 
 	/*
 	 * 商品图片集合
 	 */
-	private function goodPics($goods_ids){
-		$good_pics = DB::table('goods_pic')->whereIn('sh_goods_id',$goods_ids)->get();
-
-		return $good_pics;
+	private function goodsPics($goods_ids){
+		return DB::table('goods_pic')->select('pic_url')->whereIn('sh_goods_id',$goods_ids)->get();
 	}
 
 	/*
 	 * 商品标签集合
 	 */
-	private function goodTags($data,$goods_ids){
+	private function goodsTags($goods_ids){
 		$good_tags = DB::table('goods_tag')->whereIn('goods_id',$goods_ids)->get();
 
 		$tags_ids   = array();
-		foreach($good_tags as $list){
-			$tags_ids[] = $list->tag_id;
+		foreach($good_tags as $vgt){
+			$tags_ids[] = $vgt->tag_id;
 		}
 
 		$tags      = DB::table('tag')->select('tag_id','name')->whereIn('tag_id',$tags_ids)->where('is_delete',0)->get();
 
-		foreach($data as $goods){
-			$goods->product_tag = array();
-			foreach($good_tags as $good_tag){
-				if($goods->id == $good_tag->goods_id) {    //绑定关系表
-					foreach ($tags as $tag) {
-						if ($good_tag->tag_id == $tag->tag_id) {
-							$goods->product_tag[] = $tag;
-						}
-					}
+		$data = array();
+		foreach($good_tags as $vg){
+			foreach ($tags as $vt) {
+				if($vg->tag_id == $vt->tag_id){
+					$data[$vg->goods_id][] = $vt;
 				}
 			}
+
 		}
 
+
 		return $data;
+	}
+
+
+	/*
+	 * 获取供应商
+	 */
+	private function suppliers($suppliers_ids){
+		return DB::table('suppliers')->whereIn('id',$suppliers_ids)->where('status',0)->select('id','suppliers_name')->get();
 	}
 }
