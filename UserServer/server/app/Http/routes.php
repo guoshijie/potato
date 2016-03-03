@@ -74,4 +74,6 @@ $app->get('/user/shop/edit-shop',"Shop\ShopController@editShop");      //修改�
 
 $app->get('/user/shop/delete-shop',"Shop\ShopController@destroyShop");      //删除收货信息
 
-$app->get('/user/shop/get-shop-default',"Shop\ShopController@getShopDefault");      //删除收货信息
+$app->get('/user/shop/get-shop-default',"Shop\ShopController@getShopDefault");      //获取默认收货信息
+
+$app->get('/user/shop/set-shop-default',"Shop\ShopController@addressDefault");      //设置默认收货信息

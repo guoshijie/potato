@@ -131,12 +131,18 @@ class User extends Api
 	}
 
 	/*
-	 * 删除收货信息
+	 * 获取默认收货地址
 	 */
 	public function getAddressDefault($user_id){
 		return $this->getData("/user/shop/get-shop-default?user_id=".$user_id);
 	}
 
 
-
+	/*
+	 * 设置默认收货地址
+	 */
+	public function setAddressDefault($user_id,$id){
+		return $this->getData("/user/shop/set-shop-default?user_id=".$user_id."&id=".$id);
+	}
+	
 }

@@ -46,6 +46,8 @@ Route::group( array('prefix' => $version),function() {
 
 	Route::any('/user/get-address-default','UserController@getAddressDefault'); //http://food.laraver.com/user/get-address-default
 
+	Route::any('/user/set-address-default','UserController@setAddressDefault'); //http://food.laraver.com/user/get-address-default
+
 	Route::any('/user/logout','UserController@logout');         //http://food.laraver.com/user/logout?uid=2
 
 	Route::any('/goods','GoodsController@index');       //http://food.laraver.com/goods?page=1

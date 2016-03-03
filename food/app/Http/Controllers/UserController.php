@@ -266,6 +266,26 @@ class UserController extends ApiController
 	}
 
 
+	/*
+	 * 设置默认收货地址
+	 */
+	public function setAddressDefault(){
+
+		if(!Request::has('address_id')){
+			return Response::json($this->response(10005));
+		}
+
+		//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$user_id   =   Session::get('user.id');
+		$user_id    = 2;
+		$address_id   =   Request::get('address_id');
+		return $this->userServer->setAddressDefault($user_id,$address_id);
+	}
+
+
 
 	/**
 	 * 退出登录

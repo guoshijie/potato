@@ -178,7 +178,6 @@ class ShopModel extends Model
 	public function editAddressByAddressId($user_id, $address_id, $name, $mobile, $area, $address, $isDefault, $store)
 	{
 		$data = array(
-			'user_id'    => $user_id,
 			'consignee'  => $name,
 			'store_name' => $store,
 			'district'   => $area,
@@ -203,6 +202,36 @@ class ShopModel extends Model
 		return DB::table($this->table)
 			->where('address_id', $address_id)
 			->update($data);
+	}
+
+
+	/*
+	 * 设置默认收货地址
+	 */
+	public function setDefault($user_id,$id){
+		$data = array(
+			'is_default' => 1,
+			'update_time'=> date('Y-m-d H:i:s')
+		);
+
+		$isDefault = 1;
+
+		//设置默认
+		if ($isDefault == 1) {
+			$user_address = DB::table($this->table)
+				->where('user_id', $user_id)
+				->where('is_default', 1)
+				->get();
+			if ($user_address != NULL) {
+				// debug($user_address);
+				$this->editUserAddress($user_id);
+			}
+		}
+
+		return DB::table($this->table)
+			->where('address_id', $id)
+			->update($data);
+
 	}
 
 	/*
