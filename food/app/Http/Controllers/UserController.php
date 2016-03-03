@@ -69,9 +69,9 @@ class UserController extends ApiController
 	}
 
 
-//	public function token(){
-//		return $this->userServer->getToken();
-//	}
+	public function token(){
+		return $this->userServer->getToken();
+	}
 
 	public function login(){
 		if (!Request::has('tel') || !Request::has('password') ){
@@ -102,7 +102,7 @@ class UserController extends ApiController
 			);
 
 			if($list_array->data->data->is_real){
-				config('session.lifetime',43200);
+				config('session.lifetime',432000);
 			}
 
 			Session::put('user', $user_session);

@@ -37,7 +37,6 @@ class GoodsController extends ApiController
 		}
 
 		$goods_id    =   Request::get('goods_id');
-
 		return Response::json($this->goodsServer->detail($goods_id));
 
 	}

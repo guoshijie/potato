@@ -42,8 +42,9 @@ class ProductController extends ApiController
 		$goods_id    =   $request->get('goods_id');
 
 		$data       =   $this->_model->getProductById($goods_id);
+
 		if($data){
-			return $this->response(1,'获取成功',$data);
+			return $this->response(1,'获取成功',array('product'=>$data));
 		}else{
 			return $this->response(0);
 		}

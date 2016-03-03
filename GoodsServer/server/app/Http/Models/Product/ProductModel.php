@@ -81,7 +81,7 @@ class ProductModel extends Model{
 		}
 
 		//分类
-		$cateogry = $this->goodsCategory(array($data->id));
+		$cateogry = $this->goodsCategory(array($data->sh_category_id));
 
 		//标签
 		$tag      = $this->goodsTags(array($data->id));
@@ -92,6 +92,7 @@ class ProductModel extends Model{
 		$data->cateogry = $cateogry[0]->cat_name;
 		$data->tag      = $tag;
 		$data->pics     = $pics;
+
 		return $data;
 
 
