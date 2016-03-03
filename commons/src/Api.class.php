@@ -40,6 +40,8 @@ class Api
 
         }
 
+        // 不加这个头，json解析如果带 html标签会出错
+		header('Content-type: application/json');
         return $out;
     }
 
