@@ -298,16 +298,6 @@ class UserController extends ApiController
 	}
 
 
-	function pr($data){
-		echo "<pre>";
-
-		print_r($data);
-
-		echo "</pre>";
-
-	}
-
-
 
 	/**
 	 * 清理session

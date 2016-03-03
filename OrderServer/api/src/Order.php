@@ -21,32 +21,32 @@ class Order extends Api
 	/*
 	 * 添加商品到购物车
 	 */
-	public function addCart($page){
-		return $this->getData("/order/cart/add-cart?page=" . $page);
+	public function addCart($user_id,$goods_id,$goods_num){
+		return $this->getData("/order/cart/add-cart?user_id=" . $user_id."&goods_id=".$goods_id."&goods_num=".$goods_num);
 	}
 
 
 	/*
 	 * 查看购物车列表
 	 */
-	public function getCartList($page){
-		return $this->getData("/order/cart/get-cart-list?page=" . $page);
+	public function getCartList($user_id){
+		return $this->getData("/order/cart/get-cart-list?user_id=" . $user_id);
 	}
 
 
 	/*
 	 * 提交订单
 	 */
-	public function orderConfirm($page){
-		return $this->getData("/order/order/order-confirm?page=" . $page);
+	public function orderConfirm($user_id,$inv_payee,$goods){
+		return $this->getData("/order/order/order-confirm?user_id=" . $user_id."&inv_payee=".$inv_payee."&goods=".$goods);
 	}
 
 
 	/*
 	 * 获取订单列表
 	 */
-	public function getOrderList($page){
-		return $this->getData("/order/order/order-list?page=" . $page);
+	public function getOrderList($page,$user_id,$status){
+		return $this->getData("/order/order/order-list?page=" . $page."&user_id=".$user_id."&status=".$status);
 	}
 
 
@@ -54,8 +54,8 @@ class Order extends Api
 	/*
 	 * 获取订单详情
 	 */
-	public function getOrderDetail($page){
-		return $this->getData("/order/order/order-detail?page=" . $page);
+	public function getOrderDetail($user_id,$order_no,$sub_order_no){
+		return $this->getData("/order/order/order-detail?user_id=" . $user_id."&order_no=".$order_no."&sub_order_no=".$sub_order_no);
 	}
 
 
@@ -63,8 +63,15 @@ class Order extends Api
 	/*
 	 * 取消订单
 	 */
-	public function cancelOrder($page){
-		return $this->getData("/order/order/order-cancel?page=" . $page);
+	public function cancelOrderByOrderNo($user_id,$order_no){
+		return $this->getData("/order/order/order-cancel?user_id=" . $user_id."&order_no=".$order_no);
+	}
+
+	/*
+	 * 取消订单
+	 */
+	public function cancelOrderBySubOrderNo($user_id,$sub_order_no){
+		return $this->getData("/order/order/order-cancel?user_id=" . $user_id."&sub_order_no=".$sub_order_no);
 	}
 
 
@@ -73,8 +80,8 @@ class Order extends Api
 	/*
 	 * 确认收货
 	 */
-	public function confirmReceiving($page){
-		return $this->getData("/order/order/confirm-receiving?page=" . $page);
+	public function confirmReceiving($user_id,$sub_order_no){
+		return $this->getData("/order/order/confirm-receiving?user_id=" . $user_id."&sub_order_no=".$sub_order_no);
 	}
 
 
@@ -82,8 +89,8 @@ class Order extends Api
 	/*
 	 * 联系卖家
 	 */
-	public function getSuppliers($goods_id){
-		return $this->getData("/order/order/suppliers?goods_id=" . $goods_id);
+	public function getSuppliers($user_id,$suppliers_id){
+		return $this->getData("/order/order/suppliers?user_id=" . $user_id."&suppliers_id=".$suppliers_id);
 	}
 
 

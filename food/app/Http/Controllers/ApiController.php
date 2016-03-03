@@ -11,8 +11,10 @@ class ApiController extends Controller
 
 	public function __construct( ){
 
+		if (Session::hasOldInput('id')) Session::reflash('id');
+		
 		if(Request::has('token')){
-			Session::setId(Request::only('session_id'));
+			Session::setId(Request::get('token'));
 		}
 
 	}

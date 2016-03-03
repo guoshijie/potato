@@ -10,7 +10,7 @@ function debug($data)
 
 
 function pr($data){
-    echo json_encode($data);
+    return json_encode($data);
     die;
 }
 

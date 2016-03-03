@@ -18,6 +18,7 @@ return array(
     'Api\\Server\\AdvertServer\\Banner' => $baseDir . '/../AdvertServer/api/src/Banner.php',
     'Api\\Server\\AutoId' => $baseDir . '/../AutoID/api/src/AutoId.php',
     'Api\\Server\\Goods' => $baseDir . '/../GoodsServer/api/src/Goods.php',
+    'Api\\Server\\Order' => $baseDir . '/../OrderServer/api/src/Order.php',
     'Api\\Server\\User' => $baseDir . '/../UserServer/api/src/User.php',
     'App\\Libraries\\AccountSubmit' => $baseDir . '/../commons/src/alipayAccount/lib/accountSubmit.class.php',
     'App\\Libraries\\AlipayNotify' => $baseDir . '/../commons/src/alipay/lib/alipayNotify.class.php',
