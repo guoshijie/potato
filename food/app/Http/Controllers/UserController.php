@@ -143,11 +143,13 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		if(!Session::has('user.id')){
-			return Response::json($this->response(99999));
-		}
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$tel        =   Session::get('user.tel');
 
-		$tel        =   Session::get('user.tel');
+		$tel = 18612579961;
 		$password   =   Request::get('password');
 
 		return $this->userServer->reset($tel,$password);
@@ -159,11 +161,12 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		if(!Session::has('user.id')){
-			return Response::json($this->response(99999));
-		}
-
-		$user_id    =   Session::get('user.id');
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$user_id    =   Session::get('user.id');
+		$user_id    = 2;
 
 		$head_pic   =   Request::get('head_pic');
 
@@ -176,11 +179,12 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		if(!Session::has('user.id')){
-			return Response::json($this->response(99999));
-		}
-
-		$user_id    =   Session::get('user.id');
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$user_id    =   Session::get('user.id');
+		$user_id    = 2;
 		$name       =   Request::get('name');
 		$tel        =   Request::get('tel');
 		$district   =   Request::get('district');
@@ -193,9 +197,9 @@ class UserController extends ApiController
 
 
 	public function showShopList(){
-		if(!Session::has('user.id')){
-			return Response::json($this->response(99999));
-		}
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
 
 		if(!Request::has('page')){
 			$page   = 1;
@@ -204,8 +208,8 @@ class UserController extends ApiController
 		}
 
 
-		$user_id    =   Session::get('user.id');
-
+		//$user_id    =   Session::get('user.id');
+		$user_id    = 2;
 
 		return $this->userServer->showShopList($user_id,$page);
 	}
@@ -216,11 +220,12 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		if(!Session::has('user.id')){
-			return Response::json($this->response(99999));
-		}
-
-		$user_id    =   Session::get('user.id');
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$user_id    =   Session::get('user.id');
+		$user_id    = 2;
 		$name       =   Request::get('name');
 		$tel        =   Request::get('tel');
 		$district   =   Request::get('district');
@@ -240,11 +245,12 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		if(!Session::has('user.id')){
-			return Response::json($this->response(99999));
-		}
-
-		$user_id    =   Session::get('user.id');
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$user_id    =   Session::get('user.id');
+		$user_id    = 2;
 
 		$address_id   =   Request::get('address_id');
 
@@ -254,11 +260,12 @@ class UserController extends ApiController
 
 	public function getAddressDefault(){
 
-		if(!Session::has('user.id')){
-			return Response::json($this->response(99999));
-		}
-
-		$user_id   =   Session::get('user.id');
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$user_id   =   Session::get('user.id');
+		$user_id    = 2;
 
 		return $this->userServer->getAddressDefault($user_id);
 	}

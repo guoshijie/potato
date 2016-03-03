@@ -25,7 +25,6 @@ class GoodsController extends ApiController
 		$page    =   Request::get('page');
 
 		return $this->orderServer->index($page);
-
 	}
 
 
