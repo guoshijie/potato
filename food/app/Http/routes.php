@@ -51,4 +51,23 @@ Route::group( array('prefix' => $version),function() {
 	Route::any('/goods','GoodsController@index');       //http://food.laraver.com/goods?page=1
 
 	Route::any('/goods/detail','GoodsController@detail');   //http://food.laraver.com/goods/detail?goods_id=146
+
+
+	Route::any('/order/add','OrderController@addCart');  //添加购物车
+
+	Route::any('/order/cart','OrderController@getCartList');    //购物车列表
+
+	Route::any('/order/confirm','OrderController@orderConfirm');    //提交订单
+
+	Route::any('/order/order','OrderController@getOrderList');  //订单列表
+
+	Route::any('/order/detail','OrderController@getOrderDetail');   //订单详情
+
+	Route::any('/order/cancel/order','OrderController@cancelOrderByOrderNo');   //根据订单号取消订单
+
+	Route::any('/order/cancel/suborder','OrderController@cancelOrderBySubOrderNo');  //根据子订单号取消订单
+
+	Route::any('/order/receiving','OrderController@confirmReceiving');  //确认收货
+
+	Route::any('/order/suppliers','OrderController@getSuppliers');   //联系卖家
 });
