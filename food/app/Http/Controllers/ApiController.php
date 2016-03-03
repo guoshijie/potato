@@ -12,7 +12,7 @@ class ApiController extends Controller
 	public function __construct( ){
 
 		if(Request::has('token')){
-			Session::setId(Request::only('session_id'));
+			Session::setId(Request::get('token'));
 		}
 
 	}
