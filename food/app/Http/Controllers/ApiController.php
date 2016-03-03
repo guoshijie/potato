@@ -3,9 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;            //输入输出类
+use Illuminate\Support\Facades\Session;
 
 class ApiController extends Controller
 {
+
+	public function __construct(){
+
+		if(Request::has('token')){
+			Session::setId(Request::only('session_id'));
+		}
+
+	}
 
     /**
     * 定义响应数据规范

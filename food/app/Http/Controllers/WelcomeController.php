@@ -9,6 +9,11 @@ use App\Http\Controllers\ApiController;
 
 class WelcomeController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      *
      * @return Response

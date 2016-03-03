@@ -18,7 +18,7 @@ class IndexController extends ApiController
 
     public function __construct()
     {
-        //$this->userServer = new UserServer();
+        parent::__construct();
         $this->autoIdServer = new AutoId();
     }
 

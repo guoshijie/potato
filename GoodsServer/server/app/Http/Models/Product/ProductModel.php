@@ -45,7 +45,6 @@ class ProductModel extends Model{
 
 		foreach($data as $goods_info_list){
 
-			$goods_info_list->product_tags = array();
 
 			foreach($suppliers as $suppilers_list){
 				if($goods_info_list->suppliers_id == $suppilers_list->id){

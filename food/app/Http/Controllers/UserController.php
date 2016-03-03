@@ -19,6 +19,7 @@ class UserController extends ApiController
 
 	public function __construct()
 	{
+		parent::__construct();
 		$this->userServer = new UserServer();
 		//$this->autoIdServer = new AutoId();
 	}
@@ -68,9 +69,9 @@ class UserController extends ApiController
 	}
 
 
-	public function token(){
-		return $this->userServer->getToken();
-	}
+//	public function token(){
+//		return $this->userServer->getToken();
+//	}
 
 	public function login(){
 		if (!Request::has('tel') || !Request::has('password') ){
@@ -171,7 +172,7 @@ class UserController extends ApiController
 
 
 	public function addAddress(){
-		if(!Request::has('name') || !Request::has('tel') || !Request::has('district') || !Request::has('address') || !Request::has('head_name') || !Request::has('code')){
+		if(!Request::has('name') || !Request::has('tel') || !Request::has('district') || !Request::has('address') || !Request::has('head_name') || !Request::has('code') ){
 			return Response::json($this->response(10005));
 		}
 
