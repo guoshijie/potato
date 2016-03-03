@@ -69,12 +69,17 @@ class ResetController extends ApiController
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function resetPwd(Request $request) {
-		if (!$request->has('tel') || !$request->has('password')){
+		if (!$request->has('tel') || !$request->has('password') || !$request->has('code')){
 			return $this->response(10005);
 		}
 
 		if (  !$this->commontMdel->checkUser($request->get('tel'))) {
 			return $this->response(20206);
+		}
+
+
+		if ($verifyModel->checkVerify($request->get('tel'), $request->get('code'))) {
+			return $this->response(20210);
 		}
 
 		$userModel = new NewUserModel();

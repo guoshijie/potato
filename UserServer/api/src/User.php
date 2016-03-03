@@ -82,8 +82,8 @@ class User extends Api
 	 * 用户重置密码
 	 * @param $tel          用户号
 	 */
-	public function reset($tel,$password){
-		return $this->getData("/user/reset/reset-password?tel=".$tel."&password=".$password);
+	public function reset($tel,$password,$code){
+		return $this->getData("/user/reset/reset-password?tel=".$tel."&password=".$password."&code=".$code);
 	}
 
 

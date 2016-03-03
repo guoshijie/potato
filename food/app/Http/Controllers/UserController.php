@@ -139,15 +139,16 @@ class UserController extends ApiController
 
 
 	public function reset(){
-		if(!Request::has('tel') || !Request::has('password')){
+		if(!Request::has('tel') || !Request::has('password') || !Request::has('code')){
 			return Response::json($this->response(10005));
 		}
 
 
 		$tel        =   Request::get('tel');
 		$password   =   Request::get('password');
+		$code       =   Request::get('code');
 
-		return $this->userServer->reset($tel,$password);
+		return $this->userServer->reset($tel,$password,$code);
 	}
 
 
@@ -229,7 +230,6 @@ class UserController extends ApiController
 		$code       =   Request::get('code');
 		$is_default =   Request::get('is_default');
 		$id         =   Request::get('id');
-
 
 		return $this->userServer->editShop($id,$user_id,$name,$tel,$district,$address,$head_name,$code,$is_default);
 	}
