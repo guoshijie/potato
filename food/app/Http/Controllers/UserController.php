@@ -198,11 +198,13 @@ class UserController extends ApiController
 		}
 
 		if(!Request::has('page')){
-			return Response::json($this->response(10005));
+			$page   = 1;
+		}else{
+			$page       =   Request::get('page');
 		}
 
+
 		$user_id    =   Session::get('user.id');
-		$page       =   Request::get('page');
 
 
 		return $this->userServer->showShopList($user_id,$page);

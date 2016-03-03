@@ -3,16 +3,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
-use \Api\Server\Goods as GoodsServer;
+use \Api\Server\Order as OrderServer;
 use App\Http\Controllers\ApiController;
 class GoodsController extends ApiController
 {
 
-	var $goodsServer;
+	var $orderServer;
 
 	public function __construct()
 	{
-		$this->goodsServer = new GoodsServer();
+		$this->orderServer = new OrderServer();
 	}
 
 
@@ -24,7 +24,7 @@ class GoodsController extends ApiController
 
 		$page    =   Request::get('page');
 
-		return $this->goodsServer->index($page);
+		return $this->orderServer->index($page);
 
 	}
 
@@ -37,7 +37,7 @@ class GoodsController extends ApiController
 
 		$goods_id    =   Request::get('goods_id');
 
-		return $this->goodsServer->detail($goods_id);
+		return $this->orderServer->detail($goods_id);
 
 	}
 
