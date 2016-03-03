@@ -12,7 +12,6 @@ class GoodsController extends ApiController
 
 	public function __construct()
 	{
-		parent::__construct();
 		$this->goodsServer = new GoodsServer();
 	}
 
@@ -38,9 +37,7 @@ class GoodsController extends ApiController
 
 		$goods_id    =   Request::get('goods_id');
 
-		$list =  $this->goodsServer->detail($goods_id);
-
-		pr($list);
+		return Response::json($this->goodsServer->detail($goods_id));
 
 	}
 
