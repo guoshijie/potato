@@ -1,6 +1,6 @@
 {
-    "name": "shinc/auto-id-api",
-    "description": "Auto ID API",
+    "name": "potato/order-server-api",
+    "description": "Order Server API",
     "type": "library",
     "version": "1.0",
     "repositories": {
@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "shinc/commons": "1.0"
+        "potato/commons": "1.0"
     },
     "autoload": {
         "classmap": [

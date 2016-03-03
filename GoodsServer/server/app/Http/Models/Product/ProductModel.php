@@ -25,15 +25,17 @@ class ProductModel extends Model{
 
 
 		$suppliers_ids = array();
-		$goods_ids = array();
+		$catgegory_ids  = array();
+		$goods_ids  = array();
 		foreach($data as $goods_list){
 			$goods_ids[] = $goods_list->id;
+			$catgegory[]     = $goods_list->sh_category_id;
 			$suppliers_ids[] = $goods_list->suppliers_id;
 		}
 
 
 		//分类
-		$cateogrys  = $this->goodsCategory($goods_ids);
+		$cateogrys  = $this->goodsCategory($catgegory_ids);
 
 		//标签
 		$tags      = $this->goodsTags($goods_ids);
