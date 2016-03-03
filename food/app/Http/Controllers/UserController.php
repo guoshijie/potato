@@ -139,17 +139,12 @@ class UserController extends ApiController
 
 
 	public function reset(){
-		if(!Request::has('password')){
+		if(!Request::has('tel') || !Request::has('password')){
 			return Response::json($this->response(10005));
 		}
 
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$tel        =   Session::get('user.tel');
 
-		$tel = 18612579961;
+		$tel        =   Request::get('tel');
 		$password   =   Request::get('password');
 
 		return $this->userServer->reset($tel,$password);
