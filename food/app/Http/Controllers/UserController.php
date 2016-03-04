@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
 use \Api\Server\User as UserServer;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cache;
 //use \Api\Server\AutoId;
 //use \Api\Server\AdvertServer\Banner;
 use \App\Libraries\Curl;
@@ -260,12 +261,11 @@ class UserController extends ApiController
 
 	public function getAddressDefault(){
 
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$user_id   =   Session::get('user.id');
-		$user_id    = 2;
+		if(!Cache::has('user.id')){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id   =   Cache::get('user.id');
 
 		return $this->userServer->getAddressDefault($user_id);
 	}

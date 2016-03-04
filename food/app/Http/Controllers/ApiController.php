@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;             //输入输出类
-use Illuminate\Support\Facades\Session;
 
 class ApiController extends Controller
 {
