@@ -21,7 +21,10 @@ class Order extends Api
 	 * 添加商品到购物车
 	 */
 	public function addCart($user_id,$goods){
-		return $this->getData("/order/cart/add-cart?user_id=" . $user_id."&goods=".$goods);
+		$data['user_id'] = $user_id;
+		$data['goods'] = $goods;
+		return $this->postData("/order/cart/add-cart", $data);
+		//return $this->getData("/order/cart/add-cart?user_id=" . $user_id."&goods=".$goods);
 	}
 
 

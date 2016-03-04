@@ -26,7 +26,7 @@ $app->get('/', function () use ($app) {
  * cart
  */
 
-$app->get('/order/cart/add-cart',"Cart\CartController@addCart");   //添加商品到购物车
+$app->post('/order/cart/add-cart',"Cart\CartController@addCart");   //添加商品到购物车
 
 
 $app->get('/order/cart/get-cart-list',"Cart\CartController@getCartList");   //查看购物车列表

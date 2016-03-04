@@ -22,6 +22,16 @@ class Api
     public function getData($uri)
     {
         $out = $this->curl->get($this->pathSuffix.$uri);
+		return $this->checkData($out, $uri);
+    }
+
+    public function postData($uri, $vars = array())
+    {
+        $out = $this->curl->post($this->pathSuffix.$uri, $vars);
+		return $this->checkData($out, $uri, $vars);
+    }
+	
+	public function checkData($out, $uri, $vars=array()){
 		if ($this->curl->http_code == 404) {
             throw new \Exception("error [404]: can't connect server ". $this->pathSuffix.$uri);
 		}
@@ -53,18 +63,8 @@ class Api
         // 不加这个头，json解析如果带 html标签会出错
 		header('Content-type: application/json');
         return $out;
-    }
-
-    public function postData($uri, $vars = array())
-    {
-        $out = $this->curl->post($this->pathSuffix.$uri, $vars);
-        $json = $this->str2json($out);
-        if ($json["code"] == 200) {
-            return $json["data"];
-        } else {
-            throw new \Exception($json["msg"]);
-        }
-    }
+	
+	}
 
     private function str2json($str)
     {

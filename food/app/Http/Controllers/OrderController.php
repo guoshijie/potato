@@ -21,6 +21,10 @@ class OrderController extends ApiController
 	 * 添加商品到购物车
 	 */
 	public function addCart(){
+		//$user_id = 5;
+		//$goods = '[{"goods_id":"2","goods_num":"6"},{"goods_id":"3","goods_num":"3"}]';
+		//return $this->orderServer->addCart($user_id,$goods);
+
 		Log::info(print_r(Request::all(),1));
 		if(!Request::has('goods')){
 			return Response::json($this->response(10005));
@@ -52,6 +56,7 @@ class OrderController extends ApiController
 		//$goods      =  json_decode(Request::get('goods'));
 		$goods	= Request::get('goods');
 
+		$user_id = 5;
 		return $this->orderServer->addCart($user_id,$goods);
 	}
 
