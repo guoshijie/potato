@@ -170,9 +170,9 @@ class CartModel extends Model{
 					'goods_id'  => $vg->goods_id,
 					'goods_num' => $vg->goods_num
 				);
+				$carts = DB::table('cart')->insertGetId($data);
 			}
 
-			$carts = DB::table('cart')->insertGetId($data);
 		}
 
 

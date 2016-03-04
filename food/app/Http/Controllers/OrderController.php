@@ -56,7 +56,6 @@ class OrderController extends ApiController
 		//$goods      =  json_decode(Request::get('goods'));
 		$goods	= Request::get('goods');
 
-		$user_id = 5;
 		return $this->orderServer->addCart($user_id,$goods);
 	}
 
