@@ -150,7 +150,7 @@ class User extends Api
 	 * 获取七牛Token
 	 */
 	public function qiniuToken(){
-		return $this->getData("/user/qiniu/token“);
+		return $this->getData("/user/qiniu/token");
 	}
 	
 }
