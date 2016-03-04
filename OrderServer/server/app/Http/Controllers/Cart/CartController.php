@@ -7,6 +7,7 @@ use  App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
 use Illuminate\Http\Response;           //响应类
 use App\Http\Models\Cart\CartModel;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends ApiController
 {
@@ -22,6 +23,7 @@ class CartController extends ApiController
 	 * param $goods_ids     array   商品ID和商品数量
 	 */
 	public function addCart(Request $request){
+		Log::info(print_r($request,1));
 
 		if(!$request->has('user_id') || !$request->has('goods')){
 			return $this->response(10005);
@@ -47,11 +49,12 @@ class CartController extends ApiController
 //		);
 
 
+
 		$user_id    = $request->get('user_id');
 		$goods      = $request->get('goods');
 
 		//debug($goods);
-		if(!is_array($goods) || empty($goods)){
+		if(!is_array(json_decode($goods)) || empty($goods)){
 			return $this->response(10023);
 		}
 
