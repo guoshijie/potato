@@ -24,15 +24,14 @@ class OrderController extends ApiController
 	 */
 	public function addCart(){
 
-		if(!Request::has('goods_id') || !Request::has('goods_num')){
+		if(!Request::has('goods_id') || !Request::has('goods')){
 			return Response::json($this->response(10005));
 		}
 
 		$user_id    = 2;
-		$goods_id   = Request::get('goods_id');
-		$goods_num  = Request::get('goods_num');
+		$goods   = Request::get('goods');
 
-		return $this->orderServer->addCart($user_id,$goods_id,$goods_num);
+		return $this->orderServer->addCart($user_id,$goods);
 	}
 
 
