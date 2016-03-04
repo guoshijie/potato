@@ -22,9 +22,16 @@ class Api
     public function getData($uri)
     {
         $out = $this->curl->get($this->pathSuffix.$uri);
+		if ($this->curl->http_code == 404) {
+            throw new \Exception("error [404]: can't connect server ". $this->pathSuffix.$uri);
+		}
+
+		if ($this->curl->http_code == 500) {
+            throw new \Exception("error [500]: server 内部错误  ". $this->pathSuffix.$uri);
+		}
 
         if ($this->curl->http_code != 200) {
-            throw new \Exception("error: can't connect server-". $this->pathSuffix);
+            throw new \Exception("error {$this->curl->http_code}: ". $this->pathSuffix.$uri);
         }
         if(is_null(json_decode($out))){
             if(env('APP_DEBUG')){

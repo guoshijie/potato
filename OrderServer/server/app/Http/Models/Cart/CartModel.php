@@ -76,7 +76,7 @@ class CartModel extends Model{
 
 			$infput_goods_ids = array();
 			foreach($goods as $vg){
-				$infput_goods_ids[] = $vg['goods_id'];
+				$infput_goods_ids[] = $vg->goods_id;
 			}
 
 			if(empty($infput_goods_ids)){
@@ -98,7 +98,7 @@ class CartModel extends Model{
 		//检测库存数量
 		foreach($check_nums as $vgn){
 			foreach($goods as $vg){
-				if($vgn->goods_num < $vg['goods_num']){
+				if($vgn->goods_num < $vg->goods_num){
 					return array('code'=>40001,'msg'=>'库存数量不足');
 				}
 			}
@@ -123,9 +123,9 @@ class CartModel extends Model{
 			foreach($look_cart as $vlc){
 				$lc_goods_ids[] = $vlc->goods_id;
 				foreach($goods as $vg ){
-					if($vlc->goods_id == $vg['goods_id']){
-						$num = $vlc->goods_num+$vg['goods_num'];
-						$sql_two .= 'when goods_id='.$vg['goods_id'].' then '.$num.' ';
+					if($vlc->goods_id == $vg->goods_id){
+						$num = $vlc->goods_num+$vg->goods_num;
+						$sql_two .= 'when goods_id='.$vg->goods_id.' then '.$num.' ';
 					}
 				}
 			}
@@ -148,11 +148,11 @@ class CartModel extends Model{
 				$data = array();
 				foreach($goods as $vg){
 					foreach($diff as $vd){
-						if($vg['goods_id'] == $vd){
+						if($vg->goods_id == $vd){
 							$data[] = array(
 								'user_id'   => $user_id,
-								'goods_id'  => $vg['goods_id'],
-								'goods_num' => $vg['goods_num']
+								'goods_id'  => $vg->goods_id,
+								'goods_num' => $vg->goods_num
 							);
 						}
 					}
@@ -167,8 +167,8 @@ class CartModel extends Model{
 			foreach($goods as $vg){
 				$data = array(
 					'user_id'   => $user_id,
-					'goods_id'  => $vg['goods_id'],
-					'goods_num' => $vg['goods_num']
+					'goods_id'  => $vg->goods_id,
+					'goods_num' => $vg->goods_num
 				);
 			}
 
