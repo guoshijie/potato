@@ -218,7 +218,7 @@ class OrderModel extends Model{
 		}
 
 		//子订单
-		$order_suppliers = DB::table('order_suppliers')->select('son_order_no as sub_order_no','order_no','suppliers_id')->whereIn('order_no',$order_no)->where('is_delete',0)->where('pay_status',0)->where('status',0)->get();
+		$order_suppliers = DB::table('order_suppliers')->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status')->whereIn('order_no',$order_no)->where('is_delete',0)->where('pay_status',0)->where('status',0)->get();
 
 		$data = $this->getOrderList($order_no,$order_suppliers);
 
