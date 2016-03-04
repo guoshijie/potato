@@ -152,5 +152,14 @@ class User extends Api
 	public function qiniuToken(){
 		return $this->getData("/user/qiniu/token");
 	}
+
+
+	/*
+	 * 意见反馈
+	 */
+	public function setOpinion($user_id,$content){
+		return $this->getData("/user/opinion?user_id=".$user_id."&content=".$content);
+	}
+
 	
 }
