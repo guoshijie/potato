@@ -6,12 +6,11 @@ use Seld\JsonLint\JsonParser;
 
 class AutoId extends Api
 {
-    const TEST = "TEST";
-    const AUTO_ID_HOST = "auto.id.host:20100";
+    const HOST = "auto.id.host";
 
     public function __construct()
     {
-        parent::__construct(AutoId::AUTO_ID_HOST);
+        parent::__construct(AutoId::HOST);
     }
 
     /**

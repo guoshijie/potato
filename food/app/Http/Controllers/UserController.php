@@ -88,8 +88,6 @@ class UserController extends ApiController
 
 //		$this->pr($userInfo->data->data->id);
 		if($userInfo->code == 1){
-			$address	= $this->userServer->getAddressDefault($userInfo->data->id);
-			$address	= json_decode($address);
 			//存储session
 			$user_session = array(
 				'id' 		=> $userInfo->data->id,
@@ -99,11 +97,16 @@ class UserController extends ApiController
 				'user_id' 		=> $userInfo->data->id,
 				'tel'		=> $userInfo->data->tel,
 				'nick_name'	=> $userInfo->data->nick_name,
-				'head_pic'	=> $userInfo->data->head_pic,
-				'default_address'	=> $address->data
+				'head_pic'	=> $userInfo->data->head_pic
 			);
 
-		header("Content-type:text/html;charset=utf-8");
+			$address	= $this->userServer->getAddressDefault($userInfo->data->id);
+			$address	= json_decode($address);
+		//header("Content-type:text/html;charset=utf-8");
+			if($address->code){
+				$login_info['default_address'] = $address->data;
+			}
+
 
 			if($userInfo->data->is_real){
 				//config('session.lifetime',432000);
