@@ -37,7 +37,7 @@ class UserModel extends Model {
 			->leftJoin('user_info','user_info.sh_user_id','=','user.id')
 			->where( 'tel', $tel )
 			->select( 'user.id','user.tel', 'user.real_name', 'user.nick_name', 'user.locked', 'user.sh_id','user.signature','user.head_pic','session_id as token','is_new_user','ip_address','ip','os_type' )
-			->get();
+			->first();
 	}
 
 

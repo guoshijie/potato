@@ -52,8 +52,8 @@ class User extends Api
 	 * @param $key          用户密码和token加密字符串
 	 * @param $form_token          token字符串
 	 */
-	public function login($tel,$password){
-		return $this->getData("/user/login/login-tel?tel=" . $tel.'&password='.$password);
+	public function login($tel,$password,$token){
+		return $this->getData("/user/login/login-tel?tel=" . $tel.'&password='.$password.'&token='.$token);
 	}
 
 

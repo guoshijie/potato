@@ -176,6 +176,20 @@ class Store implements SessionInterface
         $this->id = $id;
     }
 
+	// 获取自定义session id的session
+    public function resetId($id)
+    {
+		$this->flush();
+        $this->id = $id;
+		if($this->hasSession()){
+			$this->loadSession();
+		}
+    }
+
+	public function hasSession(){  
+		return $this->handler->read($this->getId()) ? true : false;  
+	} 
+
     /**
      * Determine if this is a valid session ID.
      *

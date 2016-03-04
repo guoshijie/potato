@@ -106,6 +106,7 @@ class ShopModel extends Model
 	{
 
 		$address = DB::table($this->table)
+			->select('address_id', 'consignee','store_name','address','tel')
 			->where('user_id', $ch_user_id)
 			->where('is_default', 1)
 			->get();
