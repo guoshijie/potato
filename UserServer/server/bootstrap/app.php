@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
-
+require_once __DIR__.'/../../../commons/function.php';
  Dotenv::load(__DIR__.'/../');
 
 /*

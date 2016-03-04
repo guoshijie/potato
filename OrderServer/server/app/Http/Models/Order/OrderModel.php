@@ -138,7 +138,8 @@ class OrderModel extends Model{
 						'price'         =>  $goods_value->shop_price,
 						'price_total'   =>  $goods_value->shop_price * $input_goods['goods_num'],
 						'suppliers_id'  =>  $goods_value->suppliers_id,
-						'category_id'   =>  $goods_value->sh_category_id
+						'category_id'   =>  $goods_value->sh_category_id,
+						'specs'         =>  $goods_value->specs
 					);
 				}
 			}

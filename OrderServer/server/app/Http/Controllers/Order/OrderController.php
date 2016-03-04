@@ -28,7 +28,7 @@ class OrderController extends ApiController
 
 //		$goods = array(
 //			array(
-//				'goods_id'  =>14,
+//				'goods_id'  =>2,
 //				'goods_num' =>2
 //			),
 ////			array(

@@ -29,7 +29,7 @@ class ProductModel extends Model{
 		$goods_ids  = array();
 		foreach($data as $goods_list){
 			$goods_ids[] = $goods_list->id;
-			$catgegory[]     = $goods_list->sh_category_id;
+			$catgegory_ids[]     = $goods_list->sh_category_id;
 			$suppliers_ids[] = $goods_list->suppliers_id;
 		}
 
@@ -44,9 +44,7 @@ class ProductModel extends Model{
 		$suppliers  = $this->suppliers($suppliers_ids);
 
 
-
 		foreach($data as $goods_info_list){
-
 
 			foreach($suppliers as $suppilers_list){
 				if($goods_info_list->suppliers_id == $suppilers_list->id){
@@ -72,7 +70,7 @@ class ProductModel extends Model{
 	 */
 	public function getProductById($good_id){
 		$data   =  DB::table('goods')
-			->select('id','sh_category_id','goods_name','provider_name','goods_num','shop_price',
+			->select('id','sh_category_id','goods_name','goods_num','shop_price',
 				'suppliers_id','goods_desc','specs','model','goods_thumb','goods_img')
 			->where('is_down',0)
 			->where('id',$good_id)
@@ -91,7 +89,11 @@ class ProductModel extends Model{
 		//图片
 		$pics     = $this->goodsPics(array($data->id));
 
+		//供应商
+		$suppliers  = $this->suppliers(array($data->suppliers_id));
+
 		$data->cateogry = $cateogry[0]->cat_name;
+		$data->suppilers_name     = $suppliers[0]->suppliers_name;
 		$data->tag      = $tag;
 		$data->pics     = $pics;
 		$data->goods_desc = '2015年12月，以“互联互通，共享共治，构建网络空间命运共同体”为主题的第二届世界互联网大会乌镇峰会在浙江乌镇召开，习近平总书记出席大会开幕式并做了主旨演讲,详细阐述了互联网发展的重大意义和深远影响，提出了推进全球互联网治理体系变革“四项原则”和构建网络空间命运共同体“五点主张”。“四项原则”，即“尊重网络主权、维护和平安全、促进开放合作、构建良好秩序”。“五个主张”，即“加快全球网络基础设施建设，促进互联互通；打造网上文化交流共享平台，促进交流互鉴；推动网络经济创新发展，促进共同繁荣；保障网络安全，促进有序发展；构建互联网治理体系，促进公平正义”。';
@@ -140,7 +142,6 @@ class ProductModel extends Model{
 			}
 
 		}
-
 
 		return $data;
 	}

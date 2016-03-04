@@ -35,7 +35,6 @@ class ResetController extends ApiController
 
 		if (!$this->commontMdel->checkUser($request->get('tel'))){
 			return $this->response(10022);
-
 		}
 		$verifyModel = new VerifyModel();
 		$data = $verifyModel->sendVerifyCode($request->get('tel'));
@@ -77,9 +76,9 @@ class ResetController extends ApiController
 			return $this->response(20206);
 		}
 
-
-		if ($verifyModel->checkVerify($request->get('tel'), $request->get('code'))) {
-			return $this->response(20210);
+		$verifyModel = new VerifyModel();
+		if (!$verifyModel->checkVerify($request->get('tel'), $request->get('code'))) {
+			return $this->response(20208);
 		}
 
 		$userModel = new NewUserModel();
