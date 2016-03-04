@@ -625,6 +625,26 @@ class OrderModel extends Model{
 		return DB::table('suppliers')->where('id',$suppliers_id)->where('status',0)->first();
 	}
 
+
+	/**
+	 * @param $user_id
+	 * @param $type
+	 * @return bool
+	 */
+	public function getOrderNumByUserId($user_id,$type){
+
+		if($type == 1){ //待支付
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status','!=',2)->count();
+		}elseif($type ==2){ //待收货
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',0)->count();
+		}elseif($type ==3){ //已完成
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',5)->count();
+		}else{
+			return false;
+		}
+
+	}
+
 	/*
 	 * 根据用户ID获取默认收货地址
 	 * param $user_id  string  用户ID

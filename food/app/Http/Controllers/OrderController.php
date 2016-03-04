@@ -162,4 +162,30 @@ class OrderController extends ApiController
 	}
 
 
+	/*
+	 * 购物车数量
+	 */
+	public function getCartNum(){
+
+		$user_id    = 2;
+
+		return $this->orderServer->getCartNum($user_id);
+	}
+
+
+	/*
+	 * 订单数量
+	 */
+	public function getOrderNum(){
+		if(!Request::has('type')){
+			return Response::json($this->response(10005));
+		}
+		$user_id    = 2;
+		$type   = Request::get('type');
+
+		return $this->orderServer->getOrderNum($user_id,$type);
+	}
+
+
+
 }

@@ -8,6 +8,10 @@ use  App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
 use App\Http\Models\Order\OrderModel;
 
+/**
+ * Class OrderController
+ * @package App\Http\Controllers\Order
+ */
 class OrderController extends ApiController
 {
 	protected $_model;
@@ -248,7 +252,38 @@ class OrderController extends ApiController
 
 	}
 
-	//分页
+
+	/**
+	 * @param Request $request
+	 * @return array
+	 */
+	public function getOrderNum(Request $request){
+		if(!$request->has('user_id') ){
+			return $this->response(10018);
+		}
+
+		if(!$request->has('type')){
+			return $this->response(10005);
+		}
+
+		$user_id  = $request->get('user_id');
+		$type     = $request->get('type');
+		$data     = $this->_model->getOrderNumByUserId($user_id,$type);
+
+		if($data){
+			return $this->response(1,'成功',$data);
+		}else{
+			return $this->response(0);
+		}
+
+	}
+
+
+	/**
+	 * @param     $request
+	 * @param int $length
+	 * @return \stdClass
+	 */
 	private function pageinfo($request,$length=20){
 		$pageinfo               = new \stdClass;
 		$pageinfo->length       = $request->has('length') ? $request->get('length') : $length;;

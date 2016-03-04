@@ -94,6 +94,22 @@ class Order extends Api
 	}
 
 
+	/*
+	 * 购物车数量
+	 */
+	public function getCartNum($user_id){
+		return $this->getData("/order/cart/get-cart-count?user_id=" . $user_id);
+	}
+
+
+	/*
+	 * 订单数量
+	 */
+	public function getOrderNum($user_id,$type){
+		return $this->getData("/order/order/order-count?user_id=" . $user_id."&type=".$type);
+	}
+
+
 
 
 }

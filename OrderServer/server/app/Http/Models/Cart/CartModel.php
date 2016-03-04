@@ -281,6 +281,13 @@ class CartModel extends Model{
 
 
 	/*
+	 * 获取购物车数量
+	 */
+	public function getCartNumByUserId($user_id){
+		return DB::table('cart')->select('user_id',$user_id)->where('is_delete',0)->count();
+	}
+
+	/*
 	 * 商品分类
 	 */
 	public function goodsCategory($catgegory_ids){

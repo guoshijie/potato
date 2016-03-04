@@ -102,6 +102,26 @@ class CartController extends ApiController
 
 
 
+	/*
+	 * 获取购物车数量
+	 */
+	public function getCartNum(Request $request){
+		if(!$request->has('user_id') ){
+			return $this->response(10018);
+		}
+
+		$user_id    = $request->get('user_id');
+
+		$data =  $this->_model->getCartNumByUserId($user_id);
+		if($data){
+			return $this->response('1','获取成功',$data);
+		}else{
+			return $this->response(0);
+		}
+	}
+
+
+
 	//分页
 	private function pageinfo($request,$length=20){
 		$pageinfo               = new \stdClass;

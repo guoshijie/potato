@@ -72,4 +72,8 @@ Route::group( array('prefix' => $version),function() {
 	Route::any('/order/receiving','OrderController@confirmReceiving');  //确认收货
 
 	Route::any('/order/suppliers','OrderController@getSuppliers');   //联系卖家
+
+	Route::any('/cart/num','OrderController@getCartNum');   //购物车数量
+
+	Route::any('/order/num','OrderController@getOrderNum');   //订单数量
 });
