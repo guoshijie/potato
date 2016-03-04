@@ -23,7 +23,7 @@ class CartController extends ApiController
 	 * param $goods_ids     array   商品ID和商品数量
 	 */
 	public function addCart(Request $request){
-		Log::info(print_r($request,1));
+		Log::info(print_r($request->all(),1));
 
 		if(!$request->has('user_id') || !$request->has('goods')){
 			return $this->response(10005);

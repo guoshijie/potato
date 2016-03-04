@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
 use \Api\Server\Order as OrderServer;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 class OrderController extends ApiController
 {
 
@@ -20,7 +21,7 @@ class OrderController extends ApiController
 	 * 添加商品到购物车
 	 */
 	public function addCart(){
-
+		Log::info(print_r(Request::all(),1));
 		if(!Request::has('goods_id') || !Request::has('goods')){
 			return Response::json($this->response(10005));
 		}
