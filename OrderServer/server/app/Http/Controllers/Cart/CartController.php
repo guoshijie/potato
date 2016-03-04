@@ -17,24 +17,69 @@ class CartController extends ApiController
 
 
 	/*
-	 * 添加商品到购物车
+	 * 添加商品到购物车（多个）
 	 * param $user_id       string  用户ID
 	 * param $goods_ids     array   商品ID和商品数量
 	 */
 	public function addCart(Request $request){
 
-		if(!$request->has('user_id') || !$request->has('goods_id') || !$request->has('goods_num')){
+		if(!$request->has('user_id') || !$request->has('goods')){
 			return $this->response(10005);
 		}
 
+//		$goods = array(
+//			array(
+//				'goods_id'  =>14,
+//				'goods_num' =>2
+//			),
+//			array(
+//				'goods_id'  =>131,
+//				'goods_num' =>2
+//			),
+//			array(
+//				'goods_id'  =>148,
+//				'goods_num' =>1
+//			),
+////			array(
+////				'goods_id'  =>150,
+////				'goods_num' =>2
+////			)
+//		);
+
+
 		$user_id    = $request->get('user_id');
-		$goods_id   = $request->get('goods_id');
-		$goods_num   = $request->get('goods_num');
+		$goods      = $request->get('goods');
+
+		//debug($goods);
+		if(!is_array($goods) || empty($goods)){
+			return $this->response(10023);
+		}
 
 
-		return json_encode($this->_model->addGoodsToCart($user_id,$goods_id,$goods_num));
+		return json_encode($this->_model->addGoodsToCarts($user_id,$goods));
 
 	}
+
+
+	/*
+	 * 添加商品到购物车(单个商品)
+	 * param $user_id       string  用户ID
+	 * param $goods_ids     array   商品ID和商品数量
+	 */
+//	public function addCart(Request $request){
+//
+//		if(!$request->has('user_id') || !$request->has('goods_id') || !$request->has('goods_num')){
+//			return $this->response(10005);
+//		}
+//
+//		$user_id    = $request->get('user_id');
+//		$goods_id   = $request->get('goods_id');
+//		$goods_num   = $request->get('goods_num');
+//
+//
+//		return json_encode($this->_model->addGoodsToCart($user_id,$goods_id,$goods_num));
+//
+//	}
 
 
 	/*

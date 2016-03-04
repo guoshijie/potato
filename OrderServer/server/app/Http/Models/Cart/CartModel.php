@@ -10,7 +10,7 @@ class CartModel extends Model{
 
 
 	/*
-	 * 添加商品到我的购物车
+	 * 添加商品到我的购物车（单个）
 	 *
 	 */
 	public function addGoodsToCart($user_id,$goods_id,$goods_num){
@@ -54,6 +54,127 @@ class CartModel extends Model{
 			);
 			$carts = DB::table('cart')->insertGetId($data);
 		}
+
+		if($carts){
+			return array('code'=>1,'msg'=>'添加成功');
+		}else{
+			return array('code'=>0,'msg'=>'添加失败');
+		}
+
+	}
+
+
+
+
+	/*
+	 * 添加商品到我的购物车（多个）
+	 *
+	 */
+	public function addGoodsToCarts($user_id,$goods){
+
+		try{
+
+			$infput_goods_ids = array();
+			foreach($goods as $vg){
+				$infput_goods_ids[] = $vg['goods_id'];
+			}
+
+			if(empty($infput_goods_ids)){
+				return false;
+			}
+
+		}catch (\Exception $e){
+			Log::error($e);
+			return false;
+		}
+
+		//检测虚假商品
+		$check_nums  =   DB::table('goods')->whereIn('id',$infput_goods_ids)->select('id','goods_num')->where('is_down',0)->get();
+
+		if(empty($check_nums)){
+			return array('code'=>20302,'msg'=>'检测到不存在商品，用户不良行为','data'=>$check_nums);
+		}
+
+		//检测库存数量
+		foreach($check_nums as $vgn){
+			foreach($goods as $vg){
+				if($vgn->goods_num < $vg['goods_num']){
+					return array('code'=>40001,'msg'=>'库存数量不足');
+				}
+			}
+		}
+
+
+		//限制购物车数量
+		$limit_cart = DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->count();
+		if($limit_cart > 30){
+			return array('code'=>40003,'msg'=>'购物车已满30笔，请先删除多余订单','data'=>$limit_cart);
+		}
+
+		$look_cart = DB::table('cart')->where('user_id',$user_id)->whereIn('goods_id',$infput_goods_ids)->where('is_delete',0)->get();
+
+		//debug($look_cart);
+		if(!empty($look_cart)){
+			//相同累加
+
+			$sql_one ='update sh_cart set goods_num = (case ';
+			$sql_two = '';
+			$lc_goods_ids = array();
+			foreach($look_cart as $vlc){
+				$lc_goods_ids[] = $vlc->goods_id;
+				foreach($goods as $vg ){
+					if($vlc->goods_id == $vg['goods_id']){
+						$num = $vlc->goods_num+$vg['goods_num'];
+						$sql_two .= 'when goods_id='.$vg['goods_id'].' then '.$num.' ';
+					}
+				}
+			}
+
+			$keyInfos       = implode( ',', $lc_goods_ids ) ;
+			$sql_three = 'else goods_num end) where goods_id IN ('.$keyInfos.')';
+			//debug($sql_three);
+			$carts = DB::update($sql_one.$sql_two.$sql_three);
+
+			if(!$carts){
+				return false;
+			}
+
+
+			//不同直压   $lc_goods_ids  $infput_goods_ids
+			$diff = array_diff($infput_goods_ids,$lc_goods_ids);
+
+			if(!empty($diff)){
+
+				$data = array();
+				foreach($goods as $vg){
+					foreach($diff as $vd){
+						if($vg['goods_id'] == $vd){
+							$data[] = array(
+								'user_id'   => $user_id,
+								'goods_id'  => $vg['goods_id'],
+								'goods_num' => $vg['goods_num']
+							);
+						}
+					}
+				}
+
+				//debug($data);
+				$carts = DB::table('cart')->insert($data);
+			}
+
+		}else{
+			//直接压入
+			foreach($goods as $vg){
+				$data = array(
+					'user_id'   => $user_id,
+					'goods_id'  => $vg['goods_id'],
+					'goods_num' => $vg['goods_num']
+				);
+			}
+
+			$carts = DB::table('cart')->insertGetId($data);
+		}
+
 
 		if($carts){
 			return array('code'=>1,'msg'=>'添加成功');
