@@ -10,6 +10,9 @@ namespace App\Http\Controllers\User;		// 定义命名空间
 use App\Http\Controllers\ApiController;    //导入基类
 use Illuminate\Http\Request;                //输入输出类
 use App\Http\Models\User\ResetModel;			//引入model
+use  App\Libraries\Qiniu\Auth;              //引入七牛
+use  App\Libraries\Qiniu\Processing\PersistentFop;
+use  App\Libraries\Qiniu\Storage\UploadManager;
 
 class UserController extends ApiController
 {
@@ -42,6 +45,25 @@ class UserController extends ApiController
 		}else{
 			return $this->response(0);
 		}
+
+	}
+
+
+	/*
+	 * 七牛上传图片token
+	 */
+	public function uploadKey() {
+		$bucket = 'eduonline';
+		$accessKey = 'h591Hrv-oh3BornRVEQqlDE7IJQYFgM-dkA44tKM';
+		$secretKey = 'XFwQNCCycfAf6fv_Ox-teKB8Tf2Bk21Xr5cqYXEm';
+		$policy = array(
+			'returnUrl' => 'http://alipay.localhost/qiniu/qiNiu/upload-token',
+			'returnBody' => '{"fname": $(fname)}',
+		);
+		$qiniu  = new Auth($accessKey , $secretKey);
+		$upload = $qiniu->uploadToken($bucket, null, 3600, $policy);
+
+		return $this->response(1,'成功',$upload);
 
 	}
 

@@ -164,12 +164,10 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$user_id    =   Session::get('user.id');
-		$user_id    = 2;
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+		$user_id    =   $this->loginUser->id;
 
 		$head_pic   =   Request::get('head_pic');
 
@@ -182,12 +180,10 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$user_id    =   Session::get('user.id');
-		$user_id    = 2;
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+		$user_id    =   $this->loginUser->id;
 		$name       =   Request::get('name');
 		$tel        =   Request::get('tel');
 		$district   =   Request::get('district');
@@ -200,9 +196,6 @@ class UserController extends ApiController
 
 
 	public function showShopList(){
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
 
 		if(!Request::has('page')){
 			$page   = 1;
@@ -211,8 +204,10 @@ class UserController extends ApiController
 		}
 
 
-		//$user_id    =   Session::get('user.id');
-		$user_id    = 2;
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+		$user_id    =   $this->loginUser->id;
 
 		return $this->userServer->showShopList($user_id,$page);
 	}
@@ -223,12 +218,10 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$user_id    =   Session::get('user.id');
-		$user_id    = 2;
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+		$user_id    =   $this->loginUser->id;
 		$name       =   Request::get('name');
 		$tel        =   Request::get('tel');
 		$district   =   Request::get('district');
@@ -247,14 +240,12 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$user_id    =   Session::get('user.id');
-		$user_id    = 2;
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+		$user_id        =   $this->loginUser->id;
 
-		$address_id   =   Request::get('address_id');
+		$address_id     =   Request::get('address_id');
 
 		return $this->userServer->destroyShop($address_id,$user_id);
 	}
@@ -280,13 +271,11 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$user_id   =   Session::get('user.id');
-		$user_id    = 2;
-		$address_id   =   Request::get('address_id');
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+		$user_id        =   $this->loginUser->id;
+		$address_id     =   Request::get('address_id');
 		return $this->userServer->setAddressDefault($user_id,$address_id);
 	}
 
@@ -312,6 +301,14 @@ class UserController extends ApiController
 		$userM->writeUserLog($userId, 'logout', 'success');
 
 		return Response::json( $this->response( 1 ) );
+	}
+
+
+	/*
+	 * 获取七牛上传Token
+	 */
+	public function getQiniuToken(){
+		return $this->userServer->qiniuToken();
 	}
 
 

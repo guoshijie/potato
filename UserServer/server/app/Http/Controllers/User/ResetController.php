@@ -73,7 +73,7 @@ class ResetController extends ApiController
 		}
 
 		if (  !$this->commontMdel->checkUser($request->get('tel'))) {
-			return $this->response(20206);
+			return $this->response(10013);
 		}
 
 		$verifyModel = new VerifyModel();

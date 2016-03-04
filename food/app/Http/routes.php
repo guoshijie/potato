@@ -50,6 +50,10 @@ Route::group( array('prefix' => $version),function() {
 
 	Route::any('/user/logout','UserController@logout');         //http://food.laraver.com/user/logout?uid=2
 
+	Route::any('/user/qiniu/token','UserController@getQiniuToken');         //http://food.laraver.com/user/logout?uid=2
+
+
+
 	Route::any('/goods','GoodsController@index');       //http://food.laraver.com/goods?page=1
 
 	Route::any('/goods/detail','GoodsController@detail');   //http://food.laraver.com/goods/detail?goods_id=146

@@ -144,5 +144,13 @@ class User extends Api
 	public function setAddressDefault($user_id,$id){
 		return $this->getData("/user/shop/set-shop-default?user_id=".$user_id."&id=".$id);
 	}
+
+
+	/*
+	 * 获取七牛Token
+	 */
+	public function qiniuToken(){
+		return $this->getData("/user/qiniu/token");
+	}
 	
 }
