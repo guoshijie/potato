@@ -16,15 +16,6 @@ class OrderController extends ApiController
 	}
 
 
-	protected function checkUser(){
-		if(!$this->isLogin()){
-			return Response::json($this->response(99999));
-		}
-
-		return $this->loginUser->id;
-	}
-
-
 	/*
 	 * 添加商品到购物车
 	 */
@@ -34,8 +25,13 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$user_id    = $this->checkUser();
-		$goods      = Request::get('goods');
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+
+		$user_id    =   $this->loginUser->id;
+		$goods   = Request::get('goods');
 
 		return $this->orderServer->addCart($user_id,$goods);
 	}
@@ -46,7 +42,11 @@ class OrderController extends ApiController
 	 */
 	public function getCartList(){
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   $this->loginUser->id;
 
 		return $this->orderServer->getCartList($user_id);
 	}
@@ -61,7 +61,11 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   $this->loginUser->id;
 		$inv_payee  = Request::get('inv_payee');
 		$goods      = Request::get('goods');
 
@@ -82,8 +86,11 @@ class OrderController extends ApiController
 			$page   = Request::get('page');
 		}
 
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
 
-		$user_id    = $this->checkUser();
+		$user_id    =   $this->loginUser->id;
 		$status     = Request::get('status');
 
 		return $this->orderServer->getOrderList($page,$user_id,$status);
@@ -99,7 +106,11 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   $this->loginUser->id;
 		$order_no   = Request::get('order_no');
 		$sub_order_no  = Request::get('sub_order_no');
 
@@ -115,7 +126,11 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   $this->loginUser->id;
 		$order_no   = Request::get('order_no');
 
 		return $this->orderServer->cancelOrderByOrderNo($user_id,$order_no);
@@ -131,7 +146,11 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id        =   $this->loginUser->id;
 		$sub_order_no   = Request::get('sub_order_no');
 
 		return $this->orderServer->cancelOrderBySubOrderNo($user_id,$sub_order_no);
@@ -147,7 +166,11 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id        =   $this->loginUser->id;
 		$sub_order_no   = Request::get('sub_order_no');
 
 		return $this->orderServer->confirmReceiving($user_id,$sub_order_no);
@@ -162,7 +185,11 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   $this->loginUser->id;
 		$suppliers_id   = Request::get('suppliers_id');
 
 		return $this->orderServer->getSuppliers($user_id,$suppliers_id);
@@ -174,7 +201,11 @@ class OrderController extends ApiController
 	 */
 	public function getCartNum(){
 
-		$user_id    = $this->checkUser();
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   $this->loginUser->id;
 
 		return $this->orderServer->getCartNum($user_id);
 	}
@@ -187,7 +218,12 @@ class OrderController extends ApiController
 		if(!Request::has('type')){
 			return Response::json($this->response(10005));
 		}
-		$user_id    = $this->checkUser();
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$user_id    =   $this->loginUser->id;
 		$type       = Request::get('type');
 
 		return $this->orderServer->getOrderNum($user_id,$type);
