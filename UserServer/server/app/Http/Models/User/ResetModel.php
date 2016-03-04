@@ -98,4 +98,18 @@ class ResetModel extends Model{
 		return DB::table('user')->where('id',$user_id)->first();
 	}
 
+	/*
+	 * 意见反馈
+	 */
+	public function setOpinionByUserId($user_id,$content){
+
+		$data = array(
+			'content'       => $content,
+			'user_id'       => $user_id,
+			'create_time'   => date('Y-m-d H:i:s')
+		);
+
+		return  DB::table('system_opinion')->insertGetId($data);
+	}
+
 }

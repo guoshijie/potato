@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
 use \Api\Server\Order as OrderServer;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Log;
 class OrderController extends ApiController
 {
 
@@ -12,9 +13,6 @@ class OrderController extends ApiController
 
 	public function __construct()
 	{
-		if(!$this->isLogin()){
-			return Response::json($this->response(99999));
-		}
 		$this->orderServer = new OrderServer();
 	}
 
@@ -23,13 +21,35 @@ class OrderController extends ApiController
 	 * 添加商品到购物车
 	 */
 	public function addCart(){
-
-		if(!Request::has('goods_id') || !Request::has('goods')){
+		Log::info(print_r(Request::all(),1));
+		if(!Request::has('goods')){
 			return Response::json($this->response(10005));
 		}
 
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		/*
+		 * [2016-03-04 09:46:53] local.INFO: Array
+			(
+			    [goods] => [{"goods_id":"2","goods_num":"6"},{"goods_id":"3","goods_num":"3"}]
+			    [token] =>
+			    [deviceId] => D92716E7C26F65D7922D2826EE9BA546
+			    [platform] => Android
+			    [phoneCompany] => Lenovo
+			    [phoneModel] => Lenovo K50-t5
+			    [osVersion] => 5.0
+			    [channel] => AnZhi
+			    [version] => 1.0
+			    [netType] => WIFI
+			)
+		 *
+		 */
+
+
 		$user_id    =   $this->loginUser->id;
-		$goods   = Request::get('goods');
+		$goods      =  json_decode(Request::get('goods'));
 
 		return $this->orderServer->addCart($user_id,$goods);
 	}
@@ -39,6 +59,10 @@ class OrderController extends ApiController
 	 * 查看购物车列表
 	 */
 	public function getCartList(){
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
 
 		$user_id    =   $this->loginUser->id;
 
@@ -53,6 +77,10 @@ class OrderController extends ApiController
 
 		if(!Request::has('inv_payee') || !Request::has('goods')){
 			return Response::json($this->response(10005));
+		}
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
 		}
 
 		$user_id    =   $this->loginUser->id;
@@ -76,6 +104,10 @@ class OrderController extends ApiController
 			$page   = Request::get('page');
 		}
 
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
 		$user_id    =   $this->loginUser->id;
 		$status     = Request::get('status');
 
@@ -90,6 +122,10 @@ class OrderController extends ApiController
 
 		if(!Request::has('order_no') || !Request::has('sub_order_no')){
 			return Response::json($this->response(10005));
+		}
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
 		}
 
 		$user_id    =   $this->loginUser->id;
@@ -108,6 +144,10 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
 		$user_id    =   $this->loginUser->id;
 		$order_no   = Request::get('order_no');
 
@@ -122,6 +162,10 @@ class OrderController extends ApiController
 
 		if(!Request::has('sub_order_no')){
 			return Response::json($this->response(10005));
+		}
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
 		}
 
 		$user_id        =   $this->loginUser->id;
@@ -140,6 +184,10 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
 		$user_id        =   $this->loginUser->id;
 		$sub_order_no   = Request::get('sub_order_no');
 
@@ -155,6 +203,10 @@ class OrderController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
 		$user_id    =   $this->loginUser->id;
 		$suppliers_id   = Request::get('suppliers_id');
 
@@ -166,6 +218,10 @@ class OrderController extends ApiController
 	 * 购物车数量
 	 */
 	public function getCartNum(){
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
 
 		$user_id    =   $this->loginUser->id;
 
@@ -180,6 +236,11 @@ class OrderController extends ApiController
 		if(!Request::has('type')){
 			return Response::json($this->response(10005));
 		}
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
 		$user_id    =   $this->loginUser->id;
 		$type       = Request::get('type');
 

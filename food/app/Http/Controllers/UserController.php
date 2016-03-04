@@ -315,6 +315,23 @@ class UserController extends ApiController
 	}
 
 
+	/*
+	 * 意见反馈
+	 */
+	public function setOpinion(){
+		if(!Request::has('content')){
+			return Response::json($this->response(10005));
+		}
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+		$user_id        =   $this->loginUser->id;
+		$content        =   Request::get('content');
+		return $this->userServer->setOpinion($user_id,$content);
+	}
+
+
 	 /**
 	 * 验证手机号是否正确
 	 * @param int $mobile

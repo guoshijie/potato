@@ -50,7 +50,8 @@ Route::group( array('prefix' => $version),function() {
 
 	Route::any('/user/logout','UserController@logout');         //http://food.laraver.com/user/logout?uid=2
 
-	Route::any('/user/qiniu/token','UserController@getQiniuToken');         //http://food.laraver.com/user/logout?uid=2
+	Route::any('/user/qiniu/token','UserController@getQiniuToken');     //七牛Token
+	Route::any('/user/opinion','UserController@setOpinion');        //意见反馈
 
 
 

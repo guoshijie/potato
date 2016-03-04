@@ -67,4 +67,28 @@ class UserController extends ApiController
 
 	}
 
+
+	/*
+	 *  意见反馈
+	 */
+	public function setOpinion(Request $request){
+		if(!$request->has('content')){
+			return $this->response(10005);
+		}
+
+		if(!$request->has('user_id')){
+			return $this->response(10013);
+		}
+
+		$user_id = $request->get('user_id');
+		$content = $request->get('content');
+		$user = new ResetModel();
+		$res = $user->setOpinionByUserId( $user_id, $content );
+		if( $res ) {
+			return $this->response(1);
+		}else{
+			return $this->response(0);
+		}
+	}
+
 }
