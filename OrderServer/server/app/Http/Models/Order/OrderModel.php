@@ -138,7 +138,8 @@ class OrderModel extends Model{
 						'price'         =>  $goods_value->shop_price,
 						'price_total'   =>  $goods_value->shop_price * $input_goods['goods_num'],
 						'suppliers_id'  =>  $goods_value->suppliers_id,
-						'category_id'   =>  $goods_value->sh_category_id
+						'category_id'   =>  $goods_value->sh_category_id,
+						'specs'         =>  $goods_value->specs
 					);
 				}
 			}
@@ -622,6 +623,26 @@ class OrderModel extends Model{
 	public function getSuppliersInformation($suppliers_id){
 
 		return DB::table('suppliers')->where('id',$suppliers_id)->where('status',0)->first();
+	}
+
+
+	/**
+	 * @param $user_id
+	 * @param $type
+	 * @return bool
+	 */
+	public function getOrderNumByUserId($user_id,$type){
+
+		if($type == 1){ //待支付
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status','!=',2)->count();
+		}elseif($type ==2){ //待收货
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',0)->count();
+		}elseif($type ==3){ //已完成
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',5)->count();
+		}else{
+			return false;
+		}
+
 	}
 
 	/*

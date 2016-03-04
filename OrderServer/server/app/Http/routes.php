@@ -31,6 +31,8 @@ $app->get('/order/cart/add-cart',"Cart\CartController@addCart");   //添加商�
 
 $app->get('/order/cart/get-cart-list',"Cart\CartController@getCartList");   //查看购物车列表
 
+$app->get('/order/cart/get-cart-count',"Cart\CartController@getCartNum");   //获取购物车数量
+
 
 /*
  * order
@@ -46,4 +48,6 @@ $app->get('/order/order/order-cancel',"Order\OrderController@cancelOrder");   //
 $app->get('/order/order/confirm-receiving',"Order\OrderController@confirmReceiving");   //确认收货
 
 $app->get('/order/order/suppliers',"Order\OrderController@getSuppliers");   //联系卖家
+
+$app->get('/order/order/order-count',"Order\OrderController@getOrderNum");   //订单数量
 

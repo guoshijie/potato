@@ -3,6 +3,7 @@ namespace App\Http\Models\User;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use App\Libraries\Sms;
 
 class VerifyModel extends Model {
@@ -25,6 +26,7 @@ class VerifyModel extends Model {
 		$liveTime = time() + $activeTime * 60;
 		//将验证码写入数据库
 		$data = $this->writeVerify($tel, $st, $liveTime);
+		Log::info('发送验证码记录日记,1为成功，0为失败，验证为：  '.print_r($data,1).'   验证码:'.$st);
 		if ($data) return array('code' => '1', 'msg' => '发送成功');
 		else array('code' => '0', 'msg' => '发送失败');
 	}

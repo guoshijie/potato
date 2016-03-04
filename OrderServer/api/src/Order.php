@@ -21,8 +21,8 @@ class Order extends Api
 	/*
 	 * 添加商品到购物车
 	 */
-	public function addCart($user_id,$goods_id,$goods_num){
-		return $this->getData("/order/cart/add-cart?user_id=" . $user_id."&goods_id=".$goods_id."&goods_num=".$goods_num);
+	public function addCart($user_id,$goods){
+		return $this->getData("/order/cart/add-cart?user_id=" . $user_id."&goods=".$goods);
 	}
 
 
@@ -91,6 +91,22 @@ class Order extends Api
 	 */
 	public function getSuppliers($user_id,$suppliers_id){
 		return $this->getData("/order/order/suppliers?user_id=" . $user_id."&suppliers_id=".$suppliers_id);
+	}
+
+
+	/*
+	 * 购物车数量
+	 */
+	public function getCartNum($user_id){
+		return $this->getData("/order/cart/get-cart-count?user_id=" . $user_id);
+	}
+
+
+	/*
+	 * 订单数量
+	 */
+	public function getOrderNum($user_id,$type){
+		return $this->getData("/order/order/order-count?user_id=" . $user_id."&type=".$type);
 	}
 
 

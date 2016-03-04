@@ -24,15 +24,14 @@ class OrderController extends ApiController
 	 */
 	public function addCart(){
 
-		if(!Request::has('goods_id') || !Request::has('goods_num')){
+		if(!Request::has('goods_id') || !Request::has('goods')){
 			return Response::json($this->response(10005));
 		}
 
 		$user_id    = 2;
-		$goods_id   = Request::get('goods_id');
-		$goods_num  = Request::get('goods_num');
+		$goods   = Request::get('goods');
 
-		return $this->orderServer->addCart($user_id,$goods_id,$goods_num);
+		return $this->orderServer->addCart($user_id,$goods);
 	}
 
 
@@ -161,6 +160,32 @@ class OrderController extends ApiController
 
 		return $this->orderServer->getSuppliers($user_id,$suppliers_id);
 	}
+
+
+	/*
+	 * 购物车数量
+	 */
+	public function getCartNum(){
+
+		$user_id    = 2;
+
+		return $this->orderServer->getCartNum($user_id);
+	}
+
+
+	/*
+	 * 订单数量
+	 */
+	public function getOrderNum(){
+		if(!Request::has('type')){
+			return Response::json($this->response(10005));
+		}
+		$user_id    = 2;
+		$type   = Request::get('type');
+
+		return $this->orderServer->getOrderNum($user_id,$type);
+	}
+
 
 
 }
