@@ -22,7 +22,7 @@ class OrderController extends ApiController
 	 */
 	public function addCart(){
 		Log::info(print_r(Request::all(),1));
-		if(!Request::has('goods_id') || !Request::has('goods')){
+		if(!Request::has('goods')){
 			return Response::json($this->response(10005));
 		}
 
@@ -30,9 +30,26 @@ class OrderController extends ApiController
 			return Response::json($this->response(99999));
 		}
 
+		/*
+		 * [2016-03-04 09:46:53] local.INFO: Array
+			(
+			    [goods] => [{"goods_id":"2","goods_num":"6"},{"goods_id":"3","goods_num":"3"}]
+			    [token] =>
+			    [deviceId] => D92716E7C26F65D7922D2826EE9BA546
+			    [platform] => Android
+			    [phoneCompany] => Lenovo
+			    [phoneModel] => Lenovo K50-t5
+			    [osVersion] => 5.0
+			    [channel] => AnZhi
+			    [version] => 1.0
+			    [netType] => WIFI
+			)
+		 *
+		 */
+
 
 		$user_id    =   $this->loginUser->id;
-		$goods   = Request::get('goods');
+		$goods      =  json_decode(Request::get('goods'));
 
 		return $this->orderServer->addCart($user_id,$goods);
 	}
