@@ -13,7 +13,10 @@ class Api
     public function __construct($pathSuffix)
     {
         $this->curl = new Curl();
-        $this->pathSuffix = $pathSuffix;
+		if( !strpos('http://', $pathSuffix) && !strpos('https://', $pathSuffix) ) {
+			$this->pathSuffix = 'http://';
+		}
+        $this->pathSuffix .= $pathSuffix;
     }
 
     public function getData($uri)
@@ -21,13 +24,13 @@ class Api
         $out = $this->curl->get($this->pathSuffix.$uri);
 
         if ($this->curl->http_code != 200) {
-            throw new \Exception("error: can't connect server");
+            throw new \Exception("error: can't connect server-". $this->pathSuffix);
         }
         if(is_null(json_decode($out))){
             if(env('APP_DEBUG')){
                 var_dump($out);
             }
-            throw new \Exception('error: is not json');
+            throw new \Exception('error: '.$this->pathSuffix .' data is not json');
         }
 
         $json = $this->str2json($out);
@@ -36,7 +39,7 @@ class Api
             if(env('APP_DEBUG')){
                 echo $out;
             }
-            throw new \Exception('error:not find json[code]');
+            throw new \Exception('error:'.$this->pathSuffix .' data  not find json[code]');
 
         }
 

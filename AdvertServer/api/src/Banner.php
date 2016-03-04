@@ -6,11 +6,11 @@ use Seld\JsonLint\JsonParser;
 
 class Banner extends Api
 {
-    const HOST = "http://advert.server.potato";
+    const HOST = "advert.server.potato";
 
     public function __construct()
     {
-        parent::__construct(Banner::HOST);
+        parent::__construct(self::HOST);
     }
 
     /**

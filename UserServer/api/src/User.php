@@ -9,12 +9,11 @@ use Seld\JsonLint\JsonParser;
 
 class User extends Api
 {
-	const TEST = "TEST";
-	const USER_HOST = "user.server.potato";
+	const HOST = "user.server.potato";
 
 	public function __construct()
 	{
-		parent::__construct(User::USER_HOST);
+		parent::__construct(self::HOST);
 	}
 
 
