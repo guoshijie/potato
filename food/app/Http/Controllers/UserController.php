@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Response;
 use \Api\Server\User as UserServer;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Cache;
-//use \Api\Server\AutoId;
+use \Api\Server\AutoId;
 //use \Api\Server\AdvertServer\Banner;
 use \App\Libraries\Curl;
 use App\Http\Controllers\ApiController;
@@ -79,43 +79,49 @@ class UserController extends ApiController
 			return Response::json($this->response(10005));
 		}
 
-		$userM = new UserModel();
+		$tel        = Request::get('tel');
+		$password   = Request::get('password');
+		$token		= str_random(40);
 
-		$tel        =   Request::get('tel');
-		$password   =   Request::get('password');
+		$userInfo   = $this->userServer->login($tel,$password, $token);
+		$userInfo   = json_decode($userInfo);
 
-		$list       =  $this->userServer->login($tel,$password);
-
-		//return $list;
-		$list_array       =   json_decode($list);
-
-//		$this->pr($list_array->data->data->id);
-		if($list_array->code == 1){
+//		$this->pr($userInfo->data->data->id);
+		if($userInfo->code == 1){
+			$address	= $this->userServer->getAddressDefault($userInfo->data->id);
+			$address	= json_decode($address);
 			//存储session
 			$user_session = array(
-				'id' 		=> $list_array->data->data->id,
-				'user_id' 	=> $list_array->data->data->id,
-				'tel'		=> $list_array->data->data->tel,
-				'nick_name'	=> $list_array->data->data->nick_name,
-				'ip'	    => $list_array->data->data->ip,
-				'ip_address'=> $list_array->data->data->ip_address,
-				'is_real'	=> $list_array->data->data->is_real
+				'id' 		=> $userInfo->data->id,
+				'is_real'	=> $userInfo->data->is_real
+			);
+			$login_info = array(
+				'user_id' 		=> $userInfo->data->id,
+				'tel'		=> $userInfo->data->tel,
+				'nick_name'	=> $userInfo->data->nick_name,
+				'head_pic'	=> $userInfo->data->head_pic,
+				'default_address'	=> $address->data
 			);
 
-			if($list_array->data->data->is_real){
-				config('session.lifetime',432000);
+		header("Content-type:text/html;charset=utf-8");
+
+			if($userInfo->data->is_real){
+				//config('session.lifetime',432000);
 			}
 
-			Session::put('user', $user_session);
+			// cache 方式存储登录信息
+			Cache::put('user_'.$token, $user_session, 60*24*30);
+			Cache::forget('user_'.$userInfo->data->token);
 
 			//$this->pr(Session::getId());
 			//记录session_id 作单点登录验证
-			$userM->updateSessionId( $list_array->data->data->id, Session::getId() );
+			//$userM->updateSessionId( $userInfo->data->data->id, Session::getId() );
 
-			$userInfo = $userM->getUserInfoByMobile($tel);
-			return Response::json($this->response(1,'登录成功',$userInfo[0]));
+			//$userInfo = $userM->getUserInfoByMobile($tel);
+			$login_info['token'] = $token;
+			return Response::json($this->response(1,'登录成功',$login_info));
 		}else{
-			return Response::json($list_array);
+			return Response::json($userInfo);
 		}
 
 	}
@@ -255,12 +261,11 @@ class UserController extends ApiController
 
 
 	public function getAddressDefault(){
-
-		if(!Cache::has('user.id')){
+		if(!$this->isLogin()){
 			return Response::json($this->response(99999));
 		}
 
-		$user_id   =   Cache::get('user.id');
+		$user_id   = $this->loginUser->id;
 
 		return $this->userServer->getAddressDefault($user_id);
 	}

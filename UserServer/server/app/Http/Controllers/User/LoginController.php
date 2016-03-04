@@ -40,25 +40,26 @@ class LoginController extends ApiController
 
 		//获取用户信息
 		$userInfo   = $this->commontMdel->getUserInfoByMobile( $tel );
+		$userInfo = $userInfo[0];
+
 
 		if( empty( $userInfo ) ) {
 			return $this->response('20202');
 		}
 
-		$userInfo = $userInfo[0];
 		//判断帐号是否锁定
 		if( 1 == $userInfo->locked ) {
 			return $this->response('20204');
 		}
 
 		//记录登录次数
-		$num  = $loginM->addLoginCount();
+		$num  = $loginM->addLoginCount($request->get('token'));
 
 		//登录次数超过6此拒绝锁定账户
 		if( $num > 6  ) {
 			//锁定帐号
-			$loginM->lockedUser( $userInfo->id );
-			return $this->response('20203');
+			//$loginM->lockedUser( $userInfo->id );
+			//return $this->response('20203');
 		}
 		$userPassword = $this->commontMdel->encryptPassword($password,$userInfo->salt);
 
@@ -68,17 +69,18 @@ class LoginController extends ApiController
 			return $this->response('20202');
 		}
 
+		// 更新登录信息
+		$loginM->updUser($userInfo->id, array('session_id'=> $request->get('token') ));
 
 		unset($userInfo->password);
 		unset($userInfo->salt);
 		unset($userInfo->locked);
+
 		$loginM->clearLoginCount();
 		//记录日志
 		$loginM->writeUserLog($userInfo->id, 'login', 'success');
-		$res		 = $this->response( '1' );
-		$res['data'] = $userInfo;
 		$this->dealDummyUser($userInfo);
-		return $this->response( '1','成功',$res);
+		return $this->response( '1','成功',$userInfo);
 	}
 
 	/**

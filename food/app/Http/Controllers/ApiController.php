@@ -4,13 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;             //输入输出类
+use Illuminate\Support\Facades\Cache;
 
 class ApiController extends Controller
 {
 
 	public function __construct( ){
-
 	}
+
+	protected $loginUser;
+	protected function isLogin(){
+		if(Request::has('token')){
+			$token = 'user_'.Request::get('token');
+			if(Cache::has($token)){
+				$user = (object)Cache::get($token);
+				if(isset($user->id)){
+					$this->loginUser = $user;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
 
     /**
     * 定义响应数据规范
