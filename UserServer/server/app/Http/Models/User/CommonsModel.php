@@ -76,7 +76,7 @@ class CommonsModel extends Model{
 		$row = DB::table( 'user' )
 			->leftJoin('user_info','user_info.sh_user_id','=','user.id')
 			->where( 'tel', $tel )
-			->select( 'user.id','user.tel', 'user.real_name', 'user.nick_name', 'user.password', 'user.locked', 'user.sh_id','user.signature','user.head_pic','user.money','user.salt','user.is_real','user_info.ip_address','user_info.ip','user.os_type','user.is_new_user','user.session_id as token' )
+			->select( 'user.id','user.tel', 'user.real_name', 'user.nick_name', 'user.password', 'user.locked', 'user.sh_id','user.signature','user.head_pic','user.money','user.salt','user.is_real','user_info.ip_address','user_info.ip','user.os_type','user.is_new_user','user.session_id as old_token' )
 			->get();
 		if($row){
 			$row[0]->money = intval($row[0]->money);
