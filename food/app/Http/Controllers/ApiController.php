@@ -10,6 +10,7 @@ class ApiController extends Controller
 {
 
 	public function __construct( ){
+
 	}
 
 	protected $loginUser;
@@ -26,7 +27,6 @@ class ApiController extends Controller
 		}
 		return false;
 	}
-
 
 
     /**
