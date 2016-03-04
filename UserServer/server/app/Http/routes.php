@@ -62,6 +62,7 @@ $app->get('/user/reset/reset-password',"User\ResetController@resetPwd");      //
 
 $app->get('/user/reset/edit-head',"User\UserController@editHeadPic");      //修改头像
 
+$app->get('/user/qiniu/token',"User\UserController@uploadKey");      //七牛上传图片token
 
 /*
  * user address

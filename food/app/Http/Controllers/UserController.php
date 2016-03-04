@@ -310,6 +310,14 @@ class UserController extends ApiController
 	}
 
 
+	/*
+	 * 获取七牛上传Token
+	 */
+	public function getQiniuToken(){
+		return $this->userServer->qiniuToken();
+	}
+
+
 	 /**
 	 * 验证手机号是否正确
 	 * @param int $mobile
