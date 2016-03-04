@@ -111,7 +111,7 @@ class UserController extends ApiController
 
 			// cache 方式存储登录信息
 			Cache::put('user_'.$token, $user_session, 60*24*30);
-			Cache::forget('user_'.$userInfo->data->token);
+			Cache::forget('user_'.$userInfo->data->old_token);
 
 			//$this->pr(Session::getId());
 			//记录session_id 作单点登录验证

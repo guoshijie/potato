@@ -90,7 +90,7 @@ class ShopModel extends Model
 
 	public function editUserAddress($user_id)
 	{
-		$this->getDefaultAddress($user_id);
+		//$this->getDefaultAddress($user_id);
 
 		//修改默认的收货地址成非默认地址
 		return DB::table($this->table)->where('user_id', $user_id)->update(array('is_default' => 0));
@@ -109,44 +109,14 @@ class ShopModel extends Model
 			->select('address_id', 'consignee','store_name','address','tel')
 			->where('user_id', $ch_user_id)
 			->where('is_default', 1)
-			->get();
+			->first();
 
 		if (!$address) {
-			$oneData = DB::table($this->table)
-				->select('address_id')
-				->where('user_id', $ch_user_id)
-				->where('is_default', 0)
-				->get();
-
-			if (!$oneData) {
-
-				return false;
-			}
-
-			$dataUp = array(
-				'is_default' => 1,
-				'address_id' => $oneData->address_id,
-				'update_time'=> date('Y-m-d H:i:s')
-			);
-
-			$addressUp = DB::table($this->table)->update($dataUp);
-
-			if (!$addressUp) {
-
-				return false;
-			}
-
 			$address = DB::table($this->table)
+				->select('address_id', 'consignee','store_name','address','tel')
 				->where('user_id', $ch_user_id)
-				->where('is_default', 0)
-				->get();
-
-			if (!$address) {
-
-				return false;
-			}
+				->first();
 		}
-		// debug($address);
 		return $address;
 	}
 
