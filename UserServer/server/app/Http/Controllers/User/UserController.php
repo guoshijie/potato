@@ -82,6 +82,7 @@ class UserController extends ApiController
 
 		$user_id = $request->get('user_id');
 		$content = $request->get('content');
+		$user = new ResetModel();
 		$res = $user->setOpinionByUserId( $user_id, $content );
 		if( $res ) {
 			return $this->response(1);
