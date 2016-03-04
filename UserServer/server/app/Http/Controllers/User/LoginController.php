@@ -40,12 +40,11 @@ class LoginController extends ApiController
 
 		//获取用户信息
 		$userInfo   = $this->commontMdel->getUserInfoByMobile( $tel );
-		$userInfo = $userInfo[0];
-
 
 		if( empty( $userInfo ) ) {
 			return $this->response('20202');
 		}
+		$userInfo = $userInfo[0];
 
 		//判断帐号是否锁定
 		if( 1 == $userInfo->locked ) {
