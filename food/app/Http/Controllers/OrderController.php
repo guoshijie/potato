@@ -5,41 +5,162 @@ use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
 use \Api\Server\Order as OrderServer;
 use App\Http\Controllers\ApiController;
-class GoodsController extends ApiController
+class OrderController extends ApiController
 {
 
 	var $orderServer;
 
 	public function __construct()
 	{
+//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
 		$this->orderServer = new OrderServer();
 	}
 
 
-	public function index(){
+	/*
+	 * 添加商品到购物车
+	 */
+	public function addCart(){
 
+		if(!Request::has('goods_id') || !Request::has('goods_num')){
+			return Response::json($this->response(10005));
+		}
+
+		$user_id    = 2;
+		$goods_id   = Request::get('goods_id');
+		$goods_num  = Request::get('goods_num');
+
+		return $this->orderServer->addCart($user_id,$goods_id,$goods_num);
+	}
+
+
+	/*
+	 * 查看购物车列表
+	 */
+	public function getCartList(){
+
+		$user_id    = 2;
+
+		return $this->orderServer->getCartList($user_id);
+	}
+
+
+	/*
+	 * 提交订单
+	 */
+	public function orderConfirm(){
+
+		if(!Request::has('inv_payee') || !Request::has('goods')){
+			return Response::json($this->response(10005));
+		}
+
+		$user_id    = 2;
+		$inv_payee  = Request::get('inv_payee');
+		$goods      = Request::get('goods');
+
+		return $this->orderServer->orderConfirm($user_id,$inv_payee,$goods);
+	}
+
+
+	/*
+	 * 获取订单列表
+	 */
+	public function getOrderList(){
+		if(!Request::has('status')){
+			return Response::json($this->response(10005));
+		}
 		if(!Request::has('page')){
-			return Response::json($this->response(10005));
+			$page   = 1;
+		}else{
+			$page   = Request::get('page');
 		}
 
-		$page    =   Request::get('page');
+		$user_id    = 2;
+		$status      = Request::get('status');
 
-		return $this->orderServer->index($page);
+		return $this->orderServer->getOrderList($page,$user_id,$status);
 	}
 
 
-	public function detail(){
+	/*
+	 * 获取订单详情
+	 */
+	public function getOrderDetail(){
 
-		if(!Request::has('goods_id')){
+		if(!Request::has('order_no') || !Request::has('sub_order_no')){
 			return Response::json($this->response(10005));
 		}
 
-		$goods_id    =   Request::get('goods_id');
+		$user_id    = 2;
+		$order_no   = Request::get('order_no');
+		$sub_order_no  = Request::get('sub_order_no');
 
-		return $this->orderServer->detail($goods_id);
-
+		return $this->orderServer->getOrderDetail($user_id,$order_no,$sub_order_no);
 	}
 
+
+	/*
+	 * 取消大订单
+	 */
+	public function cancelOrderByOrderNo(){
+		if(!Request::has('order_no')){
+			return Response::json($this->response(10005));
+		}
+
+		$user_id    = 2;
+		$order_no   = Request::get('order_no');
+
+		return $this->orderServer->cancelOrderByOrderNo($user_id,$order_no);
+	}
+
+
+	/*
+	 * 取消子订单
+	 */
+	public function cancelOrderBySubOrderNo(){
+
+		if(!Request::has('sub_order_no')){
+			return Response::json($this->response(10005));
+		}
+
+		$user_id        = 2;
+		$sub_order_no   = Request::get('sub_order_no');
+
+		return $this->orderServer->cancelOrderBySubOrderNo($user_id,$sub_order_no);
+	}
+
+
+	/*
+	 * 确认收货
+	 */
+	public function confirmReceiving(){
+
+		if(!Request::has('sub_order_no')){
+			return Response::json($this->response(10005));
+		}
+
+		$user_id        = 2;
+		$sub_order_no   = Request::get('sub_order_no');
+
+		return $this->orderServer->confirmReceiving($user_id,$sub_order_no);
+	}
+
+	/*
+	 * 联系卖家
+	 */
+	public function getSuppliers(){
+
+		if(!Request::has('suppliers_id')){
+			return Response::json($this->response(10005));
+		}
+
+		$user_id    = 2;
+		$suppliers_id   = Request::get('suppliers_id');
+
+		return $this->orderServer->getSuppliers($user_id,$suppliers_id);
+	}
 
 
 }

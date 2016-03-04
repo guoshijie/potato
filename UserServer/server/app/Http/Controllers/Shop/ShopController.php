@@ -187,6 +187,29 @@ class ShopController extends ApiController
 	}
 
 
+
+	/*
+	 * 设置默认收货地址
+	 */
+	public function addressDefault(Request $request){
+		if (!$request->has('id') || !$request->has('user_id')){
+			return $this->response(10005);
+		}
+
+		$user_id    = $request->get('user_id');
+
+		$data = $this->_model->setDefault($user_id,$request->get('id'));
+
+		if ($data) {
+			return $this->response(1, '设置成功', $data);
+		} else {
+			return $this->response(0, '设置失败');
+		}
+	}
+
+
+
+
 	/**
 	 * 根据收货地址id删除收货信息
 	 * @param address_id   收货地址id

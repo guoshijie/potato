@@ -140,20 +140,16 @@ class UserController extends ApiController
 
 
 	public function reset(){
-		if(!Request::has('password')){
+		if(!Request::has('tel') || !Request::has('password') || !Request::has('code')){
 			return Response::json($this->response(10005));
 		}
 
-//		if(!Session::has('user.id')){
-//			return Response::json($this->response(99999));
-//		}
-//
-//		$tel        =   Session::get('user.tel');
 
-		$tel = 18612579961;
+		$tel        =   Request::get('tel');
 		$password   =   Request::get('password');
+		$code       =   Request::get('code');
 
-		return $this->userServer->reset($tel,$password);
+		return $this->userServer->reset($tel,$password,$code);
 	}
 
 
@@ -236,7 +232,6 @@ class UserController extends ApiController
 		$is_default =   Request::get('is_default');
 		$id         =   Request::get('id');
 
-
 		return $this->userServer->editShop($id,$user_id,$name,$tel,$district,$address,$head_name,$code,$is_default);
 	}
 
@@ -268,6 +263,26 @@ class UserController extends ApiController
 		$user_id   =   Cache::get('user.id');
 
 		return $this->userServer->getAddressDefault($user_id);
+	}
+
+
+	/*
+	 * 设置默认收货地址
+	 */
+	public function setAddressDefault(){
+
+		if(!Request::has('address_id')){
+			return Response::json($this->response(10005));
+		}
+
+		//		if(!Session::has('user.id')){
+//			return Response::json($this->response(99999));
+//		}
+//
+//		$user_id   =   Session::get('user.id');
+		$user_id    = 2;
+		$address_id   =   Request::get('address_id');
+		return $this->userServer->setAddressDefault($user_id,$address_id);
 	}
 
 
