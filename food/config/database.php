@@ -116,9 +116,10 @@ return [
         'cluster' => false,
 
         'default' => [
-            'host'     => '127.0.0.1',
-            'port'     => 6379,
-            'database' => 0,
+			'host'     => '182.92.189.177',
+			'port'     => 6379,
+			'password' => 'shiheflyforever~',
+			'database' => 2,  // redis 有16个数据库，0-15
         ],
 
     ],
