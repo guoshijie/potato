@@ -59,7 +59,7 @@ class ShopController extends ApiController
 		$messages = $this->vd([
 			'name' => 'required',
 			'tel' => 'required',
-			//'code' => 'required',
+			'code' => 'required',
 			], $request);
 
 		if($messages!=''){
@@ -76,7 +76,7 @@ class ShopController extends ApiController
 		$district  = $request->get('district');
 		$address   = $request->get('address');
 		$head_name = $request->get('head_name');
-		$code = $request->has('code') ? $request->get('code') : 0;
+		$code	   = $request->get('code');
 		//根据用户id获取用户信息
 		$Users = $this->commontMdel->getUserInfoByUserId($user_id);
 		if (!$Users) {
@@ -90,7 +90,9 @@ class ShopController extends ApiController
 
 			$check      = $this->commontMdel->checkVerifyCode( $tel , $code  );
 			if(!$check){
-				return $this->response(20208);
+				if( !env('APP_DEBUG')){
+					return $this->response(20208);
+				}
 			}
 
 			$data = $this->_model->addAddress($user_id, $name, $tel, $district, $address, $head_name);

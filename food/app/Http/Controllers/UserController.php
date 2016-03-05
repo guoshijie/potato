@@ -185,7 +185,7 @@ class UserController extends ApiController
 			'district' => 'required',
 			'address' => 'required',
 			'head_name' => 'required',
-			'code' => 'required',
+			//'code' => 'required',
 		]);
 
 		if($messages!=''){
@@ -202,7 +202,7 @@ class UserController extends ApiController
 		$district   =   Request::get('district');
 		$address    =   Request::get('address');
 		$head_name  =   Request::get('head_name');
-		$code       =   Request::get('code');
+		$code       =   Request::has('code') ? Request::get('code') : 1234;
 
 		return $this->userServer->add_address($user_id,$name,$tel,$district,$address,$head_name,$code);
 	}
