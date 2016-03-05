@@ -56,16 +56,27 @@ class ShopController extends ApiController
 	 */
 	public function createShop(Request $request)
 	{
+		$messages = $this->vd([
+			'name' => 'required',
+			'tel' => 'required',
+			//'code' => 'required',
+			], $request);
+
+		if($messages!=''){
+			return $this->response(10005, $messages);
+		}
+/*
 		if (!$request->has('name') || !$request->has('tel') || !$request->has('district') || !$request->has('address') || !$request->has('head_name') || !$request->has('user_id') || !$request->has('code')) {
 			return $this->response(10005);
 		}
+ */
 		$user_id   = $request->get('user_id');
 		$name      = $request->get('name');
 		$tel       = $request->get('tel');
 		$district  = $request->get('district');
 		$address   = $request->get('address');
 		$head_name = $request->get('head_name');
-		$code = $request->get('code');
+		$code = $request->has('code') ? $request->get('code') : 0;
 		//根据用户id获取用户信息
 		$Users = $this->commontMdel->getUserInfoByUserId($user_id);
 		if (!$Users) {
@@ -96,9 +107,16 @@ class ShopController extends ApiController
 	 */
 	public function getShopDefault(Request $request)
 	{
-		if (!$request->has('user_id')) {
-			return $this->response(10018);
+		$messages = $this->vd([
+			'user_id' => 'required',
+			], $request);
+
+		if($messages!=''){
+			return $this->response(10018, $messages);
 		}
+
+
+
 
 		$userId = $request->get('user_id');
 		$data = $this->_model->getDefaultAddress($userId);

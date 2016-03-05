@@ -33,41 +33,45 @@ class Api
 	
 	public function checkData($out, $uri, $vars=array()){
 		if ($this->curl->http_code == 404) {
-            throw new \Exception("error [404]: can't connect server ". $this->pathSuffix.$uri);
+			$error = "error [404]: can't connect server ". $this->pathSuffix.$uri;
+            //throw new \Exception($error);
 		}
 
 		if ($this->curl->http_code == 500) {
-            throw new \Exception("error [500]: server 内部错误  ". $this->pathSuffix.$uri);
+            $error = "error [500]: server 内部错误  ". $this->pathSuffix.$uri;
+            //throw new \Exception($error);
 		}
 
         if ($this->curl->http_code != 200) {
-            throw new \Exception("error {$this->curl->http_code}: ". $this->pathSuffix.$uri);
+            $error = "error {$this->curl->http_code}: ". $this->pathSuffix.$uri;
+            //throw new \Exception($error);
         }
         if(is_null(json_decode($out))){
-            if(env('APP_DEBUG')){
-                var_dump($out);
-            }
-            throw new \Exception('error: '.$this->pathSuffix .' data is not json');
+            $error = 'error: '.$this->pathSuffix .' data is not json';
+            //throw new \Exception($error);
         }
 
         $json = $this->str2json($out);
 
-        if ( !isset($json["code"])) {
-            if(env('APP_DEBUG')){
-                echo $out;
-            }
-            throw new \Exception('error:'.$this->pathSuffix .' data  not find json[code]');
+        if ( !isset($json->code)) {
+            $error = 'error:'.$this->pathSuffix .' data  not find json[code]';
+            //throw new \Exception($error);
 
         }
 
+		if(isset($error) && env('APP_DEBUG')){
+			die($out);
+		}else{
+			header('Content-type: application/json');
+		}
+
         // 不加这个头，json解析如果带 html标签会出错
-		header('Content-type: application/json');
-        return $out;
+        return isset($error) ? $error : $out;
 	
 	}
 
     private function str2json($str)
     {
-        return json_decode($str,true);
+        return json_decode($str);
     }
 }

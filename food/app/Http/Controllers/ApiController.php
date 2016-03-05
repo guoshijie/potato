@@ -68,7 +68,8 @@ class ApiController extends Controller
 	}
 
 	/*
-	 * Validator
+	 * validate
+	 *
 	 */
 	protected function vd($rules){
 		$validate = Validator::make(Request::all(), $rules);
