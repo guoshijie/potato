@@ -207,8 +207,8 @@ class CartModel extends Model{
 
 		//获取商品信息
 		$data   =  DB::table('goods')
-			->select('id','sh_category_id','goods_name','provider_name','goods_num','shop_price',
-				'suppliers_id','specs','model','goods_thumb','goods_img','goods_fee')
+			->select('id','sh_category_id','goods_name','goods_num','shop_price',
+				'suppliers_id','specs','model','goods_img','goods_fee','unit')
 			->where('is_down',0)
 			->whereIn('id',$goods_ids)
 			->get();
@@ -240,13 +240,13 @@ class CartModel extends Model{
 		foreach($data as $vg){
 			$vg->order_num    = '';
 			if($vg->goods_num == 0 ){
-				$vg->last_num = '库存数量不足(对接时调为数字)';
+				$vg->last_num = '库存数量不足';
 			}
 			foreach($carts as $cart){
 				if($vg->id == $cart->goods_id){
 					$vg->order_num    = $cart->goods_num;
 					if($vg->goods_num <= $cart->goods_num){
-						$vg->last_num = '库存数量不足(对接时调为数字)';
+						$vg->last_num = '库存数量不足';
 					}else{
 						$vg->last_num = '1';
 					}

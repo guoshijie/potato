@@ -55,8 +55,8 @@ class OrderModel extends Model{
 		$goods_info =   DB::table('goods')
 			->whereIn('id',$goods_ids)
 			->where('is_down',0)
-			->select('id','sh_category_id','goods_name','provider_name','goods_num','shop_price',
-				'suppliers_id','specs','model','goods_thumb','goods_img','goods_fee')
+			->select('id','sh_category_id','goods_name','goods_num','shop_price',
+				'suppliers_id','specs','model','goods_img','goods_fee','unit')
 			->orderBy('suppliers_id')
 			->get();
 
@@ -141,7 +141,8 @@ class OrderModel extends Model{
 						'price_total'   =>  $goods_value->shop_price * $input_goods['goods_num'],
 						'suppliers_id'  =>  $goods_value->suppliers_id,
 						'category_id'   =>  $goods_value->sh_category_id,
-						'specs'         =>  $goods_value->specs
+						'specs'         =>  $goods_value->specs,
+						'unit'          =>  $goods_value->unit
 					);
 				}
 			}
