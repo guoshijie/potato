@@ -179,13 +179,23 @@ class UserController extends ApiController
 
 
 	public function addAddress(){
-		if(!Request::has('name') || !Request::has('tel') || !Request::has('district') || !Request::has('address') || !Request::has('head_name') || !Request::has('code') ){
-			return Response::json($this->response(10005));
+		$messages = $this->vd([
+			'name' => 'required',
+			'tel' => 'required',
+			'district' => 'required',
+			'address' => 'required',
+			'head_name' => 'required',
+			'code' => 'required',
+		]);
+
+		if($messages!=''){
+			return Response::json($this->response(10005, $messages));
 		}
 
 		if(!$this->isLogin()){
 			return Response::json($this->response(99999));
 		}
+
 		$user_id    =   $this->loginUser->id;
 		$name       =   Request::get('name');
 		$tel        =   Request::get('tel');

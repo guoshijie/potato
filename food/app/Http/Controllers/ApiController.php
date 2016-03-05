@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;             //输入输出类
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class ApiController extends Controller
 {
@@ -66,5 +67,13 @@ class ApiController extends Controller
 		return include(app_path().'/../resources/code_msg.php');
 	}
 
+	/*
+	 * Validator
+	 */
+	protected function vd($rules){
+		$validate = Validator::make(Request::all(), $rules);
+		$messages = $validate->messages()->all();
+		return implode(' & ', $messages);
+	}
 
 }
