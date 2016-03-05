@@ -95,11 +95,13 @@ class OrderModel extends Model{
 			'phone'         => $address->tel,
 			'address'       => $address->address,
 			'district'      => $address->district,
+			'store_name'    => $address->store_name,
 			'total_price'   => $tatol_price,
-			'discount'      => 0,
 			'fact_gathering'=> $tatol_price,
+			'discount'      => 0,
 			'shipping_fee'  => 0,
 			'inv_payee'     => $inv_payee,
+			'finish_time'   => date('Y-m-d H:i:s',strtotime('+1 week'))
 		);
 
 		$order_id = DB::table('order')->insert($data);
@@ -203,10 +205,17 @@ class OrderModel extends Model{
 	 * param $user_id  string  用户ID
 	 * param $offset   string  分页开始位置
 	 * param $length   string  分页显示长度
+	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
 	 */
 	public function getOrderListByNoPay($user_id,$offset, $length){
 
-		$orders = DB::table('order')->where('user_id',$user_id)->where('pay_status',0)->where('is_delete',0)->skip($offset)->take($length)->get();
+		$orders = DB::table('order')
+			->where('user_id',$user_id)
+			->where('pay_status',0)
+			->where('is_delete',0)
+			->skip($offset)
+			->take($length)
+			->get();
 
 		if(empty($orders)){
 			return false;
@@ -218,7 +227,13 @@ class OrderModel extends Model{
 		}
 
 		//子订单
-		$order_suppliers = DB::table('order_suppliers')->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')->whereIn('order_no',$order_no)->where('is_delete',0)->where('pay_status',0)->where('status',0)->get();
+		$order_suppliers = DB::table('order_suppliers')
+			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->whereIn('order_no',$order_no)
+			->where('is_delete',0)
+			->where('pay_status',0)
+			->where('status',0)
+			->get();
 
 		$data = $this->getOrderList($order_no,$order_suppliers);
 
@@ -231,10 +246,17 @@ class OrderModel extends Model{
 	 * param $user_id  string  用户ID
 	 * param $offset   string  分页开始位置
 	 * param $length   string  分页显示长度
+	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
 	 */
 	public function getOrderListByWaiting($user_id,$offset, $length){
 
-		$orders = DB::table('order')->where('user_id',$user_id)->where('pay_status',2)->where('is_delete',0)->skip($offset)->take($length)->get();
+		$orders = DB::table('order')
+			->where('user_id',$user_id)
+			->where('pay_status',2)
+			->where('is_delete',0)
+			->skip($offset)
+			->take($length)
+			->get();
 
 		if(empty($orders)){
 			return false;
@@ -246,7 +268,13 @@ class OrderModel extends Model{
 		}
 
 		//子订单
-		$order_suppliers = DB::table('order_suppliers')->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')->whereIn('order_no',$order_no)->where('is_delete',0)->where('pay_status',2)->where('status',0)->get();
+		$order_suppliers = DB::table('order_suppliers')
+			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->whereIn('order_no',$order_no)
+			->whereIn('status',array(3,4))
+			->where('is_delete',0)
+			->where('pay_status',2)
+			->get();
 
 		$data = $this->getOrderList($order_no,$order_suppliers);
 
@@ -261,10 +289,17 @@ class OrderModel extends Model{
 	 * param $satus    string  订单状态(1=未支付,2=待收货，3=已完成,4=已撤销)
 	 * param $offset   string  分页开始位置
 	 * param $length   string  分页显示长度
+	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
 	 */
 	public function getOrderListByFinish($user_id,$offset, $length){
 
-		$orders = DB::table('order')->where('user_id',$user_id)->where('pay_status',2)->where('is_delete',0)->skip($offset)->take($length)->get();
+		$orders = DB::table('order')
+			->where('user_id',$user_id)
+			->where('pay_status',2)
+			->where('is_delete',0)
+			->skip($offset)
+			->take($length)
+			->get();
 
 		if(empty($orders)){
 			return false;
@@ -276,7 +311,13 @@ class OrderModel extends Model{
 		}
 
 		//子订单
-		$order_suppliers = DB::table('order_suppliers')->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')->whereIn('order_no',$order_no)->where('is_delete',0)->where('pay_status',2)->where('status',5)->get();
+		$order_suppliers = DB::table('order_suppliers')
+			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->whereIn('order_no',$order_no)
+			->where('is_delete',0)
+			->where('pay_status',2)
+			->where('status',5)
+			->get();
 
 		$data = $this->getOrderList($order_no,$order_suppliers);
 
@@ -293,7 +334,13 @@ class OrderModel extends Model{
 	 * param $length   string  分页显示长度
 	 */
 	public function getOrderListByCancel($user_id,$offset, $length){
-		$orders = DB::table('order')->where('user_id',$user_id)->where('status',2)->where('is_delete',0)->skip($offset)->take($length)->get();
+		$orders = DB::table('order')
+			->where('user_id',$user_id)
+			->where('status',2)
+			->where('is_delete',0)
+			->skip($offset)
+			->take($length)
+			->get();
 
 		if(empty($orders)){
 			return false;
@@ -305,7 +352,12 @@ class OrderModel extends Model{
 		}
 
 		//子订单
-		$order_suppliers = DB::table('order_suppliers')->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')->whereIn('order_no',$order_no)->where('is_delete',0)->where('status',2)->get();
+		$order_suppliers = DB::table('order_suppliers')
+			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->whereIn('order_no',$order_no)
+			->where('is_delete',0)
+			->where('status',2)
+			->get();
 
 		$data = $this->getOrderList($order_no,$order_suppliers);
 
@@ -392,7 +444,7 @@ class OrderModel extends Model{
 	 * param    $order_id   string  订单ID
 	 */
 	public function getOrderDetailByOrderId($user_id,$order_no,$son_order_no){
-		$data   = DB::table('order')->select('order_no','name','phone','address','district','pay_type','inv_payee','create_time','finish_time','end_time')->where('user_id',$user_id)->where('order_no',$order_no)->where('is_delete',0)->first();
+		$data   = DB::table('order')->select('order_no','name','phone','address','store_name','district','pay_type','inv_payee','create_time','finish_time','end_time')->where('user_id',$user_id)->where('order_no',$order_no)->where('is_delete',0)->first();
 
 		if(empty($data)){
 			return false;
