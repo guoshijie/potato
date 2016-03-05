@@ -80,10 +80,10 @@ class RegisterController extends ApiController
 		if (  $this->commontMdel->checkUser($tel)) {
 			return $this->response(20206);
 		}
-		$check      = $this->commontMdel->checkVerifyCode( $tel , $code  );
-		if(!$check){
-			return $this->response(20208);
-		}
+//		$check      = $this->commontMdel->checkVerifyCode( $tel , $code  );
+//		if(!$check){
+//			return $this->response(20208);
+//		}
 		$data       = $registerM->addUser($tel, $password );
 		if ($data) {
 			return $this->response(1,'注册成功');
