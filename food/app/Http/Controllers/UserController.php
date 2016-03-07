@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Response;
 use \Api\Server\User as UserServer;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use \Api\Server\AutoId;
 //use \Api\Server\AdvertServer\Banner;
 use \App\Libraries\Curl;
@@ -113,8 +114,9 @@ class UserController extends ApiController
 			}
 
 			// cache 方式存储登录信息
-			Cache::put('user_'.$token, $user_session, 60*24*30*12);
-			Cache::forget('user_'.$userInfo->data->old_token);
+			$prefix = Config::get('cache.token_prefix');
+			Cache::put($prefix.$token, $user_session, 60*24*30*12);
+			Cache::forget($prefix.$userInfo->data->old_token);
 
 			//$this->pr(Session::getId());
 			//记录session_id 作单点登录验证
@@ -299,21 +301,21 @@ class UserController extends ApiController
 	 *
 	 */
 	public function  logout() {
-
-		if( !Request::has('uid') ) {
-
-			return Response::json( $this->response( '10005' ) );
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
 		}
 
-		$userId = Request::get( 'uid' );
-
-		$userM = new UserModel();
 		//clear session
-		$this->clearSession();
-		//记录日志
-		$userM->writeUserLog($userId, 'logout', 'success');
+		Session::flush();
+		// clear Cache
+		$prefix = Config::get('cache.token_prefix');
+		$ss = Cache::forget($prefix.$this->loginUser->token);
 
-		return Response::json( $this->response( 1 ) );
+		//记录日志
+		//$userM = new UserModel();
+		//$userM->writeUserLog($userId, 'logout', 'success');
+
+		return Response::json( $this->response( 1 ,'退出成功') );
 	}
 
 
@@ -352,18 +354,4 @@ class UserController extends ApiController
 		}
 		return preg_match('#^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^17[0,6,7,8]{1}\d{8}$|^18[\d]{9}$#', $mobile) ? true : false;
 	}
-
-
-
-	/**
-	 * 清理session
-	 */
-	public function clearSession() {
-		Session::flush();
-	}
-
-
-
-
-
 }

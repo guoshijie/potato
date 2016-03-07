@@ -15,6 +15,9 @@ return [
 
     'default' => env('CACHE_DRIVER', 'redis'),
 
+	//
+	'token_prefix' => 'user_',
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores

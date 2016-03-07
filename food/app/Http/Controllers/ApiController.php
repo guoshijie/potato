@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;             //输入输出类
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
 
 class ApiController extends Controller
 {
@@ -17,10 +18,11 @@ class ApiController extends Controller
 	protected $loginUser;
 	protected function isLogin(){
 		if(Request::has('token')){
-			$token = 'user_'.Request::get('token');
-			if(Cache::has($token)){
-				$user = (object)Cache::get($token);
+			$userToken = Config::get('cache.token_prefix') . Request::get('token');
+			if(Cache::has($userToken)){
+				$user = (object)Cache::get($userToken);
 				if(isset($user->id)){
+					$user->token = Request::get('token');
 					$this->loginUser = $user;
 					return true;
 				}

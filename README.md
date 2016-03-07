@@ -1,6 +1,12 @@
 [TOC]
 
 #餐饮平台
+## 新服务上线 
+1. 在服务器上添加hosts 127.0.0.1	xxx.server.potato
+2. nginx 配置 server
+3. 重启nginx
+4. 添加.env 配置到 /home/develop/code/bin/dev_config.sh
+5. 进入walle 系统上线
 
 ## 服务及接口
 
