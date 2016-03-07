@@ -52,7 +52,6 @@ class PaymentController extends ApiController
 		}elseif($data == 'success'){
 			return 'success';
 		}else{
-
 			return Response::json($this->response(0));
 		}
 
@@ -61,9 +60,23 @@ class PaymentController extends ApiController
 
 	public function weixinPay(){
 
-		$param    =   Request::all();
+		if(!Request::has('out_trade_no') || !Request::has('goods_name') || !Request::has('total_fee') || !Request::has('payment_type')){
+			return Response::json($this->response(10005));
+		}
+
+
+		if(!$this->isLogin()){
+			return Response::json($this->response(99999));
+		}
+
+		$out_trade_no = Request::get('out_trade_no');
+		$goods_name   = Request::get('goods_name');
+		$total_fee    = Request::get('total_fee');
+		$payment_type = Request::get('payment_type');
+		$user_id      =   $this->loginUser->id;
+
 		header('Content-type: text/html');
-		return $this->paymentServer->weixinPay($param);
+		return $this->paymentServer->weixinPay($out_trade_no,$goods_name,$total_fee,$payment_type,$user_id);
 	}
 
 

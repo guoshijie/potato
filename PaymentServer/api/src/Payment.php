@@ -29,8 +29,8 @@ class Payment extends Api
 	/*
 	 * 微信预订单
 	 */
-	public function weixinPay($param){
-		return $this->postData("/weixin/api",$param);
+	public function weixinPay($out_trade_no,$goods_name,$total_fee,$payment_type,$user_id){
+		return $this->getData("/weixin/api?out_trade_no=".$out_trade_no."&goods_name=".$goods_name."&total_fee=".$total_fee."&payment_type=".$payment_type."&user_id=".$user_id);
 	}
 
 

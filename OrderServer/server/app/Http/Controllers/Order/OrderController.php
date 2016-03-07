@@ -30,24 +30,21 @@ class OrderController extends ApiController
 			return $this->response(10018);
 		}
 
-//		$goods = array(
-//			array(
-//				'goods_id'  =>2,
-//				'goods_num' =>2
-//			),
-////			array(
-////				'goods_id'  =>10,
-////				'goods_num' =>2
-////			),
-////			array(
-////				'goods_id'  =>148,
-////				'goods_num' =>1
-////			),
-////			array(
-////				'goods_id'  =>150,
-////				'goods_num' =>2
-////			)
-//		);
+	/*
+	 *  [token] => fNZiHnRWCoT482knZtLb6DqWiIZFlzQYgmfi8hiZ
+	    [goods] => [{"goods_id":"2","goods_num":"10"},{"goods_id":"3","goods_num":"10"},{"goods_id":"4","goods_num":"10"},{"goods_id":"17","goods_num":"10"}]
+	    [inv_payee] => 无
+	    [inv_content] =>
+	    [total_price] => 214400.0
+	    [deviceId] => D92716E7C26F65D7922D2826EE9BA546
+	    [platform] => Android
+	    [phoneCompany] => Lenovo
+	    [phoneModel] => Lenovo K50-t5
+	    [osVersion] => 5.0
+	    [channel] => AnZhi
+	    [version] => 1.0
+	    [netType] => WIFI
+	 */
 
 		//二维数组，存商品ID和商品数量
 		if(!$request->has('goods') ){

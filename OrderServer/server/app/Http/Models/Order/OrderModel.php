@@ -32,7 +32,7 @@ class OrderModel extends Model{
 
 			$goods_ids = array();
 			foreach($goods as $goods_list){
-				$goods_ids[]    =   $goods_list['goods_id'];
+				$goods_ids[]    =   $goods_list->goods_id;
 			}
 
 			if(empty($goods_ids)){
@@ -65,14 +65,14 @@ class OrderModel extends Model{
 		$tatol_price = '';
 		foreach($goods_info as $goods_value){
 			foreach($goods as $input_goods){
-				if($goods_value->id == $input_goods['goods_id']){
+				if($goods_value->id == $input_goods->goods_id){
 
 					//suppliers
 					$suppliers_ids[] = $goods_value->suppliers_id;
 					//tatol_price
-					$tatol_price += $goods_value->shop_price * $input_goods['goods_num'];
+					$tatol_price += $goods_value->shop_price * $input_goods->goods_num;
 					//stock
-					if($goods_value->goods_num < $input_goods['goods_num']){
+					if($goods_value->goods_num < $input_goods->goods_num){
 						return '-6';
 					}
 				}
@@ -129,16 +129,16 @@ class OrderModel extends Model{
 		$data_info = array();
 		foreach($goods_info as $goods_value){
 			foreach($goods as $input_goods){
-				if($goods_value->id == $input_goods['goods_id']){
+				if($goods_value->id == $input_goods->goods_id){
 					//debug($order_no);
 					$data_info[]=array(
 						'order_no'      =>  $order_no,
 						'goods_id'      =>  $goods_value->id,
 						'goods_name'    =>  $goods_value->goods_name,
 						'goods_pic'     =>  $goods_value->goods_img,
-						'goods_num'     =>  $input_goods['goods_num'],
+						'goods_num'     =>  $input_goods->goods_num,
 						'price'         =>  $goods_value->shop_price,
-						'price_total'   =>  $goods_value->shop_price * $input_goods['goods_num'],
+						'price_total'   =>  $goods_value->shop_price * $input_goods->goods_num,
 						'suppliers_id'  =>  $goods_value->suppliers_id,
 						'category_id'   =>  $goods_value->sh_category_id,
 						'specs'         =>  $goods_value->specs,
@@ -168,8 +168,8 @@ class OrderModel extends Model{
 		$sql_2 = '';
 		$goods_id = array();
 		foreach($goods as $goods_value ){
-			$goods_id[]=$goods_value['goods_id'];
-			$sql_2 .= 'when goods_id='.$goods_value['goods_id'].' then '. '1 ';
+			$goods_id[]=$goods_value->goods_id;
+			$sql_2 .= 'when goods_id='.$goods_value->goods_id.' then '. '1 ';
 		}
 		$keyInfos       = implode( ',', $goods_id ) ;
 		$sql_3 = 'else is_delete end) where goods_id IN ('.$keyInfos.')';
@@ -184,9 +184,9 @@ class OrderModel extends Model{
 		$sql_two = '';
 		foreach($goods_info as $goods_value){
 			foreach($goods as $goods_val ){
-				if($goods_value->id == $goods_val['goods_id']){
-					$num = $goods_value->goods_num - $goods_val['goods_num'];
-					$sql_two .= 'when id='.$goods_val['goods_id'].' then '.$num.' ';
+				if($goods_value->id == $goods_val->goods_id){
+					$num = $goods_value->goods_num - $goods_val->goods_num;
+					$sql_two .= 'when id='.$goods_val->goods_id.' then '.$num.' ';
 				}
 			}
 		}
