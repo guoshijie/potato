@@ -81,4 +81,11 @@ Route::group( array('prefix' => $version),function() {
 	Route::any('/cart/num','OrderController@getCartNum');   //购物车数量
 
 	Route::any('/order/num','OrderController@getOrderNum');   //订单数量
+
+	Route::any('/alipay','PaymentController@alipay');   //支付宝回调通知
+
+	Route::any('/weixin/pay','PaymentController@weixinPay');   //微信预支付
+
+	Route::any('/weixin','PaymentController@weixin');   //微信回调通知
+
 });

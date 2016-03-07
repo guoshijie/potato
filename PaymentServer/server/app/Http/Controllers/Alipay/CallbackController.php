@@ -93,6 +93,8 @@ class CallbackController extends  ApiController {
 						];
 						$this->_model->update($trade_no, $param);
 					}
+
+					$flag = true;
 				}
 			}
 
@@ -110,12 +112,14 @@ class CallbackController extends  ApiController {
 				Log::error(var_export($e, true), array(__CLASS__));
 			}
 
-			return 'success';
+			//return 'success';
+			return $this->response(1);
 		}
 		else
 		{
 			//验证失败
-			return "fail";
+			//return "fail";
+			return $this->response(0);
 
 			//调试用，写文本函数记录程序运行情况是否正常
 			//logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");

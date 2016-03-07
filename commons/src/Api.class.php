@@ -52,7 +52,6 @@ class Api
         }
 
         $json = $this->str2json($out);
-
         if ( !isset($json->code)) {
             $error = 'error:'.$this->pathSuffix .' data  not find json[code]';
             //throw new \Exception($error);

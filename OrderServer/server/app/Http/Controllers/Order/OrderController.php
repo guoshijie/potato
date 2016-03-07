@@ -60,7 +60,7 @@ class OrderController extends ApiController
 		}
 
 		$user_id    = $request->get('user_id');
-		$goods      = $request->get('goods');
+		$goods      = json_decode($request->get('goods'));
 
 		//debug($goods);
 		if(!is_array($goods)){

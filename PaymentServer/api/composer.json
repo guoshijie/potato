@@ -1,6 +1,6 @@
 {
-    "name": "shinc/auto-id-api",
-    "description": "Auto ID API",
+    "name": "shinc/payment-id-api",
+    "description": "Payment Server API",
     "type": "library",
     "version": "1.0",
     "repositories": {

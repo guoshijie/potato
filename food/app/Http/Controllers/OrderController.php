@@ -80,6 +80,7 @@ class OrderController extends ApiController
 	 */
 	public function orderConfirm(){
 
+		Log::info(print_r(Request::all(),1));
 		if(!Request::has('inv_payee') || !Request::has('goods')){
 			return Response::json($this->response(10005));
 		}

@@ -26,7 +26,16 @@ $app->get('/', function () use ($app) {
  * Callback
  */
 
-$app->get('/alipay/callback',"Alipay\CallbackController@getTest");   //添加商品到购物车
+$app->post('/alipay/callback',"Alipay\CallbackController@callback");   //添加商品到购物车
 
 
+$app->post('/weixin/api',"Weixinpay\WeixinApiController@wxPay");
 
+$app->post('/weixin/callback',"Weixinpay\WeixinApiController@callback");
+
+$app->get('/alipay/callback',"Alipay\CallbackController@callback");   //添加商品到购物车
+
+
+$app->get('/weixin/api',"Weixinpay\WeixinApiController@wxPay");
+
+$app->get('/weixin/callback',"Weixinpay\WeixinApiController@callback");

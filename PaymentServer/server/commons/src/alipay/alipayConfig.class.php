@@ -23,7 +23,7 @@ class alipayConfig{
 //合作身份者id，以2088开头的16位纯数字
 		 public function config(){
 			//合作身份者id，以2088开头的16位纯数字
-			$alipay_config['partner']		= ALIPAY_PARTNER;
+			$alipay_config['partner']		= '2088121060752556';
 
 			//商户的私钥（后缀是.pen）文件相对路径
 			$alipay_config['private_key_path']	= dirname(__FILE__).'/key/rsa_private_key.pem';
