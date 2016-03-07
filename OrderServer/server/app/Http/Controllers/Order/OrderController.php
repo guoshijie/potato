@@ -68,7 +68,7 @@ class OrderController extends ApiController
 		$data = $this->_model->orderConfirmByUser($user_id,$goods,$inv_payee);
 
 		if($data == -1){
-			return $this->response(40005);
+			return $this->response(40006);
 		}elseif($data == -2){
 			return $this->response(10023);
 		}elseif($data == -3){
