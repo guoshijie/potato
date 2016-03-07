@@ -55,9 +55,6 @@ class OrderController extends ApiController
 		}
 
 
-		if(!$request->has('inv_payee') ){
-			return $this->response(40005);
-		}
 
 		$user_id    = $request->get('user_id');
 		$goods      = json_decode($request->get('goods'));
@@ -67,7 +64,7 @@ class OrderController extends ApiController
 			return $this->response(10023);
 		}
 
-		$inv_payee  = $request->get('inv_payee');
+		$inv_payee  = $request->has('inv_payee') ? $request->get('inv_payee') : '';
 		$data = $this->_model->orderConfirmByUser($user_id,$goods,$inv_payee);
 
 		if($data == -1){
