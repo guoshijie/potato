@@ -25,7 +25,8 @@
             "../AdvertServer/api",
             "../UserServer/api",
             "../GoodsServer/api",
-			"../OrderServer/api"
+			"../OrderServer/api",
+            "../PaymentServer/api"
         ],
         "psr-4": {
             "App\\": "app/"
