@@ -256,13 +256,8 @@ class OrderController extends ApiController
 			return $this->response(10018);
 		}
 
-		if(!$request->has('type')){
-			return $this->response(10005);
-		}
-
 		$user_id  = $request->get('user_id');
-		$type     = $request->get('type');
-		$data     = $this->_model->getOrderNumByUserId($user_id,$type);
+		$data     = $this->_model->getOrderNumByUserId($user_id);
 
 		if($data){
 			return $this->response(1,'成功',$data);

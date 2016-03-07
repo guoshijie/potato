@@ -239,20 +239,13 @@ class OrderController extends ApiController
 	 * 订单数量
 	 */
 	public function getOrderNum(){
-		if(!Request::has('type')){
-			return Response::json($this->response(10005));
-		}
-
 		if(!$this->isLogin()){
 			return Response::json($this->response(99999));
 		}
 
 		$user_id    =   $this->loginUser->id;
-		$type       = Request::get('type');
-
-		return $this->orderServer->getOrderNum($user_id,$type);
+		return $this->orderServer->getOrderNum($user_id);
 	}
-
 
 
 }
