@@ -336,4 +336,17 @@ class CartModel extends Model{
 	public function clear($user_id){
 		return DB::table('cart')->where('user_id', $user_id)->delete();
 	}
+
+	/*
+	 * 删除购物车内容
+	 */
+	public function del($userIds, $goodsIds){
+		if(!is_array($userIds) || !is_array($goodsIds)){
+			return false;
+		}
+		return DB::table('cart')->whereIn('user_id', $userIds)->whereIn('goods_id', $goodsIds)->delete();
+	}
+
+
+
 }

@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Order;    //定义命名空间
 use  App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
 use App\Http\Models\Order\OrderModel;
+use App\Http\Models\Cart\CartModel;
 
 /**
  * Class OrderController
@@ -26,10 +27,6 @@ class OrderController extends ApiController
 	 * param $inv_payee string  发票抬头
 	 */
 	public function orderConfirm(Request $request){
-		if(!$request->has('user_id') ){
-			return $this->response(10018);
-		}
-
 	/*
 	 *  [token] => fNZiHnRWCoT482knZtLb6DqWiIZFlzQYgmfi8hiZ
 	    [goods] => [{"goods_id":"2","goods_num":"10"},{"goods_id":"3","goods_num":"10"},{"goods_id":"4","goods_num":"10"},{"goods_id":"17","goods_num":"10"}]
@@ -46,12 +43,14 @@ class OrderController extends ApiController
 	    [netType] => WIFI
 	 */
 
+		if(!$request->has('user_id') ){
+			return $this->response(10018);
+		}
+
 		//二维数组，存商品ID和商品数量
 		if(!$request->has('goods') ){
 			return $this->response(40004);
 		}
-
-
 
 		$user_id    = $request->get('user_id');
 		$goods      = json_decode($request->get('goods'));
@@ -77,6 +76,13 @@ class OrderController extends ApiController
 		}elseif($data == -6){
 			return $this->response(40001);
 		}else{
+			// 清理购物车
+			foreach($goods as $v){
+				$goodsIds[] = $v->goods_id;
+			}
+			$cartM = new CartModel();
+			$cartM->del(array($user_id), $goodsIds);
+
 			return $this->response(1,'成功',$data);
 		}
 
