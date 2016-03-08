@@ -104,6 +104,11 @@ class OrderController extends ApiController
 		$inv_payee  = Request::get('inv_payee');
 		$goods      = Request::get('goods');
 		if(is_array($goods)){
+			if(is_array($goods[0])){
+				foreach($goods as &$v){
+					$v = (object)$v;
+				}
+			}
 			$goods = json_encode($goods);
 		}
 		Log::info(print_r($goods,1));
