@@ -332,4 +332,8 @@ class CartModel extends Model{
 	public function suppliers($suppliers_ids){
 		return DB::table('suppliers')->whereIn('id',$suppliers_ids)->where('status',0)->select('id','suppliers_name')->get();
 	}
+
+	public function clear($user_id){
+		return DB::table('cart')->where('user_id', $user_id)->delete();
+	}
 }

@@ -26,13 +26,14 @@ $app->get('/', function () use ($app) {
  * cart
  */
 
-$app->get('/order/cart/add-cart',"Cart\CartController@addCart");   //添加商品到购物车
-$app->post('/order/cart/add-cart',"Cart\CartController@addCart");   //添加商品到购物车
+$app->get('/cart/add',"Cart\CartController@addCart");   //添加商品到购物车
+$app->post('/cart/add',"Cart\CartController@addCart");   //添加商品到购物车
 
+$app->get('/cart/list',"Cart\CartController@getCartList");   //查看购物车列表
 
-$app->get('/order/cart/get-cart-list',"Cart\CartController@getCartList");   //查看购物车列表
+$app->get('/cart/num',"Cart\CartController@getCartNum");   //获取购物车数量
 
-$app->get('/order/cart/get-cart-count',"Cart\CartController@getCartNum");   //获取购物车数量
+$app->get('/cart/clear',"Cart\CartController@clear");   //添加商品到购物车
 
 
 /*

@@ -17,6 +17,7 @@ return array(
     'AndroidUnicast' => $baseDir . '/../commons/src/notification/android/AndroidUnicast.php',
     'Api\\Server\\AdvertServer\\Banner' => $baseDir . '/../AdvertServer/api/src/Banner.php',
     'Api\\Server\\AutoId' => $baseDir . '/../AutoID/api/src/AutoId.php',
+    'Api\\Server\\Cart' => $baseDir . '/../OrderServer/api/src/Cart.php',
     'Api\\Server\\Goods' => $baseDir . '/../GoodsServer/api/src/Goods.php',
     'Api\\Server\\Order' => $baseDir . '/../OrderServer/api/src/Order.php',
     'Api\\Server\\Payment' => $baseDir . '/../PaymentServer/api/src/Payment.php',

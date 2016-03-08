@@ -123,6 +123,27 @@ class CartController extends ApiController
 		}
 	}
 
+	/*
+	 * 清空购物车
+	 */
+	public function clear(Request $request){
+		$messages = $this->vd([
+				'user_id' => 'required',
+			], $request);
+
+		if($messages!=''){
+			return $this->response(10005, $messages);
+		}
+
+		$cartM = new CartModel();
+		$user_id    = $request->get('user_id');
+		$rs = $cartM->clear($user_id);
+		if($rs){
+			return $this->response('1','清空成功');
+		}else{
+			return $this->response(0, '清空失败');
+		}
+	}
 
 
 	//分页

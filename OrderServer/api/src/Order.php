@@ -16,26 +16,6 @@ class Order extends Api
 		parent::__construct(self::HOST);
 	}
 
-
-	/*
-	 * 添加商品到购物车
-	 */
-	public function addCart($user_id,$goods){
-		$data['user_id'] = $user_id;
-		$data['goods'] = $goods;
-		return $this->postData("/order/cart/add-cart", $data);
-		//return $this->getData("/order/cart/add-cart?user_id=" . $user_id."&goods=".$goods);
-	}
-
-
-	/*
-	 * 查看购物车列表
-	 */
-	public function getCartList($user_id){
-		return $this->getData("/order/cart/get-cart-list?user_id=" . $user_id);
-	}
-
-
 	/*
 	 * 提交订单
 	 */
@@ -78,7 +58,6 @@ class Order extends Api
 
 
 
-
 	/*
 	 * 确认收货
 	 */
@@ -93,14 +72,6 @@ class Order extends Api
 	 */
 	public function getSuppliers($user_id,$suppliers_id){
 		return $this->getData("/order/order/suppliers?user_id=" . $user_id."&suppliers_id=".$suppliers_id);
-	}
-
-
-	/*
-	 * 购物车数量
-	 */
-	public function getCartNum($user_id){
-		return $this->getData("/order/cart/get-cart-count?user_id=" . $user_id);
 	}
 
 

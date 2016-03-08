@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
 use \Api\Server\Order as OrderServer;
+use \Api\Server\Cart as CartServer;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Log;
 class OrderController extends ApiController
@@ -14,6 +15,7 @@ class OrderController extends ApiController
 	public function __construct()
 	{
 		$this->orderServer = new OrderServer();
+		$this->CartServer = new CartServer();
 	}
 
 
@@ -56,7 +58,16 @@ class OrderController extends ApiController
 		//$goods      =  json_decode(Request::get('goods'));
 		$goods	= Request::get('goods');
 
-		return $this->orderServer->addCart($user_id,$goods);
+		return $this->CartServer->addCart($user_id,$goods);
+	}
+
+	/*
+	 * 清空购物车
+	 */
+	public function clearCart(){
+		if(!$this->isLogin()) return Response::json($this->response(99999));
+
+		return $this->CartServer->clear($this->loginUser->id);
 	}
 
 
@@ -71,7 +82,7 @@ class OrderController extends ApiController
 
 		$user_id    =   $this->loginUser->id;
 
-		return $this->orderServer->getCartList($user_id);
+		return $this->CartServer->getCartList($user_id);
 	}
 
 
@@ -231,7 +242,7 @@ class OrderController extends ApiController
 
 		$user_id    =   $this->loginUser->id;
 
-		return $this->orderServer->getCartNum($user_id);
+		return $this->CartServer->getCartNum($user_id);
 	}
 
 
