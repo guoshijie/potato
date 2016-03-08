@@ -103,6 +103,10 @@ class OrderController extends ApiController
 		$user_id    =   $this->loginUser->id;
 		$inv_payee  = Request::get('inv_payee');
 		$goods      = Request::get('goods');
+		if(is_array($goods)){
+			$goods = json_encode($goods);
+		}
+		Log::info(print_r($goods,1));
 
 		return $this->orderServer->orderConfirm($user_id,$inv_payee,$goods);
 	}
