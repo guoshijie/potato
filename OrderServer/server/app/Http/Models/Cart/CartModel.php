@@ -272,6 +272,9 @@ class CartModel extends Model{
 		$supplly = array();
 		foreach($supplier_list as $v){
 			$v->goods_list = $suppliers[$v->id];
+			foreach($v->goods_list as $vvg){
+				$vvg->suppliers_name = $suppliers[$v->id]['suppliers_name'];
+			}
 			$supplly['suppliers'][] = $v;
 		}
 
