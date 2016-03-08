@@ -14,6 +14,8 @@ class OrderController extends ApiController
 
 	public function __construct()
 	{
+		parent::__construct();
+
 		$this->orderServer = new OrderServer();
 		$this->CartServer = new CartServer();
 	}
@@ -79,7 +81,7 @@ class OrderController extends ApiController
 
 		$user_id    =   $this->loginUser->id;
 
-		return $this->CartServer->getCartList($user_id);
+		return $this->CartServer->getCartList(Request::all(), $user_id);
 	}
 
 
@@ -87,7 +89,6 @@ class OrderController extends ApiController
 	 * 提交订单
 	 */
 	public function orderConfirm(){
-
 		Log::info(print_r(Request::all(),1));
 		if(!Request::has('inv_payee') || !Request::has('goods')){
 			return Response::json($this->response(10005));
@@ -97,17 +98,16 @@ class OrderController extends ApiController
 			return Response::json($this->response(99999));
 		}
 
-		$user_id    =   $this->loginUser->id;
-		$inv_payee  = Request::get('inv_payee');
-		$goods      = Request::get('goods');
-		if(is_array($goods)){
-			if(is_array($goods[0])){
-				foreach($goods as &$v){
-					$v = (object)$v;
-				}
-			}
-			$goods = json_encode($goods);
+		// 兼容特殊情况
+		if(Request::isJson()) {
+			$goods = json_encode(Request::json('goods'));
+			$inv_payee  = Request:json:('inv_payee');
+		}else{
+			$inv_payee  = Request::get('inv_payee');
+			$goods      = Request::get('goods');
 		}
+
+		$user_id    = $this->loginUser->id;
 		Log::info(print_r($goods,1));
 
 		return $this->orderServer->orderConfirm($user_id,$inv_payee,$goods);

@@ -12,17 +12,22 @@ class ApiController extends Controller
 {
 
 	public function __construct( ){
-
 	}
 
 	protected $loginUser;
 	protected function isLogin(){
-		if(Request::has('token')){
-			$userToken = Config::get('cache.token_prefix') . Request::get('token');
+		if(Request::isJson()) {  // 兼容特殊情况
+			$token = Request::json('token');
+		} elseif(Request::has('token')) {
+			$token = Request::get('token');
+		}
+
+		if(isset($token)){
+			$userToken = Config::get('cache.token_prefix') . $token;
 			if(Cache::has($userToken)){
 				$user = (object)Cache::get($userToken);
 				if(isset($user->id)){
-					$user->token = Request::get('token');
+					$user->token = $token;
 					$this->loginUser = $user;
 					return true;
 				}

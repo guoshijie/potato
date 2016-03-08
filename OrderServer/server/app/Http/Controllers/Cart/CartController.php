@@ -29,38 +29,14 @@ class CartController extends ApiController
 			return $this->response(10005);
 		}
 
-//		$goods = array(
-//			array(
-//				'goods_id'  =>14,
-//				'goods_num' =>2
-//			),
-//			array(
-//				'goods_id'  =>131,
-//				'goods_num' =>2
-//			),
-//			array(
-//				'goods_id'  =>148,
-//				'goods_num' =>1
-//			),
-////			array(
-////				'goods_id'  =>150,
-////				'goods_num' =>2
-////			)
-//		);
-
-
-
 		$user_id    = $request->get('user_id');
 		$goods      = json_decode($request->get('goods'));
 
-		//debug($goods);
 		if(!is_array($goods) || empty($goods)){
 			return $this->response(10023);
 		}
 
-
 		return json_encode($this->_model->addGoodsToCarts($user_id,$goods));
-
 	}
 
 
@@ -94,8 +70,9 @@ class CartController extends ApiController
 		}
 
 		$user_id    = $request->get('user_id');
+		$is_select = $request->has('is_select') ? $request->get('is_select') : null;
 
-		$data =  $this->_model->getCartListByUserId($user_id);
+		$data =  $this->_model->getCartListByUserId($user_id, $is_select);
 		if($data!==false){
 			return $this->response('1','获取成功',$data);
 		}else{

@@ -190,9 +190,7 @@ class UserController extends ApiController
 			//'code' => 'required',
 		]);
 
-		if($messages!=''){
-			return Response::json($this->response(10005, $messages));
-		}
+		if($messages!='') return Response::json($this->response(10005, $messages)); 
 
 		if(!$this->isLogin()){
 			return Response::json($this->response(99999));

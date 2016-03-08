@@ -71,9 +71,7 @@ class CartModel extends Model{
 	 *
 	 */
 	public function addGoodsToCarts($user_id,$goods){
-
 		try{
-
 			$infput_goods_ids = array();
 			foreach($goods as $vg){
 				$infput_goods_ids[] = $vg->goods_id;
@@ -104,19 +102,17 @@ class CartModel extends Model{
 			}
 		}
 
-
 		//限制购物车数量
 		$limit_cart = DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->count();
 		if($limit_cart > 30){
 			return array('code'=>40003,'msg'=>'购物车已满30笔，请先删除多余订单','data'=>$limit_cart);
 		}
 
+/*
 		$look_cart = DB::table('cart')->where('user_id',$user_id)->whereIn('goods_id',$infput_goods_ids)->where('is_delete',0)->get();
-
 		//debug($look_cart);
 		if(!empty($look_cart)){
 			//相同累加
-
 			$sql_one ='update sh_cart set goods_num = (case ';
 			$sql_two = '';
 			$lc_goods_ids = array();
@@ -163,24 +159,22 @@ class CartModel extends Model{
 			}
 
 		}else{
-			//直接压入
+ */
+			//	删除旧的
+			DB::table('cart')->where('user_id', $user_id)->delete();
+
+			//写入新的
 			foreach($goods as $vg){
-				$data = array(
+				$data[] = array(
 					'user_id'   => $user_id,
 					'goods_id'  => $vg->goods_id,
-					'goods_num' => $vg->goods_num
+					'goods_num' => $vg->goods_num,
+					'is_select' => $vg->is_select
 				);
-				$carts = DB::table('cart')->insertGetId($data);
 			}
+			DB::table('cart')->insert($data);
 
-		}
-
-
-		if($carts){
 			return array('code'=>1,'msg'=>'添加成功');
-		}else{
-			return array('code'=>0,'msg'=>'添加失败');
-		}
 
 	}
 
@@ -188,9 +182,12 @@ class CartModel extends Model{
 	/*
 	 * 获取购物车列表
 	 */
-	public function getCartListByUserId($user_id){
-
-		$carts = DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->get();
+	public function getCartListByUserId($user_id, $is_select){
+		if($is_select!==null){
+			$carts = DB::table('cart')->where('user_id',$user_id)->where('is_select', $is_select)->where('is_delete',0)->get();
+		}else{
+			$carts = DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->get();
+		}
 		//pr($carts);
 		if(empty($carts)){
 			return array();
@@ -288,6 +285,14 @@ class CartModel extends Model{
 	 */
 	public function getCartNumByUserId($user_id){
 		return DB::table('cart')->select('user_id',$user_id)->where('is_delete',0)->count();
+	}
+
+	/*
+	 * 获取购物车数量和总价
+	 */
+	public function getCartSum($user_id){
+		$num = DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->count();
+	//	return DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->sum('');
 	}
 
 	/*

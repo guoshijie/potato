@@ -31,8 +31,9 @@ class Cart extends Api
 	/*
 	 * 查看购物车列表
 	 */
-	public function getCartList($user_id){
-		return $this->getData("/cart/list?user_id=" . $user_id);
+	public function getCartList($params, $user_id){
+		$is_select = isset($params['is_select']) ? '&is_select'=$params['is_select'] : '';
+		return $this->getData("/cart/list?user_id=" . $user_id.$is_select);
 	}
 
 	/*
@@ -44,5 +45,11 @@ class Cart extends Api
 
 	public function clear($user_id){
 		return $this->getData("/cart/clear?user_id=" . $user_id);
+	}
+
+	public function preOrder($user_id,$goods){
+		$data['user_id'] = $user_id;
+		$data['goods'] = $goods;
+		return $this->postData("/cart/pre-order", $data);
 	}
 }
