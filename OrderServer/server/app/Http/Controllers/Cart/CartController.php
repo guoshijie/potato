@@ -96,7 +96,7 @@ class CartController extends ApiController
 		$user_id    = $request->get('user_id');
 
 		$data =  $this->_model->getCartListByUserId($user_id);
-		if($data){
+		if($data!==false){
 			return $this->response('1','获取成功',$data);
 		}else{
 			return $this->response(0);

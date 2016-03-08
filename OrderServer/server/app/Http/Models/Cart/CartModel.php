@@ -193,7 +193,7 @@ class CartModel extends Model{
 		$carts = DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->get();
 		//pr($carts);
 		if(empty($carts)){
-			return false;
+			return array();
 		}
 
 		//debug($carts);
@@ -273,7 +273,7 @@ class CartModel extends Model{
 		foreach($supplier_list as $v){
 			$v->goods_list = $suppliers[$v->id];
 			foreach($v->goods_list as $vvg){
-				$vvg->suppliers_name = $suppliers[$v->id]['suppliers_name'];
+				$vvg->suppliers_name = $v->suppliers_name;
 			}
 			$supplly['suppliers'][] = $v;
 		}

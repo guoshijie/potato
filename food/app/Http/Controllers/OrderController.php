@@ -75,10 +75,7 @@ class OrderController extends ApiController
 	 * 查看购物车列表
 	 */
 	public function getCartList(){
-
-		if(!$this->isLogin()){
-			return Response::json($this->response(99999));
-		}
+		if(!$this->isLogin()) return Response::json($this->response(99999));
 
 		$user_id    =   $this->loginUser->id;
 
