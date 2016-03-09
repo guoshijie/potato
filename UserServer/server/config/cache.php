@@ -13,10 +13,7 @@ return [
     |
     */
 
-    'default' => 'redis',
-
-	//
-	'token_prefix' => 'user_',
+    'default' => 'file',
 
     /*
     |--------------------------------------------------------------------------
@@ -31,17 +28,13 @@ return [
 
     'stores' => [
 
-        'apc' => [
-            'driver' => 'apc',
-        ],
-
         'array' => [
             'driver' => 'array',
         ],
 
         'database' => [
             'driver' => 'database',
-            'table'  => 'cache',
+            'table'  => env('CACHE_DATABASE_TABLE', 'cache'),
             'connection' => null,
         ],
 
@@ -54,7 +47,7 @@ return [
             'driver'  => 'memcached',
             'servers' => [
                 [
-                    'host' => '127.0.0.1', 'port' => 11211, 'weight' => 100,
+                    'host' => env('MEMCACHED_HOST', '127.0.0.1'), 'port' => env('MEMCACHED_PORT', 11211), 'weight' => 100,
                 ],
             ],
         ],

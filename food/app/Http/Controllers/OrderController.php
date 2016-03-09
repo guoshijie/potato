@@ -101,7 +101,7 @@ class OrderController extends ApiController
 		// 兼容特殊情况
 		if(Request::isJson()) {
 			$goods = json_encode(Request::json('goods'));
-			$inv_payee  = Request:json:('inv_payee');
+			$inv_payee  = Request::json('inv_payee');
 		}else{
 			$inv_payee  = Request::get('inv_payee');
 			$goods      = Request::get('goods');
