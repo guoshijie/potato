@@ -25,42 +25,23 @@ class OrderController extends ApiController
 	 * 添加商品到购物车
 	 */
 	public function addCart(){
-		//$user_id = 5;
-		//$goods = '[{"goods_id":"2","goods_num":"6"},{"goods_id":"3","goods_num":"3"}]';
-		//return $this->orderServer->addCart($user_id,$goods);
+		if(!$this->isLogin()){ return Response::json($this->response(99999)); }
 
 		Log::info(print_r(Request::all(),1));
-		if(!Request::has('goods')){
-			return Response::json($this->response(10005));
+		$messages = $this->vd([
+			'inv_payee' => 'required',
+			'goods' => 'required',
+		]);
+		if($messages!='') return Response::json($this->response(10005, $messages)); 
+
+		// 兼容特殊情况
+		if(Request::isJson()) {
+			$goods = json_encode(Request::json('goods'));
+		}else{
+			$goods	= Request::get('goods');
 		}
 
-		if(!$this->isLogin()){
-			return Response::json($this->response(99999));
-		}
-
-		/*
-		 * [2016-03-04 09:46:53] local.INFO: Array
-			(
-			    [goods] => [{"goods_id":"2","goods_num":"6"},{"goods_id":"3","goods_num":"3"}]
-			    [token] =>
-			    [deviceId] => D92716E7C26F65D7922D2826EE9BA546
-			    [platform] => Android
-			    [phoneCompany] => Lenovo
-			    [phoneModel] => Lenovo K50-t5
-			    [osVersion] => 5.0
-			    [channel] => AnZhi
-			    [version] => 1.0
-			    [netType] => WIFI
-			)
-		 *
-		 */
-
-
-		$user_id    =   $this->loginUser->id;
-		//$goods      =  json_decode(Request::get('goods'));
-		$goods	= Request::get('goods');
-
-		return $this->CartServer->addCart($user_id,$goods);
+		return $this->CartServer->addCart($this->loginUser->id, $goods);
 	}
 
 	/*
@@ -90,9 +71,12 @@ class OrderController extends ApiController
 	 */
 	public function orderConfirm(){
 		Log::info(print_r(Request::all(),1));
-		if(!Request::has('inv_payee') || !Request::has('goods')){
-			return Response::json($this->response(10005));
-		}
+		
+		$messages = $this->vd([
+			'inv_payee' => 'required',
+			'goods' => 'required',
+		]);
+		if($messages!='') return Response::json($this->response(10005, $messages)); 
 
 		if(!$this->isLogin()){
 			return Response::json($this->response(99999));

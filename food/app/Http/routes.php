@@ -60,9 +60,9 @@ Route::group( array('prefix' => $version),function() {
 	Route::any('/goods/detail','GoodsController@detail');   //http://food.laraver.com/goods/detail?goods_id=146
 
 
-	Route::any('/order/add','OrderController@addCart');  //添加购物车
+	Route::any('/cart/add','OrderController@addCart');  //添加购物车
 
-	Route::any('/order/cart','OrderController@getCartList');    //购物车列表
+	Route::any('/cart','OrderController@getCartList');    //购物车列表
 
 	Route::any('/order/confirm','OrderController@orderConfirm');    //提交订单
 

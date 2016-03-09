@@ -35,28 +35,25 @@ class Api
 		if ($this->curl->http_code == 404) {
 			$error = "error [404]: can't connect server ". $this->pathSuffix.$uri;
             //throw new \Exception($error);
-		}
-
-		if ($this->curl->http_code == 500) {
+		}elseif ($this->curl->http_code == 500) {
             $error = "error [500]: server 内部错误  ". $this->pathSuffix.$uri;
             //throw new \Exception($error);
-		}
-
-        if ($this->curl->http_code != 200) {
+			
+		}elseif ($this->curl->http_code != 200) {
             $error = "error {$this->curl->http_code}: ". $this->pathSuffix.$uri;
             //throw new \Exception($error);
-        }
-        if(is_null(json_decode($out))){
-            $error = 'error: '.$this->pathSuffix .' data is not json';
+        }elseif(is_null(json_decode($out))){
+			$error = 'error: '.$this->pathSuffix .' data is not json';
+			$error .= "\n<br/>is: $out";
             //throw new \Exception($error);
-        }
-
-        $json = $this->str2json($out);
-        if ( !isset($json->code)) {
-            $error = 'error:'.$this->pathSuffix .' data  not find json[code]';
-            //throw new \Exception($error);
-
-        }
+        }else{
+			$json = $this->str2json($out);
+			if ( !isset($json->code)) {
+				$error = 'error:'.$this->pathSuffix .' data  not find json[code]';
+				$error .= "\n<br/>is:".print_r($json,1);
+				//throw new \Exception($error);
+			}
+		}
 
 		if(isset($error) && env('APP_DEBUG')){
 			die($out);

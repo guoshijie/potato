@@ -70,7 +70,7 @@ class OrderController extends ApiController
 		}elseif($data == -3){
 			return $this->response(20001);
 		}elseif($data == -4){
-			return $this->response(10006);
+			return $this->response(10006, '购物车内该用户的商品不存在');
 		}elseif($data == -5){
 			return $this->response(10003);
 		}elseif($data == -6){

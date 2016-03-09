@@ -32,7 +32,7 @@ class Cart extends Api
 	 * 查看购物车列表
 	 */
 	public function getCartList($params, $user_id){
-		$is_select = isset($params['is_select']) ? '&is_select'=$params['is_select'] : '';
+		$is_select = isset($params['is_select']) ? '&is_select='.$params['is_select'] : '';
 		return $this->getData("/cart/list?user_id=" . $user_id.$is_select);
 	}
 
