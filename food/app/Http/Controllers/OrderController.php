@@ -29,7 +29,6 @@ class OrderController extends ApiController
 
 		Log::info(print_r(Request::all(),1));
 		$messages = $this->vd([
-			'inv_payee' => 'required',
 			'goods' => 'required',
 		]);
 		if($messages!='') return Response::json($this->response(10005, $messages)); 
