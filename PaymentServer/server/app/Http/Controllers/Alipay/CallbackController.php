@@ -104,22 +104,26 @@ class CallbackController extends  ApiController {
 					$data = $this->_model->payCallbackUpdateJnl($out_trade_no, $pay_amount , $payment_type);
 
 					if(!$data){
-						return "fail";
+						$flag = false;
 					}
 				}
 
 			} catch (\Exception $e) {
 				Log::error(var_export($e, true), array(__CLASS__));
 			}
+			if($flag){
+				return $this->response(1, 'success');
+			}else{
+				return $this->response(1, 'fail');
+			}
 
 			//return 'success';
-			return $this->response(1);
 		}
 		else
 		{
 			//验证失败
 			//return "fail";
-			return $this->response(0);
+			return $this->response(1, 'fail');
 
 			//调试用，写文本函数记录程序运行情况是否正常
 			//logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");

@@ -101,21 +101,15 @@ class OrderController extends ApiController
 	 * 获取订单列表
 	 */
 	public function getOrderList(){
-		if(!Request::has('status')){
-			return Response::json($this->response(10005));
-		}
-		if(!Request::has('page')){
-			$page   = 1;
-		}else{
-			$page   = Request::get('page');
-		}
+		if(!$this->isLogin()) return Response::json($this->response(99999)); 
+		$messages = $this->vd([
+			'status' => 'required',
+		]);
+		if($messages!='') return Response::json($this->response(10005, $messages)); 
 
-		if(!$this->isLogin()){
-			return Response::json($this->response(99999));
-		}
-
-		$user_id    =   $this->loginUser->id;
+		$page		= Request::has('page') ? Request::get('page') : 1;
 		$status     = Request::get('status');
+		$user_id	= $this->loginUser->id;
 
 		return $this->orderServer->getOrderList($page,$user_id,$status);
 	}

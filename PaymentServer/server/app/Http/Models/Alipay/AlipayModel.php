@@ -164,7 +164,7 @@ class AlipayModel extends Model{
 		}
 
 		//更新订单
-		DB::table('order')->where('order_no',$data->order_no)->where('is_delete',0)->update(array('pay_status'=>2));
+		//DB::table('order')->where('order_no',$data->order_no)->where('is_delete',0)->update(array('pay_status'=>2));
 
 		$update_order_suppliers = DB::table('order_suppliers')->where('son_order_no',$out_trade_no)->where('is_delete',0)->update(array('pay_status'=>2));
 

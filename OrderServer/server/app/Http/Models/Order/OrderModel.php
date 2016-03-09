@@ -87,7 +87,7 @@ class OrderModel extends Model{
 		$order_no = $this->generateJnlNo();
 
 
-		//inset data
+		//insert data
 		$data = array(
 			'order_no'      => $order_no,
 			'user_id'       => $user_id,
@@ -124,7 +124,6 @@ class OrderModel extends Model{
 
 		//debug($data_supplisers);
 		DB::table('order_suppliers')->insert($data_supplisers);
-
 
 		$data_info = array();
 		foreach($goods_info as $goods_value){

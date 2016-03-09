@@ -45,14 +45,13 @@ class PaymentController extends ApiController
 //			'sign'                => 'mVd5lMtnAXEhSjv7ZQfQjeVkTH8kJGm2Hj/9CbZwAf32Us//aiDFSn9xmzlYQIcAt/HsJmMb/dU/FaTkXoBeMB21z+RPcYiizLjtpaxjgEhr75O9ESZVbxzLqiBxAh2J7eieBYofd4P03+PeQNZyVZV2Xm7jhi/t5cqMfVUZp8A='
 //		);
 
-		$data =  $this->paymentServer->alipay($param);
-		header('Content-type: text/html');
-		if($data == 'fail'){
-			return 'fail';
-		}elseif($data == 'success'){
-			return 'success';
+		$pay =  $this->paymentServer->alipay($param);
+		$pay = json_decode($pay);
+		//header('Content-type: text/html');
+		if($pay->code){
+			return $pay->data;
 		}else{
-			return Response::json($this->response(0));
+			return 'fail';
 		}
 
 	}
