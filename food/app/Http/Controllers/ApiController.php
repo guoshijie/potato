@@ -46,7 +46,7 @@ class ApiController extends Controller
     * @param    string  $data   状态码
     * @return   array
     */
-    public function response( $code, $msg = '', $data = array() ) {
+    public function response( $code, $msg = '', $data = null ) {
 		if( '' == $msg ) {
 			$codeMsg = $this->getCodeMsg();
 			if( !array_key_exists( $code, $codeMsg ) ) {
@@ -59,7 +59,7 @@ class ApiController extends Controller
         $ret->code  = (int)$code;
         $ret->msg   = (string)$msg;
 
-	    if(null != $data){
+	    if(null !== $data){
 		    $ret->data  = $data;
 	    }
         return $ret;
