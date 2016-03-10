@@ -146,7 +146,11 @@ class CallbackController extends  ApiController {
 		$pay_type	= $request->get('pay_type');
 
 		$res =  $this->_model->getResult($out_trade_no, $pay_type);
-		return json_encode($res);
+		if($res){
+			return $this->response(1,'成功',$res);
+		}else{
+			return $this->response(0,'未找到订单');
+		}
 	}
 
 
