@@ -235,7 +235,6 @@ class OrderModel extends Model{
 			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
 			->whereIn('order_no',$order_no)
 			->where('is_delete',0)
-			->where('pay_status',0)
 			->where('status',$status)
 			->get();
 
