@@ -18,6 +18,7 @@ class AlipayController extends ApiController
 
 	public function anyCallback(){
 		$param    =   Request::all();
+		/*
 		$param = array (
 				'out_trade_no' => 'G310798172248611',
 				'discount' => '0.00',
@@ -43,6 +44,7 @@ class AlipayController extends ApiController
 				'sign_type' => 'RSA',
 				'sign' => 'FwSws/O3u3O+0bLTuevOZwgGyNmEepP1BC3fs1qiYAl5RwhwBICq2nwazR5Rd2WYyOmdA8a6thv1Wcdy2TPTydPUH5LAjgMIRv0fCLwFyO9OFl0mM8WWzo+gHOfvihLOE/2ZFj4mqwduB4caH4NygjaAoJnos3mMDcbbwWj3C6A=',
 			);
+		 */
 
 		$pay =  $this->paymentServer->alipay($param);
 		$pay = json_decode($pay);
