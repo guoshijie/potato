@@ -240,7 +240,7 @@ class ApiController extends BaseController
      * @param 	string	$data 	状态码
      * @return	array
      */
-    public function getPageResponse( $code, $msg = null, $data = array() , $page ) {
+    public function getPageResponse( $code, $msg = null, $data = null , $page ) {
         $code = (int)$code;
         if( null == $msg ) {
             $errList = $this->getErrorList();
