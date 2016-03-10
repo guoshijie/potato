@@ -21,6 +21,7 @@ Route::group( array('prefix' => $version),function() {
 
 	Route::controller('/pay/alipay', 'Pay\AlipayController');
 	Route::controller('/pay/weixin', 'Pay\WeixinController');
+	Route::controller('/pay/cash', 'Pay\CashController');
 
 
 	Route::any('/welcome/hello', "WelcomeController@hello");

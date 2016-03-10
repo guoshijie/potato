@@ -73,7 +73,7 @@ class CallbackController extends  ApiController {
 			$trade_no       = $data['trade_no'];
 			$trade_status   = $data['trade_status'];
 			$pay_amount     = $data['total_fee'];
-			$pay_type		= $request->get('pay_type');
+			$pay_type		= $request->get('my_order_type');
 
 
 			//数据处理
@@ -112,6 +112,7 @@ class CallbackController extends  ApiController {
 			} catch (\Exception $e) {
 				Log::error(var_export($e, true), array(__CLASS__));
 			}
+			 Log::info('----flag:'.$flag);
 			if($flag){
 				return $this->response(1, 'success');
 			}else{
@@ -124,6 +125,7 @@ class CallbackController extends  ApiController {
 		{
 			//验证失败
 			//return "fail";
+			 Log::info('----flag:fail');
 			return $this->response(1, 'fail');
 
 			//调试用，写文本函数记录程序运行情况是否正常

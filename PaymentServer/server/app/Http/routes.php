@@ -11,22 +11,20 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    echo "<h1 align='center' style='margin-top: 20%;'>Hello World!</h1>";
-});
+$anyAction = array(
+	array('/alipay/result','Alipay\CallbackController@result'),
+	array('/alipay/callback','Alipay\CallbackController@callback'),
+	array('/cash','CashController@index'),
+);
 
-
-$app->get('/alipay/result',"Alipay\CallbackController@result");   //添加商品到购物车
-$app->post('/alipay/result',"Alipay\CallbackController@result");   //添加商品到购物车
+foreach($anyAction as $v){
+	$app->get($v[0],$v[1]); 
+	$app->post($v[0],$v[1]); 
+}
 
 /*
  * Callback
  */
-
-
-$app->get('/alipay/callback',"Alipay\CallbackController@callback");   //添加商品到购物车
-$app->post('/alipay/callback',"Alipay\CallbackController@callback");   //添加商品到购物车
-
 $app->get('/weixin/api',"Weixinpay\WeixinApiController@wxPay");
 $app->post('/weixin/api',"Weixinpay\WeixinApiController@wxPay");
 
@@ -36,3 +34,7 @@ $app->post('/weixin/callback',"Weixinpay\WeixinApiController@callback");
 
 
 
+
+$app->get('/', function () use ($app) {
+    echo "<h1 align='center' style='margin-top: 20%;'>Hello World!</h1>";
+});
