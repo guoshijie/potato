@@ -176,6 +176,15 @@ class AlipayModel extends Model{
 		return true;
 	}
 
-
-
+	/*
+	 * 支付结果
+	 */
+	public function getResult($out_trade_no, $payment_type){
+		if($payment_type == 1){
+			$row = DB::table('order')->select('pay_status')->where('order_no',$out_trade_no)->first();
+		}elseif($payment_type == 2){
+			$row = DB::table('order_suppliers')->select('pay_status')->where('son_order_no',$out_trade_no)->first();
+		}
+		return $row;
+	}
 }

@@ -16,15 +16,13 @@ $app->get('/', function () use ($app) {
 });
 
 
-//demo
-//$app->get('/demo/index',"Demo\DemoController@index");
-
-//$app->get('/index',"ApiController@index");
-
+$app->get('/alipay/result',"Alipay\CallbackController@result");   //添加商品到购物车
+$app->post('/alipay/result',"Alipay\CallbackController@result");   //添加商品到购物车
 
 /*
  * Callback
  */
+
 
 $app->get('/alipay/callback',"Alipay\CallbackController@callback");   //添加商品到购物车
 $app->post('/alipay/callback',"Alipay\CallbackController@callback");   //添加商品到购物车

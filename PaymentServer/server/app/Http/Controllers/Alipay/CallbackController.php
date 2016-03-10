@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Alipay;    //定义命名空间
 use  App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
+use Illuminate\Http\Response;            //输入输出类
 use Illuminate\Support\Facades\Log;
 use App\Libraries\AlipayNotify;//引入支付宝移动支付异步服务器支付宝扩展
 use App\Libraries\alipayConfig;//引入支付宝移动支付异步服务器配置文件
@@ -68,11 +69,11 @@ class CallbackController extends  ApiController {
 				'refund_status' => '',//退款状态
 				'gmt_refund'    => '');//退款时间
 
-			$out_trade_no   = $verify_result['out_trade_no'];
-			$trade_no       = $verify_result['trade_no'];
-			$trade_status   = $verify_result['trade_status'];
-			$pay_amount     = $verify_result['total_fee'];
-			$payment_type   = $verify_result['payment_type'];
+			$out_trade_no   = $data['out_trade_no'];
+			$trade_no       = $data['trade_no'];
+			$trade_status   = $data['trade_status'];
+			$pay_amount     = $data['total_fee'];
+			$pay_type		= $request->get('pay_type');
 
 
 			//数据处理
@@ -101,7 +102,7 @@ class CallbackController extends  ApiController {
 			try {
 				if ($flag) {
 
-					$data = $this->_model->payCallbackUpdateJnl($out_trade_no, $pay_amount , $payment_type);
+					$data = $this->_model->payCallbackUpdateJnl($out_trade_no, $pay_amount , $pay_type);
 
 					if(!$data){
 						$flag = false;
@@ -129,6 +130,25 @@ class CallbackController extends  ApiController {
 			//logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
 		}
 	}
+
+
+	/*
+	 * 支付结果
+	 */
+	public function result(Request $request){
+		$messages = $this->vd([
+			'out_trade_no' => 'required',
+			'pay_type' => 'required',
+			],$request);
+		if($messages!='') return $this->response(10005, $messages);
+
+		$out_trade_no	= $request->get('out_trade_no');
+		$pay_type	= $request->get('pay_type');
+
+		$res =  $this->_model->getResult($out_trade_no, $pay_type);
+		return json_encode($res);
+	}
+
 
 	public function getTest(Request $request){
 		if($request) {

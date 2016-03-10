@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ApiController extends BaseController
 {
@@ -266,5 +267,14 @@ class ApiController extends BaseController
         return $ret;
     }
 
+	/*
+	 *	 *	 validate
+	 *		 *
+	 *			 * */
+	protected function vd($rules, $request){
+		$validate = Validator::make($request->all(), $rules);
+		$messages = $validate->messages()->all();
+		return implode(' & ', $messages);
+	}
 
 }

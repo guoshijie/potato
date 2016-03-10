@@ -12,10 +12,16 @@
 */
 $version = '/v1';
 
+
+
 Route::group( array('prefix' => $version),function() {
 	Route::any('/', function () {
 		return view('welcome');
 	});
+
+	Route::controller('/pay/alipay', 'Pay\AlipayController');
+	Route::controller('/pay/weixin', 'Pay\WeixinController');
+
 
 	Route::any('/welcome/hello', "WelcomeController@hello");
 	Route::any('/welcome/intro', "WelcomeController@intro");
@@ -83,10 +89,10 @@ Route::group( array('prefix' => $version),function() {
 
 	Route::any('/order/num','OrderController@getOrderNum');   //订单数量
 
-	Route::any('/alipay','PaymentController@alipay');   //支付宝回调通知
+	//Route::any('/alipay','PayController@anyAlipay');   //支付宝回调通知
 
-	Route::any('/weixin/pay','PaymentController@weixinPay');   //微信预支付
+	//Route::any('/weixin/pay','PayController@weixinPay');   //微信预支付
 
-	Route::any('/weixin','PaymentController@weixin');   //微信回调通知
+	//Route::any('/weixin','PayController@weixin');   //微信回调通知
 
 });

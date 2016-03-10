@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
 use \Api\Server\Payment as PaymentServer;
 use App\Http\Controllers\ApiController;
-class PaymentController extends ApiController
+class PayController extends ApiController
 {
 
 	var $paymentServer;
@@ -15,35 +15,33 @@ class PaymentController extends ApiController
 		$this->paymentServer = new PaymentServer();
 	}
 
-
 	public function alipay(){
-
 		$param    =   Request::all();
-//		$verify_result = Array(
-//			'discount'            => 0.00,
-//			'payment_type'        => 1,
-//			'subject'             => 'iPhone6 4.7英寸 128G',
-//			'trade_no'            => '2015101300001000340065',
-//			'buyer_email'         => 13240372487,
-//			'gmt_create'          => '2015-10-13 19:43:03',
-//			'gmt_payment'         => '2015-10-13 19:43:03',
-//			'notify_type'         => 'trade_status_sync',
-//			'quantity'            => 1,
-//			'notify_id'           => '',
-//			'out_trade_no'        => 'G304714535525622',
-//			'seller_id'           => 2088911708976095,
-//			'notify_time'         => '2015-10-13 19:43:04',
-//			'body'                => 2,
-//			'trade_status'        => 'TRADE_SUCCESS',
-//			'is_total_fee_adjust' => 'N',
-//			'total_fee'           => '12160.00',
-//			'seller_email'        => 'admin@shinc.net',
-//			'price'               => 0.01,
-//			'buyer_id'            => 2088712044133340,
-//			'use_coupon'          => 'N',
-//			'sign_type'           => 'RSA',
-//			'sign'                => 'mVd5lMtnAXEhSjv7ZQfQjeVkTH8kJGm2Hj/9CbZwAf32Us//aiDFSn9xmzlYQIcAt/HsJmMb/dU/FaTkXoBeMB21z+RPcYiizLjtpaxjgEhr75O9ESZVbxzLqiBxAh2J7eieBYofd4P03+PeQNZyVZV2Xm7jhi/t5cqMfVUZp8A='
-//		);
+		$param = array (
+				'out_trade_no' => 'G310798172248611',
+				'discount' => '0.00',
+				'payment_type' => '1',
+				'subject' => '拾谷采购',
+				'trade_no' => '2016031021001004240265278302',
+				'buyer_email' => '13661383294',
+				'gmt_create' => '2016-03-10 11:18:34',
+				'notify_type' => 'trade_status_sync',
+				'quantity' => '1',
+				'seller_id' => '2088911708976095',
+				'notify_time' => '2016-03-10 11:32:37',
+				'body' => 'mmzt9W4eNFzs6TlZr9GwjkEkOQ6ibcVb8peJn3az',
+				'trade_status' => 'TRADE_SUCCESS',
+				'is_total_fee_adjust' => 'N',
+				'total_fee' => '0.01',
+				'gmt_payment' => '2016-03-10 11:18:36',
+				'seller_email' => 'admin@shinc.net',
+				'price' => '0.01',
+				'buyer_id' => '2088802658468245',
+				'notify_id' => 'aaec910822b2c8e09ff94d870df83f0huq',
+				'use_coupon' => 'N',
+				'sign_type' => 'RSA',
+				'sign' => 'FwSws/O3u3O+0bLTuevOZwgGyNmEepP1BC3fs1qiYAl5RwhwBICq2nwazR5Rd2WYyOmdA8a6thv1Wcdy2TPTydPUH5LAjgMIRv0fCLwFyO9OFl0mM8WWzo+gHOfvihLOE/2ZFj4mqwduB4caH4NygjaAoJnos3mMDcbbwWj3C6A=',
+			);
 
 		$pay =  $this->paymentServer->alipay($param);
 		$pay = json_decode($pay);

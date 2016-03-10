@@ -20,6 +20,7 @@ return array(
     'Api\\Server\\Cart' => $baseDir . '/../OrderServer/api/src/Cart.php',
     'Api\\Server\\Goods' => $baseDir . '/../GoodsServer/api/src/Goods.php',
     'Api\\Server\\Order' => $baseDir . '/../OrderServer/api/src/Order.php',
+    'Api\\Server\\Pay' => $baseDir . '/../PaymentServer/api/src/Pay.php',
     'Api\\Server\\Payment' => $baseDir . '/../PaymentServer/api/src/Payment.php',
     'Api\\Server\\User' => $baseDir . '/../UserServer/api/src/User.php',
     'App\\Libraries\\AccountSubmit' => $baseDir . '/../commons/src/alipayAccount/lib/accountSubmit.class.php',

@@ -1,5 +1,5 @@
 {
-    "name": "shinc/payment-id-api",
+    "name": "potato/payment",
     "description": "Payment Server API",
     "type": "library",
     "version": "1.0",
