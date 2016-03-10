@@ -49,7 +49,7 @@ class PaymentController extends ApiController
 		$pay = json_decode($pay);
 		//header('Content-type: text/html');
 		if($pay->code){
-			return $pay->data;
+			return $pay->msg;
 		}else{
 			return 'fail';
 		}
