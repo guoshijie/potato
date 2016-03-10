@@ -112,14 +112,16 @@ class OrderModel extends Model{
 
 		$data_supplisers = array();
 		foreach($suppliers_ids as $suppliers_id_list) {
+			$tmp_sub_order_no = $this->generateJnlSonNo();
 			$data_supplisers[] = array(
-				'son_order_no' => $this->generateJnlSonNo(),
+				'sub_order_no' => $tmp_sub_order_no,
 				'order_no'     => $order_no,
 				'suppliers_id' => $suppliers_id_list,
 				'status'       => 0,
 				'pay_status'   => 0,
 				'is_delete'    => 0
 			);
+			$arr_sub_order_no[$suppliers_id_list] = $tmp_sub_order_no;
 		}
 
 		//debug($data_supplisers);
@@ -132,6 +134,7 @@ class OrderModel extends Model{
 					//debug($order_no);
 					$data_info[]=array(
 						'order_no'      =>  $order_no,
+						'sub_order_no'  =>  $arr_sub_order_no[$goods_value->suppliers_id],
 						'goods_id'      =>  $goods_value->id,
 						'goods_name'    =>  $goods_value->goods_name,
 						'goods_pic'     =>  $goods_value->goods_img,
@@ -201,6 +204,51 @@ class OrderModel extends Model{
 
 
 	/*
+	 * 获取支付订单列表
+	 * param $status   int	   状态
+	 * param $user_id  string  用户ID
+	 * param $offset   string  分页开始位置
+	 * param $length   string  分页显示长度
+	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
+	 */
+	public function getOrderListByStatus($user_id, $offset, $length, $status){
+
+		$orders = DB::table('order')
+			->where('user_id',$user_id)
+			->where('status',$status)
+			->where('is_delete',0)
+			->skip($offset)
+			->take($length)
+			->get();
+
+		if(empty($orders)){
+			return array();
+		}
+
+		$order_no = array();
+		foreach($orders as $orders_list){
+			$order_no[] =$orders_list->order_no;
+		}
+
+		//子订单
+		$order_suppliers = DB::table('order_suppliers')
+			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->whereIn('order_no',$order_no)
+			->where('is_delete',0)
+			->where('pay_status',0)
+			->where('status',$status)
+			->get();
+
+		if(empty($order_suppliers)){
+			return array();
+		}
+		$data = $this->getOrderList($order_no,$order_suppliers);
+
+		return $data;
+	}
+
+
+	/*
 	 * 获取未支付订单列表
 	 * param $user_id  string  用户ID
 	 * param $offset   string  分页开始位置
@@ -228,7 +276,7 @@ class OrderModel extends Model{
 
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
-			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
 			->whereIn('order_no',$order_no)
 			->where('is_delete',0)
 			->where('pay_status',0)
@@ -269,7 +317,7 @@ class OrderModel extends Model{
 
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
-			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
 			->whereIn('order_no',$order_no)
 			->whereIn('status',array(3,4))
 			->where('is_delete',0)
@@ -312,7 +360,7 @@ class OrderModel extends Model{
 
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
-			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
 			->whereIn('order_no',$order_no)
 			->where('is_delete',0)
 			->where('pay_status',2)
@@ -353,7 +401,7 @@ class OrderModel extends Model{
 
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
-			->select('son_order_no as sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
 			->whereIn('order_no',$order_no)
 			->where('is_delete',0)
 			->where('status',2)
@@ -369,22 +417,23 @@ class OrderModel extends Model{
 	 * 获取订单列表公共模块，四维数组压二维，好的代码应该不是循环嵌套
 	 */
 	private function getOrderList($order_no,$order_suppliers){
-		//获取订单商品
-		$order_info  = DB::table('order_info')->whereIn('order_no',$order_no)->where('is_delete',0)->get();
-
-
-
-		if(empty($order_info)){
-			return false;
+		foreach($order_suppliers as $v){
+			$sub_order_noList[] = $v->sub_order_no;
 		}
 
+		//获取订单商品
+		$order_info  = DB::table('order_info')->whereIn('sub_order_no',$sub_order_noList)->where('is_delete',0)->get();
+
+		if(empty($order_info)){
+			return array();
+		}
 
 		$category_ids  = array();
 		$supplier_ids  = array();
 		$goods_ids    = array();
 		foreach($order_info as $order_info_list){
-			$category_ids[]   = $order_info_list->category_id;
-			$supplier_ids[]   = $order_info_list->suppliers_id;
+			$category_ids[$order_info_list->category_id]   = $order_info_list->category_id;
+			$supplier_ids[$order_info_list->suppliers_id]   = $order_info_list->suppliers_id;
 			$goods_ids[]      = $order_info_list->goods_id;
 		}
 
@@ -396,11 +445,8 @@ class OrderModel extends Model{
 
 		$suppliers = $cart_M->suppliers($supplier_ids);
 
-
 		$tmp = array();
 		foreach($order_info as $goods_info_list) {
-
-
 			//分类
 			foreach($cateogrys as $cateogry_list){
 				if($goods_info_list->category_id == $cateogry_list->id){
@@ -413,7 +459,7 @@ class OrderModel extends Model{
 
 			//$tmp[$goods_info_list->order_no][$goods_info_list->suppliers_id][] = $goods_info_list;
 
-			$tmp[$goods_info_list->order_no.$goods_info_list->suppliers_id][] = $goods_info_list;
+			$tmp[$goods_info_list->sub_order_no][] = $goods_info_list;
 
 		}
 
@@ -427,8 +473,8 @@ class OrderModel extends Model{
 				}
 			}
 
-			@$vs->order_info = $tmp[$vs->order_no.$vs->suppliers_id];
-			$data[$vs->order_no.$vs->suppliers_id] = $vs;
+			$vs->order_info = isset($tmp[$vs->sub_order_no]) ? $tmp[$vs->sub_order_no] : array();
+			$data[$vs->sub_order_no] = $vs;
 		}
 
 		return array_values($data);
@@ -451,7 +497,7 @@ class OrderModel extends Model{
 		}
 
 		//子订单
-		$order_suppliers = DB::table('order_suppliers')->where('son_order_no',$son_order_no)->where('is_delete',0)->first();
+		$order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$son_order_no)->where('is_delete',0)->first();
 
 		//$data->detail_order = $order_suppliers;
 
@@ -568,7 +614,7 @@ class OrderModel extends Model{
 
 		//debug($sub_order_no);
 		//得到子订单号
-		$order_suppliers = DB::table('order_suppliers')->where('son_order_no',$sub_order_no)->where('is_delete',0)->first();
+		$order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->first();
 		if(empty($order_suppliers)){
 			return false;
 		}
@@ -593,7 +639,7 @@ class OrderModel extends Model{
 		}
 
 		//更新子订单表
-		DB::table('order_suppliers')->where('son_order_no',$sub_order_no)->where('is_delete',0)->update(array('status'=>2));
+		DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->update(array('status'=>2));
 
 		/****************************恢复商品数量************************/
 		$order_info = DB::table('order_info')->select('goods_id','goods_num')->where('is_delete',0)->where('order_no',$order_suppliers->order_no)->where('suppliers_id',$order_suppliers->suppliers_id)->get();
@@ -636,7 +682,7 @@ class OrderModel extends Model{
 	 */
 	public function confirmReceivingOrder($user_id,$sub_order_no){
 		//得到子订单号
-		$order_suppliers = DB::table('order_suppliers')->where('son_order_no',$sub_order_no)->where('is_delete',0)->where('pay_status',2)->first();
+		$order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('pay_status',2)->first();
 		//debug($order_suppliers);
 
 		if(empty($order_suppliers)){
@@ -662,7 +708,7 @@ class OrderModel extends Model{
 		}
 
 		//更新子订单表
-		DB::table('order_suppliers')->where('son_order_no',$sub_order_no)->where('is_delete',0)->update(array('status'=>1));
+		DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->update(array('status'=>1));
 
 		return 1;
 

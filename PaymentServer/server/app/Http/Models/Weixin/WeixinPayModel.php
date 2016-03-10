@@ -113,7 +113,7 @@ class WeixinPayModel extends Model{
 	 * 更新子订单处理逻辑
 	 */
 	private function updateSubOrder($out_trade_no,$pay_amount){
-		$data = DB::table('order_suppliers')->where('son_order_no',$out_trade_no)->where('is_delete',0)->first();
+		$data = DB::table('order_suppliers')->where('sub_order_no',$out_trade_no)->where('is_delete',0)->first();
 
 		if(empty($data)){
 			Log::info('子订单处理逻辑，order_suppliers表没有该子订单数据，当前回调子订单ID为:'.$out_trade_no);
@@ -165,7 +165,7 @@ class WeixinPayModel extends Model{
 		//更新订单
 		DB::table('order')->where('order_no',$data->order_no)->where('is_delete',0)->update(array('pay_status'=>2));
 
-		$update_order_suppliers = DB::table('order_suppliers')->where('son_order_no',$out_trade_no)->where('is_delete',0)->update(array('pay_status'=>2));
+		$update_order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$out_trade_no)->where('is_delete',0)->update(array('pay_status'=>2));
 
 		if(!$update_order_suppliers){
 			Log::info('更新订单信息错误，请查看更新order表和order_suppliers表信息,当前为大订单交易，订单号为:'.$out_trade_no);

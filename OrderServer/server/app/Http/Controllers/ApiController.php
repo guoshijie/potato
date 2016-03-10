@@ -223,7 +223,7 @@ class ApiController extends BaseController
             'msg' => "{$msg}",
         );
 
-        if( null != $data ) {
+        if( null !== $data ) {
             $ret[ 'data' ] = $data;
         }
 

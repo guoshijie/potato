@@ -31,7 +31,7 @@ class CashController extends  ApiController {
 			DB::table('order')->where('order_no', $request->get('out_trade_no') )->where('pay_status',0)->update(array('pay_status'=>3));
 			$up = DB::table('order_suppliers')->where('order_no', $request->get('out_trade_no') )->where('pay_status',0)->update(array('pay_status'=>3));
 		}else{
-			$up = DB::table('order_suppliers')->where('son_order_no', $request->get('out_trade_no') )->where('pay_status',0)->update(array('pay_status=>3'));
+			$up = DB::table('order_suppliers')->where('sub_order_no', $request->get('out_trade_no') )->where('pay_status',0)->update(array('pay_status=>3'));
 		}
 		if($up){
 			return $this->response(1, '设为货到付款成功');

@@ -59,7 +59,7 @@ class ApiController extends Controller
         $ret->code  = (int)$code;
         $ret->msg   = (string)$msg;
 
-	    if(!empty($data)){
+	    if(null !== $data){
 		    $ret->data  = $data;
 	    }
         return $ret;

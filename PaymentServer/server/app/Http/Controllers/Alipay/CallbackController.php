@@ -73,7 +73,10 @@ class CallbackController extends  ApiController {
 			$trade_no       = $data['trade_no'];
 			$trade_status   = $data['trade_status'];
 			$pay_amount     = $data['total_fee'];
-			$pay_type		= $request->get('my_order_type');
+
+			$arrPay_type    = explode('=',$request->get('body'));
+			$pay_type       = $arrPay_type[1];
+			Log::info('-------- pay_type:'.$pay_type);
 
 
 			//数据处理

@@ -109,23 +109,9 @@ class OrderController extends ApiController
 		$user_id    = $request->get('user_id');
 		$status     = $request->get('status');
 
-		if($status == 1){
-			$data = $this->_model->getOrderListByNoPay($user_id,$pageinfo->offset, $pageinfo->length);
-		}elseif($status == 2){
-			$data = $this->_model->getOrderListByWaiting($user_id,$pageinfo->offset, $pageinfo->length);
-		}elseif($status == 3){
-			$data = $this->_model->getOrderListByFinish($user_id,$pageinfo->offset, $pageinfo->length);
-		}elseif($status == 4){
-			$data = $this->_model->getOrderListByCancel($user_id,$pageinfo->offset, $pageinfo->length);
-		}else{
-			return $this->response(0);
-		}
+		$data = $this->_model->getOrderListByStatus($user_id,$pageinfo->offset, $pageinfo->length, $status);
 
-		if($data){
-			return $this->response(1,'成功',$data);
-		}else{
-			return $this->response(0);
-		}
+		return $this->response(1,'成功',$data);
 
 	}
 
