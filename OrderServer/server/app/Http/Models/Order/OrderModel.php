@@ -288,129 +288,6 @@ class OrderModel extends Model{
 	}
 
 
-	/*
-	 * 获取待收货订单列表
-	 * param $user_id  string  用户ID
-	 * param $offset   string  分页开始位置
-	 * param $length   string  分页显示长度
-	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
-	 */
-	public function getOrderListByWaiting($user_id,$offset, $length){
-
-		$orders = DB::table('order')
-			->where('user_id',$user_id)
-			->where('pay_status',2)
-			->where('is_delete',0)
-			->skip($offset)
-			->take($length)
-			->get();
-
-		if(empty($orders)){
-			return false;
-		}
-
-		$order_no = array();
-		foreach($orders as $orders_list){
-			$order_no[] =$orders_list->order_no;
-		}
-
-		//子订单
-		$order_suppliers = DB::table('order_suppliers')
-			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
-			->whereIn('order_no',$order_no)
-			->whereIn('status',array(3,4))
-			->where('is_delete',0)
-			->where('pay_status',2)
-			->get();
-
-		$data = $this->getOrderList($order_no,$order_suppliers);
-
-		return $data;
-
-	}
-
-
-	/*
-	 * 获取已完成订单列表
-	 * param $user_id  string  用户ID
-	 * param $satus    string  订单状态(1=未支付,2=待收货，3=已完成,4=已撤销)
-	 * param $offset   string  分页开始位置
-	 * param $length   string  分页显示长度
-	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
-	 */
-	public function getOrderListByFinish($user_id,$offset, $length){
-
-		$orders = DB::table('order')
-			->where('user_id',$user_id)
-			->where('pay_status',2)
-			->where('is_delete',0)
-			->skip($offset)
-			->take($length)
-			->get();
-
-		if(empty($orders)){
-			return false;
-		}
-
-		$order_no = array();
-		foreach($orders as $orders_list){
-			$order_no[] =$orders_list->order_no;
-		}
-
-		//子订单
-		$order_suppliers = DB::table('order_suppliers')
-			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
-			->whereIn('order_no',$order_no)
-			->where('is_delete',0)
-			->where('pay_status',2)
-			->where('status',5)
-			->get();
-
-		$data = $this->getOrderList($order_no,$order_suppliers);
-
-		return $data;
-
-	}
-
-
-	/*
-	 * 获取已撤销订单列表
-	 * param $user_id  string  用户ID
-	 * param $satus    string  订单状态(1=未支付,2=待收货，3=已完成,4=已撤销)
-	 * param $offset   string  分页开始位置
-	 * param $length   string  分页显示长度
-	 */
-	public function getOrderListByCancel($user_id,$offset, $length){
-		$orders = DB::table('order')
-			->where('user_id',$user_id)
-			->where('status',2)
-			->where('is_delete',0)
-			->skip($offset)
-			->take($length)
-			->get();
-
-		if(empty($orders)){
-			return false;
-		}
-
-		$order_no = array();
-		foreach($orders as $orders_list){
-			$order_no[] =$orders_list->order_no;
-		}
-
-		//子订单
-		$order_suppliers = DB::table('order_suppliers')
-			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
-			->whereIn('order_no',$order_no)
-			->where('is_delete',0)
-			->where('status',2)
-			->get();
-
-		$data = $this->getOrderList($order_no,$order_suppliers);
-
-		return $data;
-	}
-
 
 	/*
 	 * 获取订单列表公共模块，四维数组压二维，好的代码应该不是循环嵌套
@@ -557,7 +434,7 @@ class OrderModel extends Model{
 	public function cancelOrderNo($user_id,$order_no){
 		//更新订单表
 		$upNum = DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)->where('user_id',$user_id)
-			->update(array('status'=>3));
+			->update(array('status'=>1));
 		if(!$upNum){
 			return 0;
 			/*
@@ -572,7 +449,7 @@ class OrderModel extends Model{
 
 		//更新子订单表
 		$upNum = DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)->where('user_id',$user_id)
-			->update(array('status'=>3));
+			->update(array('status'=>1));
 		if(!$upNum){
 			return 0;
 		}
@@ -647,7 +524,7 @@ class OrderModel extends Model{
  */
 		//更新子订单表
 		$upNum = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',0)->where('user_id',$user_id)
-			->update(array('status'=>3));
+			->update(array('status'=>1));
 		if(!$upNum){
 			return 0;
 		}
@@ -696,7 +573,7 @@ class OrderModel extends Model{
 	 */
 	public function confirmReceivingOrder($user_id,$sub_order_no){
 		//更新子订单表
-		return DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',1)->update(array('status'=>2));
+		return DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',4)->update(array('status'=>5));
 	}
 
 
@@ -716,15 +593,15 @@ class OrderModel extends Model{
 	 */
 	public function getOrderNumByUserId($user_id,$type=0){
 		if($type == 1){ //待支付
-			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status','!=',2)->count();
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',0)->count();
 		}elseif($type ==2){ //待收货
-			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',0)->count();
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',4)->count();
 		}elseif($type ==3){ //已完成
-			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',5)->count();
+			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
 		}else{ // all
-			$num['unpaid'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status','!=',2)->count();
-			$num['shipping'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',0)->count();
-			$num['finished'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('pay_status',2)->where('status',5)->count();
+			$num['unpaid'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',0)->count();
+			$num['shipping'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',4)->count();
+			$num['finished'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
 			return $num;
 		}
 	}

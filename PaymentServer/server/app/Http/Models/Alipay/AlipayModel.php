@@ -96,9 +96,9 @@ class AlipayModel extends Model{
 
 
 		//更新订单
-		DB::table('order')->where('order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->update(array('pay_status'=>2, 'status'=>1));
+		DB::table('order')->where('order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->update(array('pay_status'=>2, 'status'=>2));
 
-		$update_order_suppliers = DB::table('order_suppliers')->where('order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->update(array('pay_status'=>2,'status'=>1));
+		$update_order_suppliers = DB::table('order_suppliers')->where('order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->update(array('pay_status'=>2,'status'=>2));
 
 		if(!$update_order_suppliers){
 			Log::info('更新订单信息错误，请查看更新order表和order_suppliers表信息,当前为大订单交易，订单号为:'.$out_trade_no."update_order_suppliers为:".$update_order_suppliers);
@@ -166,7 +166,7 @@ class AlipayModel extends Model{
 		//更新订单
 		//DB::table('order')->where('order_no',$data->order_no)->where('is_delete',0)->update(array('pay_status'=>2));
 
-		$update_order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->update(array('pay_status'=>2,'status'=>1));
+		$update_order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->update(array('pay_status'=>2,'status'=>2));
 
 		if(!$update_order_suppliers){
 			Log::info('更新订单信息错误，请查看更新order表和order_suppliers表信息,当前为大订单交易，订单号为:'.$out_trade_no);
