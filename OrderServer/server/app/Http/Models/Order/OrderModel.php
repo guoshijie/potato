@@ -213,35 +213,34 @@ class OrderModel extends Model{
 	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
 	 */
 	public function getOrderListByStatus($user_id, $offset, $length, $status){
-
-		$orders = DB::table('order')
-			->where('user_id',$user_id)
-			->where('status',$status)
-			->where('is_delete',0)
-			->skip($offset)
-			->take($length)
-			->get();
-
-		if(empty($orders)){
-			return array();
-		}
-
-		$order_no = array();
-		foreach($orders as $orders_list){
-			$order_no[] =$orders_list->order_no;
-		}
-
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
 			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
-			->whereIn('order_no',$order_no)
 			->where('is_delete',0)
+			->where('user_id',$user_id)
 			->where('status',$status)
+			->skip($offset)
+			->take($length)
 			->get();
 
 		if(empty($order_suppliers)){
 			return array();
 		}
+		$order_no = array();
+		foreach($order_suppliers as $v){
+			$order_no[$v->order_no] =$v->order_no;
+		}
+
+		$orders = DB::table('order')
+			->where('is_delete',0)
+			->whereIn('order_no', $order_no)
+			->get();
+
+		if(empty($orders)){
+			return false;
+		}
+
+
 		$data = $this->getOrderList($order_no,$order_suppliers);
 
 		return $data;
