@@ -101,8 +101,9 @@ class User extends Api
 	 * 添加收货地址
 	 */
 	public function add_address($user_id,$name,$tel,$district,$address,$head_name,$code){
-
-		return $this->postData('/user/shop/create-shop', "user_id=".$user_id."&name=".$name."&tel=".$tel."&district=".$district."&address=".$address."&head_name=".$head_name."&code=".$code);
+		$str = "user_id=".$user_id."&name=".$name."&tel=".$tel."&district=".$district."&address=".$address."&head_name=".$head_name."&code=".$code;
+		parse_str($str, $param);
+		return $this->postData('/user/shop/create-shop', $param);
 	}
 
 
