@@ -70,6 +70,7 @@ $app->get('/user/opinion',"User\UserController@setOpinion");        //意见反�
  * user address
  */
 $app->get('/user/shop/create-shop',"Shop\ShopController@createShop");      //添加收货地址
+$app->post('/user/shop/create-shop',"Shop\ShopController@createShop");      //添加收货地址
 
 $app->get('/user/shop/get-shop',"Shop\ShopController@showShopList");      //获取收货地址列表
 
