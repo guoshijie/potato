@@ -84,7 +84,7 @@ class Curl{
             curl_setopt($ch, CURLOPT_COOKIE, $this->cookie);
         }
 
-        if ($method == 'POST') {
+		if ($method == 'POST' && !empty($vars)) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($vars));
         }
