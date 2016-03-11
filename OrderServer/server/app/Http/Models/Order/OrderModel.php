@@ -213,12 +213,15 @@ class OrderModel extends Model{
 	 * 逻辑:拿订单表->$order_no->拿子订单表信息->商品
 	 */
 	public function getOrderListByStatus($user_id, $offset, $length, $status){
+		if($status==2 || $status==3 || $status==4){
+			$status = array(2,3,4);
+		}
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
 			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
 			->where('is_delete',0)
 			->where('user_id',$user_id)
-			->where('status',$status)
+			->whereIn('status',$status)
 			->skip($offset)
 			->take($length)
 			->get();
@@ -336,11 +339,13 @@ class OrderModel extends Model{
 			//$tmp[$goods_info_list->order_no][$goods_info_list->suppliers_id][] = $goods_info_list;
 
 			$tmp[$goods_info_list->sub_order_no][] = $goods_info_list;
+			$tmpTotalPrice[$goods_info_list->sub_order_no][] = $goods_info_list->price_total;
 
 		}
 
 		$data = array();
 		foreach($order_suppliers as $vs){
+			$vs->total_price = 0;
 
 			//供应商
 			foreach($suppliers as $suppilers_list){
@@ -350,7 +355,11 @@ class OrderModel extends Model{
 			}
 
 			$vs->order_info = isset($tmp[$vs->sub_order_no]) ? $tmp[$vs->sub_order_no] : array();
+
+			$vs->total_price = array_sum($tmpTotalPrice[$vs->sub_order_no]);
+
 			$data[$vs->sub_order_no] = $vs;
+
 		}
 
 		return array_values($data);
@@ -600,7 +609,7 @@ class OrderModel extends Model{
 			return DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
 		}else{ // all
 			$num['unpaid'] = DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',0)->count();
-			$num['shipping'] = DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',4)->count();
+			$num['shipping'] = DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->whereIn('status',array(2,3,4))->count();
 			$num['finished'] = DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
 			return $num;
 		}

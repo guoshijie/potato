@@ -53,11 +53,10 @@ class GoodsController extends ApiController
 		}
 
 		foreach($goodsList->data->product_list as $v){
+			$v->cart_num = 0;
 			foreach($cartList->data as $vc){
 				if($v->id==$vc->goods_id){
 					$v->cart_num = $vc->goods_num;
-				}else{
-					$v->cart_num = 0;
 				}
 			}
 		}

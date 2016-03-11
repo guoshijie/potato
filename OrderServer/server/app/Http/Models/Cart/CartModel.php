@@ -289,7 +289,7 @@ class CartModel extends Model{
 	}
 
 	/*
-	 * 获取购物车数量和总价
+	 * 获取购物车数量
 	 */
 	public function getCartGoodsNum($user_id, $goods_ids=array()){
 		$table = DB::table('cart')->select('goods_id','goods_num','is_select')->where('user_id',$user_id)->where('is_delete',0);
