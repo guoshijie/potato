@@ -215,6 +215,8 @@ class OrderModel extends Model{
 	public function getOrderListByStatus($user_id, $offset, $length, $status){
 		if($status==2 || $status==3 || $status==4){
 			$status = array(2,3,4);
+		}else{
+			$status = array($status);
 		}
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
