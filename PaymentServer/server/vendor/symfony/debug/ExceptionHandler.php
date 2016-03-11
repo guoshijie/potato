@@ -258,6 +258,13 @@ class ExceptionHandler
                 $count = count($exception->getAllPrevious());
                 $total = $count + 1;
                 foreach ($exception->toArray() as $position => $e) {
+					print_r('"'.$e['message'].'" ');
+					print_r('   file: '.$e['trace'][0]['file']);
+					print_r('   line: '.$e['trace'][0]['line']);
+
+die;
+
+
                     $ind = $count - $position + 1;
                     $class = $this->formatClass($e['class']);
                     $message = nl2br($this->escapeHtml($e['message']));

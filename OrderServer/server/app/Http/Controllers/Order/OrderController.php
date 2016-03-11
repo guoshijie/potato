@@ -159,13 +159,15 @@ class OrderController extends ApiController
 			return $this->response(10018);
 		}
 
+		if(!$request->has('order_no') && !$request->has('sub_order_no')){
+			return $this->response(10005, 'order_no or sub_order_no is reqired');
+		}
+
 		$user_id = $request->get('user_id');
 
 		if($request->has('order_no')){
 			$order_no = $request->get('order_no');
 			$data     = $this->_model->cancelOrderNo($user_id,$order_no);
-
-			//debug($data);
 		}
 
 		if($request->has('sub_order_no')){
@@ -173,17 +175,8 @@ class OrderController extends ApiController
 			$data     = $this->_model->cancelSubOrderNo($user_id,$sub_order_no);
 		}
 
-
-		if(!isset($order_no) && !isset($sub_order_no)){
-			return $this->response(10005);
-		}
-
-		if(!isset($data)){
-			return $this->response(0);
-		}
-
 		if($data){
-			return $this->response(1,'成功',$data);
+			return $this->response(1,'成功');
 		}else{
 			return $this->response(40009);
 		}

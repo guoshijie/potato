@@ -116,6 +116,7 @@ class OrderModel extends Model{
 			$data_supplisers[] = array(
 				'sub_order_no' => $tmp_sub_order_no,
 				'order_no'     => $order_no,
+				'user_id'       => $user_id,
 				'suppliers_id' => $suppliers_id_list,
 				'status'       => 0,
 				'pay_status'   => 0,
@@ -556,16 +557,24 @@ class OrderModel extends Model{
 	 */
 	public function cancelOrderNo($user_id,$order_no){
 		//更新订单表
-		$up = DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)
+		$upNum = DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)->where('user_id',$user_id)
 			->update(array('status'=>3));
-		if(!$up){
+		if(!$upNum){
 			return 0;
+			/*
+			$row = DB::table('order')->select('status')->where('order_no',$order_no)->where('is_delete',0)->where('user_id',$user_id)->first();
+			if($row){
+				return 'error: 订单状态:'.$status;
+			}else{
+				return 'error: 订单不存在';
+			}
+			 */
 		}
 
 		//更新子订单表
-		$up = DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)
+		$upNum = DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)->where('user_id',$user_id)
 			->update(array('status'=>3));
-		if(!$up){
+		if(!$upNum){
 			return 0;
 		}
 
@@ -578,6 +587,9 @@ class OrderModel extends Model{
 		}
 
 		$goods = DB::table('goods')->select('id','goods_num')->whereIn('id',$goods_ids)->where('is_down',0)->get();
+		if(empty($goods)){
+			return false;
+		}
 
 		$sql_one ='update sh_goods set goods_num = (case ';
 		$sql_two = '';
@@ -594,7 +606,6 @@ class OrderModel extends Model{
 		$sql_three = 'else goods_num end) where id IN ('.$keyInfos.')';
 		//debug($sql_three);
 		$res = DB::update($sql_one.$sql_two.$sql_three);
-
 
 		if(!$res){
 			return false;
@@ -636,14 +647,14 @@ class OrderModel extends Model{
 		}
  */
 		//更新子订单表
-		$up = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',0)
+		$upNum = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',0)->where('user_id',$user_id)
 			->update(array('status'=>3));
-		if(!$up){
+		if(!$upNum){
 			return 0;
 		}
 
 		/****************************恢复商品数量************************/
-		$order_info = DB::table('order_info')->select('goods_id','goods_num')->where('is_delete',0)->where('order_no',$order_suppliers->order_no)->where('suppliers_id',$order_suppliers->suppliers_id)->get();
+		$order_info = DB::table('order_info')->select('goods_id','goods_num')->where('is_delete',0)->where('sub_order_no',$sub_order_no)->get();
 
 		$goods_ids = array();
 		foreach($order_info as $voi){
