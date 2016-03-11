@@ -29,7 +29,7 @@ class GoodsController extends ApiController
 		$goodsList = json_decode($goodsList);
 		if(isset($goodsList->data->product_list)){
 			foreach($goodsList->data->product_list as $v){
-				$v->cart = 0;
+				$v->cart_num = 0;
 			}
 		}
 
@@ -55,9 +55,9 @@ class GoodsController extends ApiController
 		foreach($goodsList->data->product_list as $v){
 			foreach($cartList->data as $vc){
 				if($v->id==$vc->goods_id){
-					$v->cart = $vc->goods_num;
+					$v->cart_num = $vc->goods_num;
 				}else{
-					$v->cart = 0;
+					$v->cart_num = 0;
 				}
 			}
 		}
