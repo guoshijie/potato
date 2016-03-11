@@ -42,6 +42,10 @@ class GoodsController extends ApiController
 		$cartServer = new CartServer();
 		$cartList = $cartServer->getCartGoodsNum($this->loginUser->id, array('goods_ids'=>$goodsIds));
 		$cartList = json_decode($cartList);
+		if($cartList->code==0 || !$cartList->data){
+			return Response::json($goodsList);
+		}
+
 		foreach($goodsList->data->product_list as $v){
 			foreach($cartList->data as $vc){
 				if($v->id==$vc->goods_id){
