@@ -91,14 +91,18 @@ class CartController extends ApiController
 		}
 
 		$user_id    = $request->get('user_id');
-
-		$data =  $this->_model->getCartGoodsNum($user_id);
+		$goods_ids = $request->has('goods_ids') ? $request->get('goods_ids') : array();
+		$data =  $this->_model->getCartGoodsNum($user_id, $goods_ids);
 		if($data){
 			return $this->response('1','获取成功',$data);
 		}else{
 			return $this->response(0);
 		}
 	}
+
+	/*
+	 *
+	 */
 
 	/*
 	 * 清空购物车

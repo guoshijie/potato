@@ -32,6 +32,7 @@ $app->post('/cart/add',"Cart\CartController@addCart");   //添加商品到购物
 $app->get('/cart/list',"Cart\CartController@getCartList");   //查看购物车列表
 
 $app->get('/cart/num',"Cart\CartController@getCartGoodsNum");   //获取购物车数量
+$app->post('/cart/num',"Cart\CartController@getCartGoodsNum");   //获取购物车数量
 
 $app->get('/cart/clear',"Cart\CartController@clear");   //添加商品到购物车
 

@@ -291,8 +291,12 @@ class CartModel extends Model{
 	/*
 	 * 获取购物车数量和总价
 	 */
-	public function getCartGoodsNum($user_id){
-		return DB::table('cart')->select('goods_id','goods_num','is_select')->where('user_id',$user_id)->where('is_delete',0)->get();
+	public function getCartGoodsNum($user_id, $goods_ids=array()){
+		$table = DB::table('cart')->select('goods_id','goods_num','is_select')->where('user_id',$user_id)->where('is_delete',0);
+		if(!empty($goods_ids)){
+			$table->whereIn('goods_id', $goods_ids);
+		}
+		return	$table->get();
 	}
 
 	/*

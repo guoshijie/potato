@@ -39,8 +39,12 @@ class Cart extends Api
 	/*
 	 * 购物车数量
 	 */
-	public function getCartGoodsNum($user_id){
-		return $this->getData("/cart/num?user_id=" . $user_id);
+	public function getCartGoodsNum($user_id, $goods_ids=array()){
+		if(!empty($goods_ids)){
+			return $this->postData("/cart/num?user_id=" . $user_id, $goods_ids);
+		}else{
+			return $this->getData("/cart/num?user_id=" . $user_id);
+		}
 	}
 
 	public function clear($user_id){
