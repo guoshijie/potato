@@ -85,14 +85,14 @@ class CartController extends ApiController
 	/*
 	 * 获取购物车数量
 	 */
-	public function getCartNum(Request $request){
+	public function getCartGoodsNum(Request $request){
 		if(!$request->has('user_id') ){
 			return $this->response(10018);
 		}
 
 		$user_id    = $request->get('user_id');
 
-		$data =  $this->_model->getCartNumByUserId($user_id);
+		$data =  $this->_model->getCartGoodsNum($user_id);
 		if($data){
 			return $this->response('1','获取成功',$data);
 		}else{

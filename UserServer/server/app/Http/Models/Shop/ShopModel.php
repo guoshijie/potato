@@ -106,17 +106,19 @@ class ShopModel extends Model
 	{
 
 		$address = DB::table($this->table)
-			->select('address_id', 'consignee','store_name','address','tel')
+			->select('address_id', 'consignee','store_name','address','district','tel')
 			->where('user_id', $ch_user_id)
 			->where('is_default', 1)
 			->first();
 
 		if (!$address) {
 			$address = DB::table($this->table)
-				->select('address_id', 'consignee','store_name','address','tel')
+				->select('address_id', 'consignee','store_name','address','district','tel')
 				->where('user_id', $ch_user_id)
 				->first();
 		}
+		$address->address = $address->district.$address->address;
+		unset($address->district);
 		return $address;
 	}
 

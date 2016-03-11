@@ -86,7 +86,7 @@ class Curl{
 
         if ($method == 'POST') {
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $vars);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($vars));
         }
         if (!empty($referer)) {
             curl_setopt($ch, CURLOPT_REFERER , $referer);

@@ -31,3 +31,6 @@ $app->get('/product/product/index',"Product\ProductController@index");   //获�
 
 $app->get('/product/product/detail',"Product\ProductController@detail");   //获取商品详情页
 
+$app->post('/get-total-price',"Product\ProductController@getTotalPrice");   //获取商品详情页
+$app->get('/get-total-price',"Product\ProductController@getTotalPrice");   //获取商品详情页
+

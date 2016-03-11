@@ -34,6 +34,13 @@ class Goods extends Api
 		return $this->getData("/product/product/detail?goods_id=" . $goods_id);
 	}
 
+	/*
+	 * 通用
+	 */
+	public function post($action, $params){
+		return  $this->postData($action, $params);
+	}
+
 
 
 

@@ -662,6 +662,9 @@ class OrderModel extends Model{
 		}
 
 		$goods = DB::table('goods')->select('id','goods_num')->whereIn('id',$goods_ids)->where('is_down',0)->get();
+		if(empty($goods)){
+			return false;
+		}
 
 		$sql_one ='update sh_goods set goods_num = (case ';
 		$sql_two = '';

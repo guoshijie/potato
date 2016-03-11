@@ -247,6 +247,7 @@ class CartModel extends Model{
 					}else{
 						$vg->last_num = '1';
 					}
+					$vg->is_select = $cart->is_select;
 				}
 			}
 
@@ -290,9 +291,8 @@ class CartModel extends Model{
 	/*
 	 * 获取购物车数量和总价
 	 */
-	public function getCartSum($user_id){
-		$num = DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->count();
-	//	return DB::table('cart')->where('user_id',$user_id)->where('is_delete',0)->sum('');
+	public function getCartGoodsNum($user_id){
+		return DB::table('cart')->select('goods_id','goods_num','is_select')->where('user_id',$user_id)->where('is_delete',0)->get();
 	}
 
 	/*

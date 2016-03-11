@@ -62,4 +62,20 @@ class ProductController extends ApiController
 
 		return $pageinfo;
 	}
+
+	/*
+	 * 计算商品总价
+	 * $arrGoodsNum	 array('goods_id value'=>'num value')
+	 *
+	 */
+	public function getTotalPrice(Request $request){
+		$arrGoodsNum = $request->get('goods_nums');
+		$goods_ids = array_keys($arrGoodsNum);
+		$goodsNumList = $this->_model->getGoodsPrice($goods_ids);
+		$priceList = array();
+		foreach($goodsNumList as $v){
+			$priceList[$v->goods_id] = $v->shop_price * $arrGoodsNum[$v->goods_id];
+		}
+		return $this->response(1, '成功',$priceList);
+	}
 }

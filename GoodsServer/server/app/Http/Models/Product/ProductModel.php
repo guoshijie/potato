@@ -156,4 +156,8 @@ class ProductModel extends Model{
 	private function suppliers($suppliers_ids){
 		return DB::table('suppliers')->whereIn('id',$suppliers_ids)->where('status',0)->select('id','suppliers_name')->get();
 	}
+
+	public function getGoodsPrice($goods_ids){
+		return DB::table('goods')->select('id as goods_id','shop_price')->whereIn('id', $goods_ids)->get();
+	}
 }

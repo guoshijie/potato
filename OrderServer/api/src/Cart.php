@@ -39,7 +39,7 @@ class Cart extends Api
 	/*
 	 * 购物车数量
 	 */
-	public function getCartNum($user_id){
+	public function getCartGoodsNum($user_id){
 		return $this->getData("/cart/num?user_id=" . $user_id);
 	}
 

@@ -52,7 +52,7 @@ class AlipayModel extends Model{
 	 * 更新大订单处理逻辑
 	 */
 	private function updateOrder($out_trade_no,$pay_amount){
-		$data = DB::table('order')->where('order_no',$out_trade_no)->where('is_delete',0)->first();
+		$data = DB::table('order')->where('order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->first();
 
 		if(empty($data)){
 			Log::info('大订单处理逻辑，order表没有该订单数据，当前回调订单ID为:'.$out_trade_no);
@@ -114,7 +114,7 @@ class AlipayModel extends Model{
 	 * 更新子订单处理逻辑
 	 */
 	private function updateSubOrder($out_trade_no,$pay_amount){
-		$data = DB::table('order_suppliers')->where('sub_order_no',$out_trade_no)->where('is_delete',0)->first();
+		$data = DB::table('order_suppliers')->where('sub_order_no',$out_trade_no)->where('is_delete',0)->where('status',0)->first();
 
 		if(empty($data)){
 			Log::info('子订单处理逻辑，order_suppliers表没有该子订单数据，当前回调子订单ID为:'.$out_trade_no);

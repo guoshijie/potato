@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Request;          //输入输出类
 use Illuminate\Support\Facades\Response;
 use \Api\Server\Order as OrderServer;
 use \Api\Server\Cart as CartServer;
+use \Api\Server\Goods as GoodsServer;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Log;
 class OrderController extends ApiController
@@ -218,14 +219,40 @@ class OrderController extends ApiController
 	 * 购物车数量
 	 */
 	public function getCartNum(){
-
 		if(!$this->isLogin()){
 			return Response::json($this->response(99999));
 		}
 
 		$user_id    =   $this->loginUser->id;
 
-		return $this->CartServer->getCartNum($user_id);
+		$cartList = $this->CartServer->getCartGoodsNum($user_id);
+		$cartList = json_decode($cartList);
+		$data = array('total_num'=>0,'total_price'=>0);
+		if($cartList->code==0){
+			return Response::json($this->response(1,'成功',$data));
+		}
+
+		foreach($cartList->data as $v){
+			//if($v->is_select){
+				$arrGoodsNum[$v->goods_id] = $v->goods_num;
+			//}
+			$data['total_num'] += $v->goods_num;
+		}
+		if(empty($arrGoodsNum)){
+			return Response::json($this->response(1,'成功',$data));
+		}
+
+		$goodsServer = new GoodsServer();
+		$priceList = $goodsServer->post('/get-total-price', array('goods_nums'=>$arrGoodsNum));
+		$priceList = json_decode($priceList);
+		if(!isset($priceList->data)){
+			return Response::json($this->response(1,'成功',$data));
+		}
+
+		foreach($priceList->data as $vid =>$vp){
+			$data['total_price'] += $vp;
+		}
+		return Response::json($this->response(1,'成功',$data));
 	}
 
 
