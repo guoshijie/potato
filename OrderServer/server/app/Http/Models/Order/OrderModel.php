@@ -524,7 +524,6 @@ class OrderModel extends Model{
 
 		foreach($order_info as $goods_info_list) {
 
-
 			//分类
 			foreach($cateogrys as $cateogry_list){
 				if($goods_info_list->category_id == $cateogry_list->id){
@@ -539,10 +538,10 @@ class OrderModel extends Model{
 			foreach($suppliers as $suppilers_list){
 				if($goods_info_list->suppliers_id == $suppilers_list->id){
 					$goods_info_list->suppilers_name = $suppilers_list->suppliers_name;
+					$order_suppliers->suppilers_name = $suppilers_list->suppliers_name;
 				}
 			}
 		}
-
 
 		$order_suppliers->product_list = $order_info;
 		$data->detail_order = $order_suppliers;
@@ -556,18 +555,19 @@ class OrderModel extends Model{
 	 * 取消大订单
 	 */
 	public function cancelOrderNo($user_id,$order_no){
-		//判断订单是否存在
-		$data = DB::table('order')->select('order_no')->where('order_no',$order_no)->where('status','!=',2)->where('user_id',$user_id)->where('is_delete',0)->first();
-
-		if(empty($data)){
-			return false;
+		//更新订单表
+		$up = DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)
+			->update(array('status'=>3));
+		if(!$up){
+			return 0;
 		}
 
-		//更新订单表
-		DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->update(array('status'=>2));
-
 		//更新子订单表
-		DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->update(array('status'=>2));
+		$up = DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)
+			->update(array('status'=>3));
+		if(!$up){
+			return 0;
+		}
 
 		/****************************恢复商品数量************************/
 		$order_info = DB::table('order_info')->select('goods_id','goods_num')->where('is_delete',0)->where('order_no',$order_no)->get();
@@ -610,7 +610,7 @@ class OrderModel extends Model{
 	 * 先取子订单表
 	 */
 	public function cancelSubOrderNo($user_id,$sub_order_no){
-
+/*
 		//debug($sub_order_no);
 		//得到子订单号
 		$order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->first();
@@ -626,8 +626,6 @@ class OrderModel extends Model{
 		if(empty($data)){
 			return false;
 		}
-
-
 		//判定订单对应关系(单笔订单，同步取消大订单)
 		$sub_order_count = DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->count();
 
@@ -636,9 +634,13 @@ class OrderModel extends Model{
 			//更新订单表
 			DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->update(array('status'=>2));
 		}
-
+ */
 		//更新子订单表
-		DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->update(array('status'=>2));
+		$up = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',0)
+			->update(array('status'=>3));
+		if(!$up){
+			return 0;
+		}
 
 		/****************************恢复商品数量************************/
 		$order_info = DB::table('order_info')->select('goods_id','goods_num')->where('is_delete',0)->where('order_no',$order_suppliers->order_no)->where('suppliers_id',$order_suppliers->suppliers_id)->get();

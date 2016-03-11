@@ -115,7 +115,7 @@ class CartController extends ApiController
 		$cartM = new CartModel();
 		$user_id    = $request->get('user_id');
 		$rs = $cartM->clear($user_id);
-		if($rs){
+		if($rs!==false && $rs!==null){
 			return $this->response('1','清空成功');
 		}else{
 			return $this->response(0, '清空失败');

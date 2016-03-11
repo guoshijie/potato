@@ -235,6 +235,21 @@ class ExceptionHandler
                 $count = count($exception->getAllPrevious());
                 $total = $count + 1;
                 foreach ($exception->toArray() as $position => $e) {
+/*
+
+					$msg = '"'.$e['message'].'" ';
+					$msg.= ' --file: '.$e['trace'][0]['file'];
+					$msg.= ' ---line: '.$e['trace'][0]['line'];
+					$json['code'] = 0;
+					$json['msg'] = $msg;
+					echo json_encode($json);
+					die;
+
+
+
+ */
+
+
 					print_r('"'.$e['message'].'" ');
 					print_r('   file: '.$e['trace'][0]['file']);
 					print_r('   line: '.$e['trace'][0]['line']);
