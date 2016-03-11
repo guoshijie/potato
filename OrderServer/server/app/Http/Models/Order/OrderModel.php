@@ -593,15 +593,15 @@ class OrderModel extends Model{
 	 */
 	public function getOrderNumByUserId($user_id,$type=0){
 		if($type == 1){ //待支付
-			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',0)->count();
+			return DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',0)->count();
 		}elseif($type ==2){ //待收货
-			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',4)->count();
+			return DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',4)->count();
 		}elseif($type ==3){ //已完成
-			return DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
+			return DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
 		}else{ // all
-			$num['unpaid'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',0)->count();
-			$num['shipping'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',4)->count();
-			$num['finished'] = DB::table('order')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
+			$num['unpaid'] = DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',0)->count();
+			$num['shipping'] = DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',4)->count();
+			$num['finished'] = DB::table('order_suppliers')->where('user_id',$user_id)->where('is_delete',0)->where('status',5)->count();
 			return $num;
 		}
 	}
