@@ -26,11 +26,17 @@ class GoodsController extends ApiController
 		$page    =   Request::get('page');
 
 		$goodsList = $this->goodsServer->index($page);
-		if( !$this->isLogin()){
-			return $goodsList;
+		$goodsList = json_decode($goodsList);
+		if(isset($goodsList->data->product_list)){
+			foreach($goodsList->data->product_list as $v){
+				$v->cart = 0;
+			}
 		}
 
-		$goodsList = json_decode($goodsList);
+		if( !$this->isLogin()){
+			return Response::json($goodsList);
+		}
+
 		if($goodsList->code==0 || !$goodsList->data){
 			return Response::json($goodsList);
 		}
@@ -49,15 +55,9 @@ class GoodsController extends ApiController
 		foreach($goodsList->data->product_list as $v){
 			foreach($cartList->data as $vc){
 				if($v->id==$vc->goods_id){
-					$v->cart = array(
-						'goods_num'=> $vc->goods_num,
-						'is_select'=> $vc->is_select,
-					);
+					$v->cart = $vc->goods_num;
 				}else{
-					$v->cart = array(
-						'goods_num'=> 0,
-						'is_select'=> "0",
-					);
+					$v->cart = 0;
 				}
 			}
 		}
