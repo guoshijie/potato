@@ -31,9 +31,11 @@ class RegisterController extends ApiController
 		}
 
 		$SmsM      = new SmsModel();
+		/*
 		if ($this->commontMdel->checkUser($request->get('tel'))){
 			return $this->response(10014);
 		}
+		 */
 		$data = $SmsM->sendVerifyCode($request->get('tel'));
 		return $this->response($data);
 	}
