@@ -300,7 +300,8 @@ class UserController extends ApiController
 	 */
 	public function  logout() {
 		if(!$this->isLogin()){
-			return Response::json($this->response(99999));
+			//return Response::json($this->response(99999));
+			return Response::json( $this->response( 1 ,'退出成功') );
 		}
 
 		//clear session

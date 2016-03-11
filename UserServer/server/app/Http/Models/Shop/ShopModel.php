@@ -117,6 +117,9 @@ class ShopModel extends Model
 				->where('user_id', $ch_user_id)
 				->first();
 		}
+		if(empty($address)){
+			return array();
+		}
 		$address->address = $address->district.$address->address;
 		unset($address->district);
 		return $address;
