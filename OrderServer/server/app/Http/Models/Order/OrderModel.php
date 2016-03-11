@@ -695,37 +695,8 @@ class OrderModel extends Model{
 	 * 先取子订单表
 	 */
 	public function confirmReceivingOrder($user_id,$sub_order_no){
-		//得到子订单号
-		$order_suppliers = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('pay_status',2)->first();
-		//debug($order_suppliers);
-
-		if(empty($order_suppliers)){
-			return false;
-		}
-
-		$order_no = $order_suppliers->order_no;
-
-		//判断订单是否存在
-		$data = DB::table('order')->select('order_no')->where('order_no',$order_no)->where('status','!=',1)->where('user_id',$user_id)->where('is_delete',0)->first();
-
-		if(empty($data)){
-			return false;
-		}
-
-		//判定订单对应关系(单笔订单，同步大订单)
-		$sub_order_count = DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->count();
-
-		//debug($sub_order_count);
-		if($sub_order_count == 1){
-			//更新订单表
-			DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->update(array('status'=>1));
-		}
-
 		//更新子订单表
-		DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->update(array('status'=>1));
-
-		return 1;
-
+		return DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',1)->update(array('status'=>2));
 	}
 
 
