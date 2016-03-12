@@ -249,9 +249,6 @@ class CartModel extends Model{
 						$vg->last_num = '1';
 					}
 					$vg->is_select = $cart->is_select;
-					if($vg->is_select){
-						$vg->total_price += 
-					}
 				}
 			}
 
