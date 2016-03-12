@@ -274,7 +274,9 @@ class CartModel extends Model{
 			$v->total_price    = 0; //选中的总价
 			foreach($v->goods_list as $vvg){
 				$vvg->suppliers_name = $v->suppliers_name;
-				$v->total_price += $vvg->order_num*$vvg->shop_price;
+				if($vvg->is_select){
+					$v->total_price += $vvg->order_num*$vvg->shop_price;
+				}
 			}
 			$supplly['suppliers'][] = $v;
 		}
