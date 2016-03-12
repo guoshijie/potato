@@ -410,6 +410,8 @@ class OrderModel extends Model{
 
 		$suppliers = $cart_M->suppliers($supplier_ids);
 
+		$order_suppliers->total_price = 0;
+
 		foreach($order_info as $goods_info_list) {
 
 			//分类
@@ -429,6 +431,7 @@ class OrderModel extends Model{
 					$order_suppliers->suppilers_name = $suppilers_list->suppliers_name;
 				}
 			}
+			$order_suppliers->total_price +=  $goods_info_list;
 		}
 
 		$order_suppliers->product_list = $order_info;
