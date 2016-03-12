@@ -11,26 +11,18 @@
 |
 */
 
-$app->get('/', function () use ($app) {
-    abort(404);
-});
+$anyAction = array(
+	array('/product/product/index','Product\ProductController@index'),
+	array('/product/product/detail','Product\ProductController@detail'),
+	array('/get-total-price','Product\ProductController@getTotalPrice'),
 
+	array('/product/add', 'Product\ProductController@add'),
+	array('/category/add', 'Product\CategoryController@add'),
+);
 
-//demo
-//$app->get('/demo/index',"Demo\DemoController@index");
+foreach($anyAction as $v){
+	$app->get($v[0],$v[1]); 
+	$app->post($v[0],$v[1]); 
+}
 
-//$app->get('/index',"ApiController@index");
-
-
-/*
- * product
- */
-
-$app->get('/product/product/index',"Product\ProductController@index");   //获取商品列表
-
-
-$app->get('/product/product/detail',"Product\ProductController@detail");   //获取商品详情页
-
-$app->post('/get-total-price',"Product\ProductController@getTotalPrice");   //获取商品详情页
-$app->get('/get-total-price',"Product\ProductController@getTotalPrice");   //获取商品详情页
 

@@ -41,6 +41,7 @@ class GoodsController extends ApiController
 			return Response::json($goodsList);
 		}
 
+		$goodsIds = array();
 		foreach($goodsList->data->product_list as $v){
 			$goodsIds[] = $v->id;
 		}

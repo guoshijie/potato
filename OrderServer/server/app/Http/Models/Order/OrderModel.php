@@ -377,7 +377,6 @@ class OrderModel extends Model{
 	 * param    $order_id   string  订单ID
 	 */
 	public function getOrderDetailByOrderId($user_id,$order_no,$son_order_no){
-		$user_id = 5;
 		$data   = DB::table('order')->select('order_no','name','phone','address','store_name','district','pay_type','inv_payee','create_time','finish_time','end_time')->where('user_id',$user_id)->where('order_no',$order_no)->where('is_delete',0)->first();
 
 		if(empty($data)){

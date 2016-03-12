@@ -24,7 +24,10 @@ class ProductController extends ApiController
 		$pageinfo = $this->pageinfo($request);
 
 		$data =  $this->_model->getProductList($pageinfo->offset , $pageinfo->length);
-		if($data){
+		if($data!==false){
+			if(empty($data)){
+				return json_encode($this->response('1','获取成功'));
+			}
 			return json_encode($this->response('1','获取成功',array('product_list'=>$data)));
 		}else{
 			return $this->response(0);
@@ -77,5 +80,74 @@ class ProductController extends ApiController
 			$priceList[$v->goods_id] = $v->shop_price * $arrGoodsNum[$v->goods_id];
 		}
 		return $this->response(1, '成功',$priceList);
+	}
+
+	/*
+	 * 添加商品
+	 */
+	public function add(Request $request){
+		if(!$request->has('user_id') ){
+			return $this->response(10018);
+		}
+		$messages = $this->vd([
+			'category_id' => 'required',
+			'suppliers_id' => 'required',
+			'goods_name' => 'required',
+			'img_url' => 'required',
+			'description' => 'required',
+			'shop_price' => 'required',
+			], $request);
+		if($messages!='') return $this->response(10005, $messages);
+
+		$data = array();
+
+		$data['sh_category_id']		= $request->get('category_id');
+		$data['goods_name']			= $request->get('goods_name');
+
+		//这里因为可以提交多个图片,但暂时只用一个
+		$goodsImg					= $request->get('img_url');
+		$data['goods_img']			= is_array($goodsImg) ? $goodsImg[0] : $goodsImg;
+
+		$data['goods_desc']			= $request->get('description');
+		$data['shop_price']			= $request->get('shop_price');
+
+		if( $request->has('specs')){
+			$data['specs']		= $request->get('specs');
+		}
+		if( $request->has('goods_num')){
+			$data['goods_num']		= $request->get('goods_num');
+		}
+
+		$data['is_real']			= 1;
+		if( $request->has('is_real')){
+			$data['is_real']		= $request->get('is_real');
+		}
+
+		$data['market_price']		= 0;
+		if( $request->has('market_price')){
+			$data['market_price']	= $request->get('market_price');
+		}
+
+		$data['purchase_url']		= 0;
+		if( $request->has('purchase_url')){
+			$data['purchase_url']	= $request->get('purchase_url');
+		}
+
+		$data['create_time']		= time();
+
+		$goodsModule = new ProductModel();
+
+		$result = $goodsModule->addGoods($data);
+
+		if($result){
+		//	$goodsModule->addGoodsPic($result , $goodsImg);
+		}
+
+		$returnData['selected'] = "goods";
+		if($result){
+			return $this->response(1);
+		}else{
+			return $this->response(0);
+		}
 	}
 }
