@@ -120,14 +120,14 @@ class OrderController extends ApiController
 	 * 获取订单详情
 	 */
 	public function getOrderDetail(){
+		if(!$this->isLogin()){ return Response::json($this->response(99999)); }
 
-		if(!Request::has('order_no') || !Request::has('sub_order_no')){
-			return Response::json($this->response(10005));
-		}
-
-		if(!$this->isLogin()){
-			return Response::json($this->response(99999));
-		}
+		Log::info(print_r(Request::all(),1));
+		$messages = $this->vd([
+			'order_no' => 'required',
+			'sub_order_no' => 'required',
+		]);
+		if($messages!='') return Response::json($this->response(10005, $messages)); 
 
 		$user_id    =   $this->loginUser->id;
 		$order_no   = Request::get('order_no');

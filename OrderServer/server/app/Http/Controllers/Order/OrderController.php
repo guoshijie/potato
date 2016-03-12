@@ -123,15 +123,15 @@ class OrderController extends ApiController
 	 * param    $order_id   string  订单ID
 	 */
 	public function getOrderDetail(Request $request){
+		$messages = $this->vd([
+			'order_no' => 'required',
+			'sub_order_no' => 'required',
+			], $request);
+		if($messages!='') return Response::json($this->response(10005, $messages));
+
 		if(!$request->has('user_id') ){
 			return $this->response(10018);
 		}
-
-		if(!$request->has('order_no') || !$request->has('sub_order_no')){
-			return $this->response(10005);
-		}
-
-
 
 		$user_id        = $request->get('user_id');
 		$order_no       = $request->get('order_no');
