@@ -235,6 +235,7 @@ class CartModel extends Model{
 		//校验库存
 		$suppliers = array();
 		foreach($data as $vg){
+			// 选中的购物车数量
 			$vg->order_num    = '';
 			if($vg->goods_num == 0 ){
 				$vg->last_num = '库存数量不足';
@@ -248,6 +249,9 @@ class CartModel extends Model{
 						$vg->last_num = '1';
 					}
 					$vg->is_select = $cart->is_select;
+					if($vg->is_select){
+						$vg->total_price += 
+					}
 				}
 			}
 
@@ -270,8 +274,10 @@ class CartModel extends Model{
 		$supplly = array();
 		foreach($supplier_list as $v){
 			$v->goods_list = $suppliers[$v->id];
+			$v->total_price    = 0; //选中的总价
 			foreach($v->goods_list as $vvg){
 				$vvg->suppliers_name = $v->suppliers_name;
+				$v->total_price += $vvg->order_num*$vvg->shop_price;
 			}
 			$supplly['suppliers'][] = $v;
 		}
