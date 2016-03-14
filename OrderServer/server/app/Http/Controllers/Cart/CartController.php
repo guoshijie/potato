@@ -70,7 +70,6 @@ class CartController extends ApiController
 		}
 
 		$user_id    = $request->get('user_id');
-		$user_id = 5;
 		$is_select = $request->has('is_select') ? $request->get('is_select') : null;
 
 		$data =  $this->_model->getCartListByUserId($user_id, $is_select);

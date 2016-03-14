@@ -91,7 +91,7 @@ class ProductModel extends Model{
 
 		//图片
 		$pics     = $this->goodsPics(array($data->id));
-		$pics[] = $data->goods_img; 
+		$pics[]	= array('pic_url'=>$data->goods_img); 
 
 		//供应商
 		$suppliers  = $this->suppliers(array($data->suppliers_id));
