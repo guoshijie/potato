@@ -71,7 +71,8 @@ class RegisterController extends ApiController
 	 */
 	public function register(Request $request) {
 
-		if (!$request->has('tel') || !$request->has('password') || !$request->has('code')){
+		//if (!$request->has('tel') || !$request->has('password') || !$request->has('code')){
+		if (!$request->has('tel') || !$request->has('password')){
 			return $this->response(10005);
 		}
 		$tel        = $request->get('tel');

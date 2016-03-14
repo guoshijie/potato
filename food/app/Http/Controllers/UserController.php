@@ -59,13 +59,18 @@ class UserController extends ApiController
 
 
 	public function register(){
-		if (!Request::has('tel') || !Request::has('password') || !Request::has('code')){
-			return Response::json($this->response(10005));
-		}
+		$messages = $this->vd([
+			'tel' => 'required',
+			'password' => 'required',
+			//'code' => 'required',
+		]);
+
+		if($messages!='') return Response::json($this->response(10005, $messages)); 
 
 		$tel        =   Request::get('tel');
 		$password   =   Request::get('password');
-		$code       =   Request::get('code');
+		//$code       =   Request::get('code');
+		$code = 1234;
 
 		return $this->userServer->register($tel,$password,$code);
 	}
