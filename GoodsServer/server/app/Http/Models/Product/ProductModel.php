@@ -143,7 +143,7 @@ class ProductModel extends Model{
 		foreach($good_tags as $vg){
 			foreach ($tags as $vt) {
 				if($vg->tag_id == $vt->tag_id){
-					$data[$vg->goods_id][] = $vt;
+					$data[$vg->goods_id] = $vt;
 				}
 			}
 
