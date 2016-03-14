@@ -37,7 +37,7 @@ class GoodsController extends ApiController
 			return Response::json($goodsList);
 		}
 
-		if($goodsList->code==0 || !$goodsList->data){
+		if($goodsList->code==0 || !isset($goodsList->data) || !$goodsList->data){
 			return Response::json($goodsList);
 		}
 
