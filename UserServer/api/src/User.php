@@ -159,7 +159,8 @@ class User extends Api
 	 * 意见反馈
 	 */
 	public function setOpinion($user_id,$content){
-		return $this->getData("/user/opinion?user_id=".$user_id."&content=".$content);
+		$data = array('user_id'=>$user_id, 'content'=>$content);
+		return $this->postData("/user/opinion", $data);
 	}
 
 	

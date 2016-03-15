@@ -65,6 +65,7 @@ $app->get('/user/reset/edit-head',"User\UserController@editHeadPic");      //修
 $app->get('/user/qiniu/token',"User\UserController@uploadKey");      //七牛上传图片token
 
 $app->get('/user/opinion',"User\UserController@setOpinion");        //意见反馈
+$app->post('/user/opinion',"User\UserController@setOpinion");        //意见反馈
 
 /*
  * user address

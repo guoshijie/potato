@@ -422,7 +422,7 @@ class OrderModel extends Model{
 			}
 
 			//标签
-			$goods_info_list->tag = isset($tags[$goods_info_list->id]) ? $tags[$goods_info_list->id] : [];
+			$goods_info_list->tag = isset($tags[$goods_info_list->goods_id]) ? $tags[$goods_info_list->goods_id] : [];
 
 			//供应商
 			foreach($suppliers as $suppilers_list){
