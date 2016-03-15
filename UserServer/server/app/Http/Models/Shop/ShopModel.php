@@ -55,45 +55,18 @@ class ShopModel extends Model
 
 		$data = array(
 			'user_id'    => $user_id,
-			'consignee'        => $name,
-			'store_name'  => $head_name,
+			'consignee'  => $name,
+			'store_name' => $head_name,
 			'district'   => $district,
 			'address'    => $address,
 			'tel'        => $tel,
-			'is_default' => 1,
-			'create_time'=> date('Y-m-d H:i:s'),
-			'update_time'=> '0000-00-00 00:00:00'
+			'is_default' => 0,
+			'create_time'=> date('Y-m-d H:i:s')
 		);
 
-		if ($data['is_default'] == 1) {
-			$user_address = DB::table($this->table)
-				->where('user_id', $user_id)
-				->where('is_default', 1)
-				->get();
-			if ($user_address != NULL) {
-				// debug($user_address);
-				$this->editUserAddress($user_id);
-			}
+		$newId = DB::table($this->table)->insertGetId($data);
 
-			$adds = DB::table($this->table)->insertGetId($data);
-		}
-
-		return $adds;
-	}
-
-
-	/**
-	 * 设置收货地址为非默认的
-	 * @param user_id   用户id
-	 * @return    json
-	 */
-
-	public function editUserAddress($user_id)
-	{
-		//$this->getDefaultAddress($user_id);
-
-		//修改默认的收货地址成非默认地址
-		return DB::table($this->table)->where('user_id', $user_id)->update(array('is_default' => 0));
+		return $newId;
 	}
 
 
@@ -108,15 +81,9 @@ class ShopModel extends Model
 		$address = DB::table($this->table)
 			->select('address_id', 'consignee','store_name','address','district','tel')
 			->where('user_id', $ch_user_id)
-			->where('is_default', 1)
+			->orderBy('is_default', 'DESC')
 			->first();
 
-		if (!$address) {
-			$address = DB::table($this->table)
-				->select('address_id', 'consignee','store_name','address','district','tel')
-				->where('user_id', $ch_user_id)
-				->first();
-		}
 		if(empty($address)){
 			return array();
 		}
@@ -137,7 +104,7 @@ class ShopModel extends Model
 			->where('user_id', $userId)
 			->skip($offset)
 			->take($length)
-			->orderBy('is_default', '1')
+			->orderBy('is_default', 'DESC')
 			->get();
 	}
 
@@ -159,20 +126,12 @@ class ShopModel extends Model
 			'district'   => $area,
 			'address'    => $address,
 			'tel'        => $mobile,
-			'is_default' => 1,
-			'update_time'=> date('Y-m-d H:i:s')
+			'is_default' => $isDefault
 		);
 
 		//设置默认
 		if ($isDefault == 1) {
-			$user_address = DB::table($this->table)
-				->where('user_id', $user_id)
-				->where('is_default', 1)
-				->get();
-			if ($user_address != NULL) {
-				// debug($user_address);
-				$this->editUserAddress($user_id);
-			}
+			DB::table($this->table)->where('user_id', $user_id)->where('is_default',1)->update(array('is_default' => 0));
 		}
 
 		return DB::table($this->table)
@@ -186,27 +145,14 @@ class ShopModel extends Model
 	 */
 	public function setDefault($user_id,$id){
 		$data = array(
-			'is_default' => 1,
-			'update_time'=> date('Y-m-d H:i:s')
+			'is_default' => 1
 		);
 
-		$isDefault = 1;
-
-		//设置默认
-		if ($isDefault == 1) {
-			$user_address = DB::table($this->table)
-				->where('user_id', $user_id)
-				->where('is_default', 1)
-				->get();
-			if ($user_address != NULL) {
-				// debug($user_address);
-				$this->editUserAddress($user_id);
-			}
-		}
+		DB::table($this->table)->where('user_id', $user_id)->where('is_default',1)->update(array('is_default' => 0));
 
 		return DB::table($this->table)
 			->where('address_id', $id)
-			->update($data);
+			->update(array('is_default'=>1));
 
 	}
 

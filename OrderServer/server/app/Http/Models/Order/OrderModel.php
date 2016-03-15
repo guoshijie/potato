@@ -336,7 +336,7 @@ class OrderModel extends Model{
 			}
 
 			//标签
-			$goods_info_list->tag = isset($tags[$goods_info_list->id]) ? $tags[$goods_info_list->id] : [];
+			$goods_info_list->tag = isset($tags[$goods_info_list->goods_id]) ? $tags[$goods_info_list->goods_id] : [];
 
 			//$tmp[$goods_info_list->order_no][$goods_info_list->suppliers_id][] = $goods_info_list;
 
