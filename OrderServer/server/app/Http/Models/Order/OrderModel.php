@@ -226,6 +226,7 @@ class OrderModel extends Model{
 			->whereIn('status',$status)
 			->skip($offset)
 			->take($length)
+			->orderBy('create_time', 'DESC')
 			->get();
 
 		if(empty($order_suppliers)){
@@ -303,7 +304,9 @@ class OrderModel extends Model{
 		}
 
 		//获取订单商品
-		$order_info  = DB::table('order_info')->whereIn('sub_order_no',$sub_order_noList)->where('is_delete',0)->get();
+		$order_info  = DB::table('order_info')
+			->whereIn('sub_order_no',$sub_order_noList)->where('is_delete',0)
+			->get();
 
 		if(empty($order_info)){
 			return array();
