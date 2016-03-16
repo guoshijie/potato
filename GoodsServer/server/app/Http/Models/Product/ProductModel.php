@@ -52,6 +52,7 @@ class ProductModel extends Model{
 			foreach($suppliers as $suppilers_list){
 				if($goods_info_list->suppliers_id == $suppilers_list->id){
 					$goods_info_list->suppilers_name = $suppilers_list->suppliers_name;
+					$goods_info_list->suppliers_name = $suppilers_list->suppliers_name;
 				}
 			}
 
