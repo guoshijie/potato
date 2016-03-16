@@ -216,14 +216,17 @@ class OrderModel extends Model{
 	 */
 	public function getOrderListByStatus($user_id, $offset, $length, $status){
 		if($status==2 || $status==3 || $status==4){
-			$status = array(2,3,4);
-			$orderby = 'update_time';
-		}elseif($status==5){
-			$status = array($status);
+			$arrStatus = array(2,3,4);
+		}else{
+			$arrStatus = array($status);
+		}
+
+		if($status==0){
+			$orderby = 'create_time';
+		}elseif($status==5 || $status==1){
 			$orderby = 'finish_time';
 		}else{
-			$status = array($status);
-			$orderby = 'create_time';
+			$orderby = 'update_time';
 		}
 
 
@@ -232,7 +235,7 @@ class OrderModel extends Model{
 			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time','update_time','finish_time')
 			->where('is_delete',0)
 			->where('user_id',$user_id)
-			->whereIn('status',$status)
+			->whereIn('status',$arrStatus)
 			->skip($offset)
 			->take($length)
 			->orderBy($orderby, 'DESC')
