@@ -165,9 +165,18 @@ class ShopController extends ApiController
 	 */
 	public function editShop(Request $request)
 	{
-		if (!$request->has('id') || !$request->has('name') || !$request->has('tel') || !$request->has('district') || !$request->has('address') || !$request->has('isDefault') || !$request->has('head_name') || !$request->has('user_id') || !$request->has('code')) {
-			return $this->response(10005);
-		}
+		$messages = $this->vd([
+			'id' => 'required',
+			'name' => 'required',
+			'district' => 'required',
+			'address' => 'required',
+			'isDefault' => 'required',
+			'head_name' => 'required',
+			'user_id' => 'required',
+			'code' => 'required',
+			], $request);
+
+		if($messages!=''){ return $this->response(10005, $messages);}
 
 		//name=梁枫&tel=18612579961&district=北京市&address=澶阳区都第三季&head_name=世和科技&code=458991&is_default=1&id=210
 
@@ -193,9 +202,11 @@ class ShopController extends ApiController
 //		}
 
 		$check      = $this->commontMdel->checkVerifyCode( $tel , $code  );
-		if(!$check){
-			return $this->response(20208);
-		}
+			if(!$check){
+				if( !env('APP_DEBUG')){
+					return $this->response(20208);
+				}
+			}
 
 		//修改收货地址
 		$data = $this->_model->editAddressByAddressId($user_id, $address_id, $name, $tel, $district, $address, $isDefault, $head_name);

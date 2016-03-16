@@ -18,10 +18,10 @@ class GoodsController extends ApiController
 
 
 	public function index(){
-
-		if(!Request::has('page')){
-			return Response::json($this->response(10005));
-		}
+		$messages = $this->vd([
+			'page' => 'required',
+		]);
+		if($messages!='') return Response::json($this->response(10005, $messages)); 
 
 		$page    =   Request::get('page');
 

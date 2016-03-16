@@ -347,12 +347,14 @@ class OrderModel extends Model{
 
 			$tmp[$goods_info_list->sub_order_no][] = $goods_info_list;
 			$tmpTotalPrice[$goods_info_list->sub_order_no][] = $goods_info_list->price_total;
+			$tmpTotalNum[$goods_info_list->sub_order_no][] = $goods_info_list->goods_num;
 
 		}
 
 		$data = array();
 		foreach($order_suppliers as $vs){
 			$vs->total_price = 0;
+			$vs->total_num = 0;
 
 			//供应商
 			foreach($suppliers as $suppilers_list){
@@ -361,9 +363,10 @@ class OrderModel extends Model{
 				}
 			}
 
-			$vs->order_info = isset($tmp[$vs->sub_order_no]) ? $tmp[$vs->sub_order_no] : array();
+			$vs->order_info		= isset($tmp[$vs->sub_order_no]) ? $tmp[$vs->sub_order_no] : array();
 
-			$vs->total_price = array_sum($tmpTotalPrice[$vs->sub_order_no]);
+			$vs->total_price	= array_sum($tmpTotalPrice[$vs->sub_order_no]);
+			$vs->total_num		= array_sum($tmpTotalNum[$vs->sub_order_no]);
 
 			$data[$vs->sub_order_no] = $vs;
 
