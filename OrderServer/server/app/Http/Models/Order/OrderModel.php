@@ -120,6 +120,7 @@ class OrderModel extends Model{
 				'suppliers_id' => $suppliers_id_list,
 				'status'       => 0,
 				'pay_status'   => 0,
+				'create_time'  => date('Y-m-d H:i:s'),
 				'is_delete'    => 0
 			);
 			$arr_sub_order_no[$suppliers_id_list] = $tmp_sub_order_no;
@@ -145,6 +146,7 @@ class OrderModel extends Model{
 						'suppliers_id'  =>  $goods_value->suppliers_id,
 						'category_id'   =>  $goods_value->sh_category_id,
 						'specs'         =>  $goods_value->specs,
+						'create_time'  => date('Y-m-d H:i:s'),
 						'unit'          =>  $goods_value->unit
 					);
 				}
@@ -220,7 +222,7 @@ class OrderModel extends Model{
 		}
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
-			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time')
+			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time','update_time','finish_time')
 			->where('is_delete',0)
 			->where('user_id',$user_id)
 			->whereIn('status',$status)
@@ -451,7 +453,7 @@ class OrderModel extends Model{
 	public function cancelOrderNo($user_id,$order_no){
 		//更新订单表
 		$upNum = DB::table('order')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)->where('user_id',$user_id)
-			->update(array('status'=>1));
+			->update(array('status'=>1, 'finish_time'=>date('Y-m-d H:i:s')));
 		if(!$upNum){
 			return 0;
 			/*
@@ -466,7 +468,7 @@ class OrderModel extends Model{
 
 		//更新子订单表
 		$upNum = DB::table('order_suppliers')->where('order_no',$order_no)->where('is_delete',0)->where('status', 0)->where('user_id',$user_id)
-			->update(array('status'=>1));
+			->update(array('status'=>1,'finish_time'=>date('Y-m-d H:i:s')));
 		if(!$upNum){
 			return 0;
 		}
@@ -541,7 +543,7 @@ class OrderModel extends Model{
  */
 		//更新子订单表
 		$upNum = DB::table('order_suppliers')->where('sub_order_no',$sub_order_no)->where('is_delete',0)->where('status',0)->where('user_id',$user_id)
-			->update(array('status'=>1));
+			->update(array('status'=>1,'finish_time'=>date('Y-m-d H:i:s')));
 		if(!$upNum){
 			return 0;
 		}
