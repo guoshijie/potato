@@ -217,9 +217,16 @@ class OrderModel extends Model{
 	public function getOrderListByStatus($user_id, $offset, $length, $status){
 		if($status==2 || $status==3 || $status==4){
 			$status = array(2,3,4);
+			$orderby = 'update_time';
+		}elseif($status==5){
+			$status = array($status);
+			$orderby = 'finish_time';
 		}else{
 			$status = array($status);
+			$orderby = 'create_time';
 		}
+
+
 		//子订单
 		$order_suppliers = DB::table('order_suppliers')
 			->select('sub_order_no','order_no','suppliers_id','status','pay_status','create_time','update_time','finish_time')
@@ -228,7 +235,7 @@ class OrderModel extends Model{
 			->whereIn('status',$status)
 			->skip($offset)
 			->take($length)
-			->orderBy('create_time', 'DESC')
+			->orderBy($orderby, 'DESC')
 			->get();
 
 		if(empty($order_suppliers)){
