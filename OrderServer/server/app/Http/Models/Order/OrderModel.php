@@ -369,7 +369,7 @@ class OrderModel extends Model{
 			//供应商
 			foreach($suppliers as $suppilers_list){
 				if($vs->suppliers_id == $suppilers_list->id){
-					$vs->suppilers_name = $suppilers_list->suppliers_name;
+					$vs->suppliers_name = $suppilers_list->suppliers_name;
 				}
 			}
 
@@ -445,8 +445,8 @@ class OrderModel extends Model{
 			//供应商
 			foreach($suppliers as $suppilers_list){
 				if($goods_info_list->suppliers_id == $suppilers_list->id){
-					$goods_info_list->suppilers_name = $suppilers_list->suppliers_name;
-					$order_suppliers->suppilers_name = $suppilers_list->suppliers_name;
+					$goods_info_list->suppliers_name = $suppilers_list->suppliers_name;
+					$order_suppliers->suppliers_name = $suppilers_list->suppliers_name;
 				}
 			}
 			$order_suppliers->total_price +=  $goods_info_list->price_total;
