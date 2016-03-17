@@ -271,8 +271,23 @@ class ApiController extends BaseController
 	 *	 *	 validate
 	 *		 *
 	 *			 * */
-	protected function vd($rules, $request){
-		$validate = Validator::make($request->all(), $rules);
+	protected function vd($rules, $request, $tip=array()){
+		// 自定义错误信息，不谢用默认的
+		$selfMessages = array(
+			'required' => '请填写 :attribute ;',
+			'same'    => 'The :attribute and :other must match;',
+			'size'    => 'The :attribute must be exactly :size;',
+			'between' => 'The :attribute must be between :min - :max;',
+			'in'      => 'The :attribute must be one of the following types: :values ;',
+		);
+
+		foreach($rules as $k=>$vr){
+			if(isset($tip[$k])){
+				$selfMessages[$k.'.'.$vr] = str_replace(':attribute', $tip[$k], $selfMessages[$vr]);
+			}
+		}
+
+		$validate = Validator::make($request->all(), $rules,$selfMessages);
 		$messages = $validate->messages()->all();
 		return implode(' & ', $messages);
 	}

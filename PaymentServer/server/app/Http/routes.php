@@ -15,22 +15,14 @@ $anyAction = array(
 	array('/alipay/result','Alipay\CallbackController@result'),
 	array('/alipay/callback','Alipay\CallbackController@callback'),
 	array('/cash','CashController@index'),
+	array('/weixin/pay','WeixinController@pay'),
+	array('/weixin/callback','WeixinController@callback'),
 );
 
 foreach($anyAction as $v){
 	$app->get($v[0],$v[1]); 
 	$app->post($v[0],$v[1]); 
 }
-
-/*
- * Callback
- */
-$app->get('/weixin/api',"Weixinpay\WeixinApiController@wxPay");
-$app->post('/weixin/api',"Weixinpay\WeixinApiController@wxPay");
-
-$app->get('/weixin/callback',"Weixinpay\WeixinApiController@callback");
-$app->post('/weixin/callback',"Weixinpay\WeixinApiController@callback");
-
 
 
 

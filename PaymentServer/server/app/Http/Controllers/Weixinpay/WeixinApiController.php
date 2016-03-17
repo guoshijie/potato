@@ -34,38 +34,39 @@ class  WeixinApiController extends  ApiController {
 	/*
 	 * 微信预支付接口
 	 */
-	public function wxPay(Request $request){
+	public function pay(Request $request){
+		$messages = $this->vd([
+			'user_id' => 'required',
+			'out_trade_no' => 'required',
+			'goods_name' => 'required',
+			'total_fee' => 'required',
+			],$request);
+		if($messages!='') return $this->response(10005, $messages);
 
-		if( $request->has('user_id') && $request->has('out_trade_no') && $request->has('goods_name')  && $request->has('total_fee') ){
-			$outTradeNo =   $request->get('out_trade_no');
-			$goodsName  =   $request->get('goods_name');
-			if($request->get('total_fee') <=1 ){
-				$totalFee   = 100;
-
-			}else{
-				$totalFee   = (int)$request->get('total_fee') * 100;
-			}
-
-			$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
+		$outTradeNo =   $request->get('out_trade_no');
+		$body  =   $request->get('body');
+		if($request->get('total_fee') <=1 ){ // 金额单位是分，最小1分，不支持0.01元，
+			$totalFee   = 100;
 
 		}else{
-			Log::error(var_export('参数错误', true), array(__CLASS__));
-			return $this->response( '10005' );
+			$totalFee   = (int)$request->get('total_fee') * 100;
 		}
+
+		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
+
 
 		//②、统一下单   请求微信预下单
 		//②、统一下单   请求微信预下单
 		$input = new WxPayUnifiedOrder();
 
-		$input->SetBody($goodsName);
+		$input->SetBody($body);
 		$input->SetOut_trade_no($outTradeNo);
 		$input->SetTotal_fee($totalFee);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 7200));
 		$input->SetGoods_tag("test_goods");
 		$input->SetAttach($payment_type);
-		$input->SetNotify_url($request->root()."
-		/weixin/callback");
+		$input->SetNotify_url($request->root()."/weixin/callback");
 		$input->SetTrade_type("APP");
 		//浏览器测试记得注释掉   $inputObj->SetSpbill_create_ip("1.1.1.1");
 		$order = WxPayApi::unifiedOrder($input);

@@ -81,7 +81,7 @@ class ApiController extends Controller
 	 */
 	protected function vd($rules, $tip=array()){
 		// 自定义错误信息，不谢用默认的
-		$error = array(
+		$selfMessages = array(
 			'required' => '请填写 :attribute ;',
 			'same'    => 'The :attribute and :other must match;',
 			'size'    => 'The :attribute must be exactly :size;',
@@ -91,11 +91,11 @@ class ApiController extends Controller
 
 		foreach($rules as $k=>$vr){
 			if(isset($tip[$k])){
-				$error[$k.'.'.$vr] = str_replace(':attribute', $tip[$k], $error[$vr]);
+				$selfMessages[$k.'.'.$vr] = str_replace(':attribute', $tip[$k], $selfMessages[$vr]);
 			}
 		}
 
-		$validate = Validator::make(Request::all(), $rules, $error);
+		$validate = Validator::make(Request::all(), $rules, $selfMessages);
 		$messages = $validate->messages()->all();
 		return implode(' ', $messages);
 	}
