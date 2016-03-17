@@ -46,6 +46,7 @@ class  WeixinController extends  ApiController {
 			'out_trade_no' => 'required',
 			'body' => 'required',
 			'total_fee' => 'required',
+			'notify_url' => 'required',  // 回调地址
 			],$request);
 		if($messages!='') return $this->response(10005, $messages);
 
@@ -59,9 +60,8 @@ class  WeixinController extends  ApiController {
 		}
 
 		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
+		$notify_url		= $request->get('notify_url'); // 回调地址
 
-
-		//②、统一下单   请求微信预下单
 		//②、统一下单   请求微信预下单
 		$input = new WxPayUnifiedOrder();
 
@@ -72,7 +72,7 @@ class  WeixinController extends  ApiController {
 		$input->SetTime_expire(date("YmdHis", time() + 7200));
 		$input->SetGoods_tag("test_goods");
 		$input->SetAttach($payment_type);
-		$input->SetNotify_url($request->root()."/weixin/callback");
+		$input->SetNotify_url($request->root()."/pay/weixin/callback");
 		$input->SetTrade_type("APP");
 		//浏览器测试记得注释掉   $inputObj->SetSpbill_create_ip("1.1.1.1");
 		$order = WxPayApi::unifiedOrder($input);
@@ -122,9 +122,9 @@ class  WeixinController extends  ApiController {
 	 * 回调
 	 */
 	public function callback(){
+		Log:error('--------Weixin callback  ---- ');
 		//获取回调通知xml
 		$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
-		Log:error('--------Weixin callback  ---- '.);
 		Log::error('--- $xml ----');
 		Log::error(var_export($xml, true), array(__CLASS__));
 		$reply = new WxPayNotifyReply();

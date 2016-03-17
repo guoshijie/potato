@@ -32,6 +32,7 @@ class WeixinController extends ApiController
 		 */
 		$param = Request::all();
 		$param['user_id'] = $this->loginUser->id;
+		$param['notify_url'] = Request::url().'/callback';
 
 		header('Content-type: text/html');
 		return $this->payServer->post('/weixin/pay', $param);
