@@ -70,4 +70,28 @@ class Api
     {
         return json_decode($str);
     }
+
+	/*
+	 * 命令行模式调用
+	 */
+	protected function command($action, $postData=array()){
+		if(isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING']!=''){
+			$action .= strpos($action,'?') ? '&' : '?';
+			$action .= $_SERVER['QUERY_STRING'];
+		}
+
+		$command = env('SYS_PHP','php').' '.RBAC_PATH.'/apple/public/index.php rbac/'.$action;
+		if(!empty($postData)){
+			$command .= ' post ' . http_build_query($postData);
+		}
+
+		// 转义特殊字符
+		$command = str_replace('&', '\&', $command);
+
+		$arr = array();
+		exec($command, $arr);
+		$content = implode('', $arr);
+		return $content;
+	}
+
 }

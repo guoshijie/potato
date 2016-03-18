@@ -327,7 +327,8 @@ class UserController extends ApiController
 	 * 获取七牛上传Token
 	 */
 	public function getQiniuToken(){
-		return $this->userServer->qiniuToken();
+		$param = Request::all();
+		return $this->userServer->qiniuToken($param);
 	}
 
 

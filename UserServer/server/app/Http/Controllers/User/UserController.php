@@ -52,21 +52,18 @@ class UserController extends ApiController
 	/*
 	 * 七牛上传图片token
 	 */
-	public function uploadKey() {
-		$bucket = 'eduonline';
+	public function uploadQiniuToken(Request $request){
+		if(!$request->has('image')){
+			return $this->response(0 , '请传入image 参数');
+		}
+		$image=$request->get('image');
 		$accessKey = 'h591Hrv-oh3BornRVEQqlDE7IJQYFgM-dkA44tKM';
 		$secretKey = 'XFwQNCCycfAf6fv_Ox-teKB8Tf2Bk21Xr5cqYXEm';
-		$policy = array(
-			'returnUrl' => 'http://alipay.localhost/qiniu/qiNiu/upload-token',
-			'returnBody' => '{"fname": $(fname)}',
-		);
 		$qiniu  = new Auth($accessKey , $secretKey);
-		$upload = $qiniu->uploadToken($bucket, null, 3600, $policy);
+		$data['token'] = $qiniu->uploadToken($image);
 
-		return $this->response(1,'成功',$upload);
-
+		return $this->response(1, '成功' ,$data);
 	}
-
 
 	/*
 	 *  意见反馈
