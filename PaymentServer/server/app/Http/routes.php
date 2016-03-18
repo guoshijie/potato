@@ -17,6 +17,7 @@ $anyAction = array(
 	array('/cash','CashController@index'),
 	array('/weixin/pay','WeixinController@pay'),
 	array('/weixin/callback','WeixinController@callback'),
+	array('/weixin/sign','WeixinController@sign'),
 );
 
 foreach($anyAction as $v){

@@ -18,7 +18,10 @@ namespace App\Http\Controllers;    //定义命名空间
 use App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
 use Illuminate\Support\Facades\Log;
+//use Illuminate\Support\Facades\Cache;
+use Cache;
 use App\Libraries\WxPayApi;
+use App\Libraries\Curl;
 use App\Libraries\WxPayConfig;
 use App\Libraries\WxPayUnifiedOrder;
 use App\Libraries\WxPayDataBase;
@@ -40,7 +43,7 @@ class  WeixinController extends  ApiController {
 	 * 微信预支付接口
 	 */
 	public function pay(Request $request){
-		Log::error('----------- weixin pay -------------');
+		Log::info('----------- weixin pay -------------');
 		$messages = $this->vd([
 			'user_id' => 'required',
 			'out_trade_no' => 'required',
@@ -82,11 +85,15 @@ class  WeixinController extends  ApiController {
 		}
 
 
-		Log::error('------ $order ---');
-		Log::error(var_export($order, true), array(__CLASS__));
+		Log::info('------ $order ---');
+		Log::info(var_export($order, true), array(__CLASS__));
 		if($order['return_code']=='SUCCESS'){
-
 			$timestamp = time();
+			if($request->has('channel')){  // js请求
+				$access_token_obj = $this->getAccessToken($timestamp);
+				$tickit = $this->getTicket($access_token_obj);
+			}
+
 			//参与签名的字段 无需修改  预支付后的返回值
 			$arr = array();
 			$arr['appid'] = trim(WxPayConfig::APPID);
@@ -108,11 +115,12 @@ class  WeixinController extends  ApiController {
 			$data['nonce_str']    = $order['nonce_str'];
 			$data['timestamp']    = $timestamp;
 			$data['sign']         = $sign;
-			Log::error('------ 预订单成功 ---');
-			//Log::error(var_export($data, true), array(__CLASS__));
+			$data['appid']         = WxPayConfig::APPID;
+			Log::info('------ 预订单成功 ---');
+			//Log::info(var_export($data, true), array(__CLASS__));
 			return $this->response( '1','预订单成功',$data );
 		}else{
-			Log::error(var_export(' --- 微信回调错误', true), array(__CLASS__));
+			Log::info(var_export(' --- 微信回调错误', true), array(__CLASS__));
 			return $this->response( '0' );
 		}
 	}
@@ -122,19 +130,19 @@ class  WeixinController extends  ApiController {
 	 * 回调
 	 */
 	public function callback(){
-		Log:error('--------Weixin callback  ---- ');
+		Log:info('--------Weixin callback  ---- ');
 		//获取回调通知xml
 		$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
-		Log::error('--- $xml ----');
-		Log::error(var_export($xml, true), array(__CLASS__));
+		Log::info('--- $xml ----');
+		Log::info(var_export($xml, true), array(__CLASS__));
 		$reply = new WxPayNotifyReply();
 		$data = $reply->FromXml($xml);
-		Log::error('--- $data ----');
-		Log::error(var_export($data, true), array(__CLASS__));
+		Log::info('--- $data ----');
+		Log::info(var_export($data, true), array(__CLASS__));
 		file_put_contents('log.txt',"\n\n红包回调通知".print_r($data,1),FILE_APPEND);
 
 		if(!$data){
-			Log::error(var_export('非法请求', true), array(__CLASS__));
+			Log::info(var_export('非法请求', true), array(__CLASS__));
 			return $this->response( '10006' );
 		}
 
@@ -142,7 +150,7 @@ class  WeixinController extends  ApiController {
 
 		if($return_code=='FAIL'){
 			$err_code_des = $data['err_code_des'];
-			Log::error(var_export('异步回调通知错误FAIL', true), array(__CLASS__));
+			Log::info(var_export('异步回调通知错误FAIL', true), array(__CLASS__));
 			return $this->response( '0', $err_code_des);
 		}
 
@@ -218,7 +226,7 @@ class  WeixinController extends  ApiController {
 					}
 
 				} catch (\Exception $e) {
-					Log::error(var_export($e, true), array(__CLASS__));
+					Log::info(var_export($e, true), array(__CLASS__));
 				}
 
 				return 'SUCCESS';
@@ -227,11 +235,116 @@ class  WeixinController extends  ApiController {
 
 
 		} else {
-			Log::error('------ Weixin FAIL ---- ');
+			Log::info('------ Weixin FAIL ---- ');
 			//验证失败
 			return 'FAIL';
 
 		}
 	}
+
+	/*
+	 * 获取 access_token
+	 */
+	private function getAccessToken(){
+		// 获取缓存的access_token
+		if( Cache::has('weixin_access_token')){  // cache 要存到公用存储器上，比如db，redis
+			$access_token_obj = Cache::get('weixin_access_token');
+			// 超过有效期; 减少5秒解决服务器可能延迟问题
+			if( !isset($access_token_obj->access_token) || $access_token_obj->expire_time + 5 < time() ){
+				unset($access_token_obj);
+			}
+		}
+
+		// 重新获取access_token
+		if( !isset($access_token_obj)){
+			$access_token_url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.WxPayConfig::APPID.'&secret='.WxPayConfig::APPSECRET;
+			$curl = new Curl();
+			$access_token_json = $curl->get($access_token_url);
+			$access_token_obj = json_decode($access_token_json);
+			if(isset($access_token_obj->access_token)){
+				$access_token_obj->expire_time = time() + $access_token_obj->expires_in;
+				Cache::put('weixin_access_token', $access_token_obj, $access_token_obj->expires_in/60);
+			}else{
+				Log::info('--- error: weixin access_token get fail ---'.$access_token_json);
+			}
+		}
+		return $access_token_obj->access_token;
+	}
+
+	/* 获取tickit
+	 * 
+	 */
+	private function getJsApiTicket(){
+		$access_token = $this->getAccessToken();
+		// 获取缓存的access_token
+		if( Cache::has('weixin_ticket')){  // cache 要存到公用存储器上，比如db，redis
+			$tickit_obj = Cache::get('weixin_ticket');
+			// 超过有效期; 减少5秒解决服务器可能延迟问题
+			if( $tickit_obj->expire_time + 5 < time() ){
+				unset($tickit_obj);
+			}
+		}
+
+		if( !isset($tickit_obj)){
+			$tickit_url = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token='.$access_token.'&type=jsapi';
+			$curl = new Curl();
+			$tickit_json = $curl->get($tickit_url);
+			$tickit_obj = json_decode($tickit_json);
+			if($tickit_obj->errcode==0){
+				$tickit_obj->expire_time = time() + $tickit_obj->expires_in;
+				Cache::put('weixin_ticket', $tickit_obj, $tickit_obj->expires_in/60);
+			}else{
+				Log::info('--- error: weixin tickit get fail ---'.$tickit_json);
+			}
+		}
+		return $tickit_obj->ticket;
+	}
+
+	private function createNonceStr($length = 16) {
+		$chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		$str = "";
+		for ($i = 0; $i < $length; $i++) {
+			$str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+		}
+		return $str;
+	}
+
+	/*
+	 * 获取signature
+	 */
+	public function sign(Request $request) {
+		$messages = $this->vd([
+			'url' => 'required',
+			],$request);
+		if($messages!='') return $this->response(10005, $messages);
+
+		$url = $request->get('url');
+		$url = urldecode($url);
+
+		$jsapiTicket = $this->getJsApiTicket();
+
+		// 注意 URL 一定要动态获取，不能 hardcode.
+		//$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+		//$url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+		$timestamp = time();
+		$nonceStr = $this->createNonceStr();
+
+		// 这里参数的顺序要按照 key 值 ASCII 码升序排序
+		$string = "jsapi_ticket=$jsapiTicket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
+
+		$signature = sha1($string);
+
+		$signPackage = array(
+			"appId"     => WxPayConfig::APPID,
+			"nonceStr"  => $nonceStr,
+			"timestamp" => $timestamp,
+			"url"       => $url,
+			"signature" => $signature,
+			"rawString" => $string
+		);
+		return $signPackage; 
+	}
+	
 
 }

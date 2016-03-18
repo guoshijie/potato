@@ -52,4 +52,12 @@ class WeixinController extends ApiController
 			return Response::json($this->response(0));
 		}
 	}
+
+	/*
+	 * jssdk signature
+	 */
+	public function anySign(){
+		$param    =   Request::all();
+		return $this->payServer->post('/weixin/sign', $param);
+	}
 }
