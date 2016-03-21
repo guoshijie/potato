@@ -18,8 +18,7 @@ namespace App\Http\Controllers;    //定义命名空间
 use App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
 use Illuminate\Support\Facades\Log;
-//use Illuminate\Support\Facades\Cache;
-use Cache;
+use Illuminate\Support\Facades\Cache;
 use App\Libraries\WxPayApi;
 use App\Libraries\Curl;
 use App\Libraries\WxPayConfig;
@@ -27,8 +26,7 @@ use App\Libraries\WxPayUnifiedOrder;
 use App\Libraries\WxPayDataBase;
 use App\Libraries\WxPayNotifyReply;
 use App\Libraries\WxPayOrderQuery;
-use App\Http\Models\Weixin\WeixinPayModel;
-
+use App\Http\Models\WeixinModel;
 
 class  WeixinController extends  ApiController {
 
@@ -36,7 +34,7 @@ class  WeixinController extends  ApiController {
 	protected $_model;
 	public function  __construct() {
 		$this->nowTime = date('Y-m-d H:i:s');
-		$this->_model = new WeixinPayModel();
+		$this->_model = new WeixinModel();
 	}
 
 	/*

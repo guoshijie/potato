@@ -12,8 +12,8 @@
 */
 
 $anyAction = array(
-	array('/alipay/result','Alipay\CallbackController@result'),
-	array('/alipay/callback','Alipay\CallbackController@callback'),
+	array('/alipay/result','AlipayController@result'),
+	array('/alipay/callback','AlipayController@callback'),
 	array('/cash','CashController@index'),
 	array('/weixin/pay','WeixinController@pay'),
 	array('/weixin/callback','WeixinController@callback'),

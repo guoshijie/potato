@@ -19,7 +19,7 @@
         },
         "classmap": [
             "database/",
-            "../../commons"
+            "app/Libraries/"
         ]
     },
     "autoload-dev": {
@@ -29,11 +29,5 @@
     },
     "config": {
         "preferred-install": "dist"
-    },
-    "repositories": {
-        "commons": {
-            "type": "path",
-            "url": "../../commons"
-        }
     }
 }

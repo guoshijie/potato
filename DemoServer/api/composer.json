@@ -1,0 +1,24 @@
+{
+    "name": "potato/demo",
+    "description": "demo Server API",
+    "type": "library",
+    "version": "1.0",
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "http://packagist.phpcomposer.com"
+        },
+        "artifact": {
+            "type": "path",
+            "url": "../../commons"
+        }
+    },
+    "require": {
+        "commons": "1.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src"
+        ]
+    }
+}

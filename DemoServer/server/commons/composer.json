@@ -1,0 +1,19 @@
+{
+    "name": "shinc/commons",
+    "description": "commons libarary",
+    "version": "1.0",
+    "type": "library",
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "http://packagist.phpcomposer.com"
+        }
+    },
+    "require": {
+    },
+    "autoload": {
+        "classmap": [
+            "src"
+        ]
+    }
+}
