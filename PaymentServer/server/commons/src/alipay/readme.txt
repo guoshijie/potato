@@ -42,7 +42,7 @@ alipay.wap.create.direct.pay.by.user-php-UTF-8
   │  │
   │  ├rsa_private_key.pem┈┈┈┈┈┈┈┈┈商户的私钥文件
   │  │
-  │  └alipay_public_key.pem┈┈┈┈┈┈┈┈支付宝的公钥文件
+  │  └rsa_public_key.pem┈┈┈┈┈┈┈┈支付宝的公钥文件
   │
   ├openssl┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈缺省dll文件（用法见下方※注意※）
   │  │

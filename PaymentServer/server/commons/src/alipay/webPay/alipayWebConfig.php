@@ -28,7 +28,7 @@ class alipayWebConfig
 		$alipay_config['private_key_path'] = dirname(__FILE__).'/rsa_private_key.pem';
 
 		//支付宝公钥（后缀是.pen）文件相对路径
-		$alipay_config['ali_public_key_path'] = dirname(__FILE__).'/alipay_public_key.pem';
+		$alipay_config['ali_public_key_path'] = dirname(__FILE__).'/rsa_public_key.pem';
 
 
 		//↑↑↑↑↑↑↑↑↑↑请在这里配置您的基本信息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑

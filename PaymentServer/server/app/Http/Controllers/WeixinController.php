@@ -89,11 +89,6 @@ class  WeixinController extends  ApiController {
 		Log::info(var_export($order, true), array(__CLASS__));
 		if($order['return_code']=='SUCCESS'){
 			$timestamp = time();
-			if($request->has('channel')){  // js请求
-				$access_token_obj = $this->getAccessToken($timestamp);
-				$tickit = $this->getTicket($access_token_obj);
-			}
-
 			//参与签名的字段 无需修改  预支付后的返回值
 			$arr = array();
 			$arr['appid'] = trim(WxPayConfig::APPID);

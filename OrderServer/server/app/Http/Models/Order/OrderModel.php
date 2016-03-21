@@ -308,7 +308,7 @@ class OrderModel extends Model{
 
 
 	/*
-	 * 获取订单列表公共模块，四维数组压二维，好的代码应该不是循环嵌套
+	 * 获取订单列表公共模块，
 	 */
 	private function getOrderList($order_no,$order_suppliers){
 		foreach($order_suppliers as $v){
