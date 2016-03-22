@@ -27,6 +27,7 @@ use App\Libraries\WxPayDataBase;
 use App\Libraries\WxPayNotifyReply;
 use App\Libraries\WxPayOrderQuery;
 use App\Http\Models\WeixinModel;
+use App\Http\Models\AlipayModel;
 
 class  WeixinController extends  ApiController {
 
@@ -210,8 +211,9 @@ class  WeixinController extends  ApiController {
 
 				try {
 					if ($flag) {
-
-						$data = $this->_model->payCallbackUpdateJnl($out_trade_no, $pay_amount , $redpacket);
+						$alipayM = new AlipayModel();
+						$data = $alipayM->payCallbackUpdateJnl($out_trade_no, $pay_amount , $redpacket);
+						//$data = $this->_model->payCallbackUpdateJnl($out_trade_no, $pay_amount , $redpacket);
 
 						if(!$data){
 							return "fail";
