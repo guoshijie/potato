@@ -42,6 +42,9 @@ class WeixinController extends ApiController
 
 	public function anyCallback(){
 		$param    =   Request::all();
+		if(isset($GLOBALS["HTTP_RAW_POST_DATA"])){
+			$param['HTTP_RAW_POST_DATA'] = $GLOBALS["HTTP_RAW_POST_DATA"];
+		}
 		$data =  $this->payServer->post('/weixin/callback', $param);
 		header('Content-type: text/html');
 		if($data == 'fail'){

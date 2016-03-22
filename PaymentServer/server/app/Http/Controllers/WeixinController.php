@@ -70,7 +70,7 @@ class  WeixinController extends  ApiController {
 		$input->SetTime_expire(date("YmdHis", time() + 7200));
 		$input->SetGoods_tag("test_goods");
 		$input->SetAttach($payment_type);
-		$input->SetNotify_url($request->root()."/pay/weixin/callback");
+		$input->SetNotify_url($notify_url);
 		$input->SetTrade_type("APP");
 		//浏览器测试记得注释掉   $inputObj->SetSpbill_create_ip("1.1.1.1");
 		$order = WxPayApi::unifiedOrder($input);
@@ -119,10 +119,11 @@ class  WeixinController extends  ApiController {
 	/*
 	 * 回调
 	 */
-	public function callback(){
+	public function callback(Request $request){
 		Log:info('--------Weixin callback  ---- ');
 		//获取回调通知xml
-		$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+		//$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+		$xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : $request->get('HTTP_RAW_POST_DATA');
 		Log::info('--- $xml ----');
 		Log::info(var_export($xml, true), array(__CLASS__));
 		$reply = new WxPayNotifyReply();
