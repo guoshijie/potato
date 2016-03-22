@@ -90,9 +90,9 @@ if($order['return_code']=='FAIL'){
 
     $arr = array();
     //公众账号ID
-    $arr['appid'] = trim(WxPayConfig::APPID);
+    $arr['appid'] = trim(WxPayConfig::MP_APPID);
     //商户号
-    $arr['partnerid'] = trim(WxPayConfig::MCHID);
+    $arr['partnerid'] = trim(WxPayConfig::MP_MCHID);
     //预支付交易会话标识
     $arr['prepayid'] = $order['prepay_id'];
     //包的格式
