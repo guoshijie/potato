@@ -54,12 +54,8 @@ class  WeixinController extends  ApiController {
 
 		$outTradeNo =   $request->get('out_trade_no');
 		$body  =   $request->get('body');
-		if($request->get('total_fee') <=1 ){ // 金额单位是分，最小1分，不支持0.01元，
-			$totalFee   = 100;
-
-		}else{
-			$totalFee   = (int)$request->get('total_fee') * 100;
-		}
+		// 金额单位是分，最小1分，不支持0.01元，
+		$totalFee   = $request->get('total_fee') * 100;
 
 		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
 		$notify_url		= $request->get('notify_url'); // 回调地址
