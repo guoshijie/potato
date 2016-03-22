@@ -27,6 +27,7 @@ use App\Libraries\WxPayDataBase;
 use App\Libraries\WxPayNotifyReply;
 use App\Libraries\WxPayOrderQuery;
 use App\Http\Models\WeixinModel;
+use App\Http\Models\AlipayModel;
 
 class  WeixinController extends  ApiController {
 
@@ -37,11 +38,24 @@ class  WeixinController extends  ApiController {
 		$this->_model = new WeixinModel();
 	}
 
+	private function init($request){
+		if($request->has('platform') && $request->get('platform')=='mp'){ // 公众号
+			$this->APPID = WxPayConfig::MP_APPID;
+			$this->MCHID = WxPayConfig::MP_MCHID;
+			$this->APPSECRET = WxPayConfig::MP_APPSECRET;
+		}else{
+			$this->APPID = WxPayConfig::OP_APPID;
+			$this->MCHID = WxPayConfig::OP_MCHID;
+			$this->APPSECRET = WxPayConfig::OP_APPSECRET;
+		}
+	}
+
 	/*
 	 * 微信预支付接口
 	 */
 	public function pay(Request $request){
 		Log::info('----------- weixin pay -------------');
+		$this->init($request);
 		$messages = $this->vd([
 			'user_id' => 'required',
 			'out_trade_no' => 'required',
@@ -51,14 +65,11 @@ class  WeixinController extends  ApiController {
 			],$request);
 		if($messages!='') return $this->response(10005, $messages);
 
+
 		$outTradeNo =   $request->get('out_trade_no');
 		$body  =   $request->get('body');
-		if($request->get('total_fee') <=1 ){ // 金额单位是分，最小1分，不支持0.01元，
-			$totalFee   = 100;
-
-		}else{
-			$totalFee   = (int)$request->get('total_fee') * 100;
-		}
+		// 金额单位是分，最小1分，不支持0.01元，
+		$totalFee   = $request->get('total_fee') * 100;
 
 		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
 		$notify_url		= $request->get('notify_url'); // 回调地址
@@ -73,7 +84,8 @@ class  WeixinController extends  ApiController {
 		$input->SetTime_expire(date("YmdHis", time() + 7200));
 		$input->SetGoods_tag("test_goods");
 		$input->SetAttach($payment_type);
-		$input->SetNotify_url($request->root()."/pay/weixin/callback");
+		$input->SetNotify_url($notify_url);
+		Log::info('----callback url:'.$notify_url);
 		$input->SetTrade_type("APP");
 		//浏览器测试记得注释掉   $inputObj->SetSpbill_create_ip("1.1.1.1");
 		$order = WxPayApi::unifiedOrder($input);
@@ -89,8 +101,8 @@ class  WeixinController extends  ApiController {
 			$timestamp = time();
 			//参与签名的字段 无需修改  预支付后的返回值
 			$arr = array();
-			$arr['appid'] = trim(WxPayConfig::APPID);
-			$arr['partnerid'] = trim(WxPayConfig::MCHID);
+			$arr['appid'] = trim($this->APPID);
+			$arr['partnerid'] = trim($this->MCHID);
 			$arr['prepayid'] = $order['prepay_id'];
 			$arr['package'] = 'Sign=WXPay';
 			$arr['noncestr'] = $order['nonce_str'];
@@ -108,7 +120,7 @@ class  WeixinController extends  ApiController {
 			$data['nonce_str']    = $order['nonce_str'];
 			$data['timestamp']    = $timestamp;
 			$data['sign']         = $sign;
-			$data['appid']         = WxPayConfig::APPID;
+			$data['appid']         = $this->APPID;
 			Log::info('------ 预订单成功 ---');
 			//Log::info(var_export($data, true), array(__CLASS__));
 			return $this->response( '1','预订单成功',$data );
@@ -122,17 +134,23 @@ class  WeixinController extends  ApiController {
 	/*
 	 * 回调
 	 */
-	public function callback(){
+	public function callback(Request $request){
+		$this->init($request);
 		Log:info('--------Weixin callback  ---- ');
-		//获取回调通知xml
-		$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+		if( !$request->has('HTTP_RAW_POST_DATA')){
+			Log::info('未获得 HTTP_RAW_POST_DATA');
+		}else{
+			Log::info($request->get('HTTP_RAW_POST_DATA'));
+		}
+		//获取回调通知xml,  独立服务不能从外放访问，从被访问的前端用参数传过来
+		$xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : $request->get('HTTP_RAW_POST_DATA');
 		Log::info('--- $xml ----');
 		Log::info(var_export($xml, true), array(__CLASS__));
 		$reply = new WxPayNotifyReply();
 		$data = $reply->FromXml($xml);
 		Log::info('--- $data ----');
 		Log::info(var_export($data, true), array(__CLASS__));
-		file_put_contents('log.txt',"\n\n红包回调通知".print_r($data,1),FILE_APPEND);
+		//file_put_contents('log.txt',"\n\n回调通知".print_r($data,1),FILE_APPEND);
 
 		if(!$data){
 			Log::info(var_export('非法请求', true), array(__CLASS__));
@@ -148,6 +166,7 @@ class  WeixinController extends  ApiController {
 		}
 
 		if($return_code=='SUCCESS'){
+			Log::info('--- SUCCESS ----');
 			//对后台通知交互时，如果微信收到商户的应答不是成功或超时，微信认为通知失败，
 			//微信会通过一定的策略（如30分钟共8次）定期重新发起通知，
 			//尽可能提高通知的成功率，但微信不保证通知最终能成功。
@@ -211,7 +230,8 @@ class  WeixinController extends  ApiController {
 				try {
 					if ($flag) {
 
-						$data = $this->_model->payCallbackUpdateJnl($out_trade_no, $pay_amount , $redpacket);
+						$alipayM = new AlipayModel();
+						$data = $alipayM->payCallbackUpdateJnl($out_trade_no, $pay_amount , $redpacket);
 
 						if(!$data){
 							return "fail";
@@ -250,7 +270,7 @@ class  WeixinController extends  ApiController {
 
 		// 重新获取access_token
 		if( !isset($access_token_obj)){
-			$access_token_url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.WxPayConfig::APPID.'&secret='.WxPayConfig::APPSECRET;
+			$access_token_url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->APPID.'&secret='.$this->APPSECRET;
 			$curl = new Curl();
 			$access_token_json = $curl->get($access_token_url);
 			$access_token_obj = json_decode($access_token_json);
@@ -265,7 +285,7 @@ class  WeixinController extends  ApiController {
 	}
 
 	/* 获取tickit
-	 * 
+	 *
 	 */
 	private function getJsApiTicket(){
 		$access_token = $this->getAccessToken();
@@ -306,6 +326,7 @@ class  WeixinController extends  ApiController {
 	 * 获取signature
 	 */
 	public function sign(Request $request) {
+		$this->init($request);
 		$messages = $this->vd([
 			'url' => 'required',
 			],$request);
@@ -329,15 +350,15 @@ class  WeixinController extends  ApiController {
 		$signature = sha1($string);
 
 		$signPackage = array(
-			"appId"     => WxPayConfig::APPID,
+			"appId"     => $this->APPID,
 			"nonceStr"  => $nonceStr,
-			"timestamp" => $timestamp,
+			"timestamp" => (string)$timestamp,
 			"url"       => $url,
 			"signature" => $signature,
 			"rawString" => $string
 		);
-		return $signPackage; 
+		return $signPackage;
 	}
-	
+
 
 }

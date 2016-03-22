@@ -83,6 +83,13 @@ class Order extends Api
 	}
 
 
+	/*
+	 * 无特殊情况通用此方法调用server
+	 */
+	public function post($action, $params){
+		return  $this->postData($action, $params);
+	}
+
 
 
 }

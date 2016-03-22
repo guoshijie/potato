@@ -54,3 +54,5 @@ $app->get('/order/order/suppliers',"Order\OrderController@getSuppliers");   //�
 
 $app->get('/order/order/order-count',"Order\OrderController@getOrderNum");   //订单数量
 
+$app->post('/order/paid',"Order\OrderController@paid");   // 完成支付
+$app->get('/order/paid',"Order\OrderController@paid");   // 完成支付
