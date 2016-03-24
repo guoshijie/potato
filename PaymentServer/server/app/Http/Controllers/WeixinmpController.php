@@ -20,8 +20,9 @@ use Illuminate\Http\Request;            //输入输出类
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Libraries\Curl;
-// -- 微信移动端支付
+// -- 微信公众号支付
 use App\Libraries\Weixin\WxPayApi;
+use App\Libraries\Weixin\JsApiPay;
 use App\Libraries\Weixin\WxPayConfig;
 use App\Libraries\Weixin\WxPayUnifiedOrder;
 use App\Libraries\Weixin\WxPayDataBase;
@@ -71,52 +72,46 @@ class  WeixinmpController extends  ApiController {
 		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
 		$notify_url		= $request->get('notify_url'); // 回调地址
 
+		//①、获取用户openid
+		$tools = new JsApiPay();
+		$openId = $tools->GetOpenid();
+
 		//②、统一下单   请求微信预下单
 		$input = new WxPayUnifiedOrder();
 
 		$input->SetBody($body);
+		$input->SetAttach($payment_type);
 		$input->SetOut_trade_no($outTradeNo);
 		$input->SetTotal_fee($totalFee);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 7200));
-		$input->SetGoods_tag("test_goods");
-		$input->SetAttach($payment_type);
+		$input->SetGoods_tag("goods");
 		$input->SetNotify_url($notify_url);
-		$input->SetTrade_type("APP");
+
+		$input->SetTrade_type("JSAPI");
+		$input->SetOpenid($openId);
+
 		//浏览器测试记得注释掉   $inputObj->SetSpbill_create_ip("1.1.1.1");
 		$order = WxPayApi::unifiedOrder($input);
-//		debug($_SERVER['REMOTE_ADDR']);
 		if(array_key_exists('err_code',$order)){
 			return $this->response( '0',$order['err_code'],$order['err_code_des']);
 		}
-
 
 		Log::info('------ $order ---');
 		Log::info(var_export($order, true), array(__CLASS__));
 		if($order['return_code']=='SUCCESS'){
 			$timestamp = time();
-			//参与签名的字段 无需修改  预支付后的返回值
-			$arr = array();
-			$arr['appid'] = trim(WxPayConfig::APPID);
-			$arr['partnerid'] = trim(WxPayConfig::MCHID);
-			$arr['prepayid'] = $order['prepay_id'];
-			$arr['package'] = 'Sign=WXPay';
-			$arr['noncestr'] = $order['nonce_str'];
-			$arr['timestamp'] = $timestamp;
-			$obj = new WxPayDataBase();
-			$obj->SetValues($arr);
-			$sign = $obj->SetSign();
 
-			//返回给APP数据
-			$data = array();
-			$data['return_code']  = $order['return_code'];
-			$data['return_msg']   = $order['return_msg'];
-			$data['prepay_id']    = $order['prepay_id'];
-			$data['trade_type']   = $order['trade_type'];
-			$data['nonce_str']    = $order['nonce_str'];
-			$data['timestamp']    = $timestamp;
-			$data['sign']         = $sign;
-			$data['appid']         = WxPayConfig::APPID;
+			$jsApiParameters = $tools->GetJsApiParameters($order);
+			//获取共享收货地址js函数参数
+			$editAddress = $tools->GetEditAddressParameters();
+			$data['jsApiParameters'] = $jsApiParameters;
+			$data['editAddress'] = $editAddress;
+
+			Log::info('--- $jsApiParameters ---');
+			Log::info($jsApiParameters);
+			Log::info($editAddress);
+
 			Log::info('------ 预订单成功 ---');
 			//Log::info(var_export($data, true), array(__CLASS__));
 			return $this->response( '1','预订单成功',$data );
