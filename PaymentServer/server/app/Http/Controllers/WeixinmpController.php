@@ -55,6 +55,8 @@ class  WeixinmpController extends  ApiController {
 	 */
 	public function pay(Request $request){
 		Log::info('----------- weixin pay -------------');
+		// 客户端ip
+		$_SERVER['REMOTE_ADDR'] = $request->REMOTE_ADDR;
 		$messages = $this->vd([
 			'user_id' => 'required',
 			'out_trade_no' => 'required',
@@ -94,7 +96,7 @@ class  WeixinmpController extends  ApiController {
 		$input->SetTotal_fee($totalFee);
 		$input->SetTime_start(date("YmdHis"));
 		$input->SetTime_expire(date("YmdHis", time() + 7200));
-		$input->SetGoods_tag("goods");
+		//$input->SetGoods_tag("test_goods");
 		$input->SetNotify_url($notify_url);
 
 		$input->SetTrade_type("JSAPI");

@@ -33,6 +33,7 @@ class WeixinController extends ApiController
 		$param = Request::all();
 		$param['user_id'] = $this->loginUser->id;
 		$param['notify_url'] = Request::url().'/callback';
+		$param['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 
 		header('Content-type: text/html');
 
