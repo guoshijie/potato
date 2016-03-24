@@ -1,6 +1,6 @@
 <?php
-//namespace App\Libraries\Weixin;
-require_once "../lib/WxPayApi.class.php";
+namespace App\Libraries\Weixin;
+require_once "WxPayApi.class.php";
 /**
  * 
  * JSAPI支付实现类
