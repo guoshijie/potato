@@ -74,6 +74,7 @@ class  WeixinmpController extends  ApiController {
 
 		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
 		$notify_url		= $request->get('notify_url'); // 回调地址
+		$notify_url		.= '?platform=mp';
 
 		//①、获取用户openid 
 		// 网页端必须提交code参数
