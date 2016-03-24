@@ -61,6 +61,7 @@ class  WeixinmpController extends  ApiController {
 			'body' => 'required',
 			'total_fee' => 'required',
 			'notify_url' => 'required',  // 回调地址
+			'code' => 'required',  // jsapi 获取openid 需要的参数
 			],$request);
 		if($messages!='') return $this->response(10005, $messages);
 
@@ -72,9 +73,17 @@ class  WeixinmpController extends  ApiController {
 		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
 		$notify_url		= $request->get('notify_url'); // 回调地址
 
-		//①、获取用户openid
+		//①、获取用户openid 
+		// 网页端必须提交code参数
 		$tools = new JsApiPay();
-		$openId = $tools->GetOpenid();
+		$code = $request->get('code');
+		$cacheid = 'weixin_mp_code_'.$code;
+		if(Cache::has($cacheid)){
+			$openId = Cache::get($cacheid);
+		}else{
+			$openId = $tools->GetOpenid();
+			Cache::put($cacheid, $openId, 60*24*30);
+		}
 
 		//②、统一下单   请求微信预下单
 		$input = new WxPayUnifiedOrder();
