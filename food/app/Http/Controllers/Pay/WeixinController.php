@@ -35,7 +35,14 @@ class WeixinController extends ApiController
 		$param['notify_url'] = Request::url().'/callback';
 
 		header('Content-type: text/html');
-		return $this->payServer->post('/weixin/pay', $param);
+
+		// 微信公众号支付
+		if(Request::has('platform') && Request::get('platform')=='mp'){
+			return $this->payServer->post('/weixinmp/pay', $param);
+		}else{ // 微信移动支付
+			return $this->payServer->post('/weixin/pay', $param);
+		}
+
 		//return $this->payServer->weixinPay($out_trade_no,$goods_name,$total_fee,$payment_type,$user_id);
 	}
 

@@ -15,9 +15,16 @@ $anyAction = array(
 	array('/alipay/result','AlipayController@result'),
 	array('/alipay/callback','AlipayController@callback'),
 	array('/cash','CashController@index'),
+
+	// 微信移动支付
 	array('/weixin/pay','WeixinController@pay'),
 	array('/weixin/callback','WeixinController@callback'),
 	array('/weixin/sign','WeixinController@sign'),
+
+	// 微信公众号支付
+	array('/weixinmp/pay','WeixinmpController@pay'),
+	array('/weixinmp/callback','WeixinmpController@callback'),
+	array('/weixinmp/sign','WeixinmpController@sign'),
 );
 
 foreach($anyAction as $v){

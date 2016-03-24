@@ -19,13 +19,24 @@ use App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use App\Libraries\WxPayApi;
 use App\Libraries\Curl;
+// -- 微信移动端支付
+use App\Libraries\WxPayApi;
 use App\Libraries\WxPayConfig;
 use App\Libraries\WxPayUnifiedOrder;
 use App\Libraries\WxPayDataBase;
 use App\Libraries\WxPayNotifyReply;
 use App\Libraries\WxPayOrderQuery;
+
+/*
+// -- 微信公众号支付
+use App\Libraries\Weixin\WxPayApi		AS WxPayApi_mp;
+use App\Libraries\Weixin\WxPayConfig	AS WxPayConfig_mp;
+use App\Libraries\Weixin\WxPayUnifiedOrder AS WxPayUnifiedOrder_mp;
+use App\Libraries\Weixin\WxPayDataBase AS WxPayDataBase_mp;
+use App\Libraries\Weixin\WxPayNotifyReply AS WxPayNotifyReply_mp;
+use App\Libraries\Weixin\WxPayOrderQuery AS WxPayOrderQuery_mp;
+ */
 use App\Http\Models\WeixinModel;
 use App\Http\Models\AlipayModel;
 
@@ -330,7 +341,7 @@ class  WeixinController extends  ApiController {
 		$signPackage = array(
 			"appId"     => WxPayConfig::APPID,
 			"nonceStr"  => $nonceStr,
-			"timestamp" => $timestamp,
+			"timestamp" => (string)$timestamp,
 			"url"       => $url,
 			"signature" => $signature,
 			"rawString" => $string
