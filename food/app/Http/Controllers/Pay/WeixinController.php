@@ -87,6 +87,6 @@ class WeixinController extends ApiController
 	 */
 	public function anySign(){
 		$param    =   Request::all();
-		return $this->payServer->post('/weixin/sign', $param);
+		return $this->payServer->post('/weixinmp/sign', $param);
 	}
 }

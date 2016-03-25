@@ -54,7 +54,7 @@ class  WeixinmpController extends  ApiController {
 	 * 微信预支付接口
 	 */
 	public function pay(Request $request){
-		Log::info('----------- weixin pay -------------');
+		Log::info('----------- weixinmp pay -------------');
 		$_SERVER['REMOTE_ADDR'] = $request->REMOTE_ADDR;
 
 		$messages = $this->vd([
@@ -139,7 +139,7 @@ class  WeixinmpController extends  ApiController {
 	 * 回调
 	 */
 	public function callback(Request $request){
-		Log:info('--------Weixin callback  ---- ');
+		Log:info('--------Weixinmp callback  ---- ');
 		//获取回调通知xml
 		//$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
 		$xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : $request->get('HTTP_RAW_POST_DATA');
@@ -164,7 +164,7 @@ class  WeixinmpController extends  ApiController {
 		}
 
 		if($return_code=='SUCCESS'){
-			Log::info('---- Weixin jsapi SUCCESS ----');
+			Log::info('---- Weixinmp jsapi SUCCESS ----');
 			//对后台通知交互时，如果微信收到商户的应答不是成功或超时，微信认为通知失败，
 			//微信会通过一定的策略（如30分钟共8次）定期重新发起通知，
 			//尽可能提高通知的成功率，但微信不保证通知最终能成功。
@@ -230,6 +230,8 @@ class  WeixinmpController extends  ApiController {
 						}
 					}
 
+				}else{
+					Log::info('-----error: $trade_status-'.$trade_status);
 				}
 
 				try {
@@ -241,12 +243,15 @@ class  WeixinmpController extends  ApiController {
 						if(!$data){
 							return "fail";
 						}
+					}else{
+						Log::info('-----error: $flag-'.$flag);
 					}
 
 				} catch (\Exception $e) {
 					Log::info(var_export($e, true), array(__CLASS__));
 				}
 
+				Log::info('------ Weixinmp SUCCESS ---- ');
 				return 'SUCCESS';
 			}else{
 				Log::info('----error: result_code -- ');
@@ -259,7 +264,7 @@ class  WeixinmpController extends  ApiController {
 
 
 		} else {
-			Log::info('------ Weixin FAIL ---- ');
+			Log::info('------ Weixinmp FAIL ---- ');
 			//验证失败
 			return 'FAIL';
 
