@@ -55,8 +55,8 @@ class  WeixinmpController extends  ApiController {
 	 */
 	public function pay(Request $request){
 		Log::info('----------- weixin pay -------------');
-		// 客户端ip
 		$_SERVER['REMOTE_ADDR'] = $request->REMOTE_ADDR;
+
 		$messages = $this->vd([
 			'user_id' => 'required',
 			'out_trade_no' => 'required',
@@ -74,9 +74,10 @@ class  WeixinmpController extends  ApiController {
 
 		$payment_type   = $request->has('payment_type') ? $request->get('payment_type') : '0';
 		$notify_url		= $request->get('notify_url'); // 回调地址
-		$notify_url		.= '?platform=mp';
+		//$notify_url		.= '?platform=mp';
+		Log::info('------- $notify_url --------'.$notify_url);
 
-		//①、获取用户openid 
+		//①、获取用户openid
 		// 网页端必须提交code参数
 		$tools = new JsApiPay();
 		$code = $request->get('code');
@@ -109,8 +110,8 @@ class  WeixinmpController extends  ApiController {
 			return $this->response( '0',$order['err_code'],$order['err_code_des']);
 		}
 
-		Log::info('------ $order ---');
-		Log::info(var_export($order, true), array(__CLASS__));
+		//Log::info('------ $order ---');
+		//Log::info(var_export($order, true), array(__CLASS__));
 		if($order['return_code']=='SUCCESS'){
 			$timestamp = time();
 
@@ -142,13 +143,12 @@ class  WeixinmpController extends  ApiController {
 		//获取回调通知xml
 		//$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
 		$xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : $request->get('HTTP_RAW_POST_DATA');
-		Log::info('--- $xml ----');
-		Log::info(var_export($xml, true), array(__CLASS__));
+		//Log::info('--- $xml ----');
+		//Log::info(var_export($xml, true), array(__CLASS__));
 		$reply = new WxPayNotifyReply();
 		$data = $reply->FromXml($xml);
-		Log::info('--- $data ----');
-		Log::info(var_export($data, true), array(__CLASS__));
-		file_put_contents('log.txt',"\n\n红包回调通知".print_r($data,1),FILE_APPEND);
+		//Log::info('--- $data ----');
+		//Log::info(var_export($data, true), array(__CLASS__));
 
 		if(!$data){
 			Log::info(var_export('非法请求', true), array(__CLASS__));
@@ -164,6 +164,7 @@ class  WeixinmpController extends  ApiController {
 		}
 
 		if($return_code=='SUCCESS'){
+			Log::info('---- Weixin jsapi SUCCESS ----');
 			//对后台通知交互时，如果微信收到商户的应答不是成功或超时，微信认为通知失败，
 			//微信会通过一定的策略（如30分钟共8次）定期重新发起通知，
 			//尽可能提高通知的成功率，但微信不保证通知最终能成功。
@@ -210,7 +211,7 @@ class  WeixinmpController extends  ApiController {
 				if ($trade_status == 'SUCCESS') {
 					$weixinInfo = $this->_model->load($transaction_id);
 					if (empty($weixinInfo)) {
-						$this->_model->add($weixinData);
+						$newId = $this->_model->add($weixinData);
 						$flag = true;
 					} else {
 						$db_status = $weixinInfo->return_code;
@@ -219,9 +220,16 @@ class  WeixinmpController extends  ApiController {
 								'return_code' => $trade_status,
 								'create_time' => $this->nowTime
 							];
-							$this->jnlWeixinModel->update( $transaction_id, $param);
+							$up = $this->jnlWeixinModel->update( $transaction_id, $param);
+							if($up){
+								$flag = true;
+
+							}else{
+								Log::info('----error: jnlWeixinModel update false --- ');
+							}
 						}
 					}
+
 				}
 
 				try {
@@ -240,6 +248,12 @@ class  WeixinmpController extends  ApiController {
 				}
 
 				return 'SUCCESS';
+			}else{
+				Log::info('----error: result_code -- ');
+				Log::info($result);
+
+				Log::info('----$input -- ');
+				Log::info($input);
 			}
 			return 'FAIL';
 
@@ -282,7 +296,7 @@ class  WeixinmpController extends  ApiController {
 	}
 
 	/* 获取tickit
-	 * 
+	 *
 	 */
 	private function getJsApiTicket(){
 		$access_token = $this->getAccessToken();
@@ -353,8 +367,8 @@ class  WeixinmpController extends  ApiController {
 			"signature" => $signature,
 			"rawString" => $string
 		);
-		return $signPackage; 
+		return $signPackage;
 	}
-	
+
 
 }
