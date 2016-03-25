@@ -5,40 +5,33 @@
 namespace App\Libraries;
 class WxPayConfig
 {
-	//=======【基本信息设置】=====================================
-	//
-	/**
-	 * TODO: 修改这里配置为您自己申请的商户信息
-	 * 微信公众号信息配置
-	 * 
-	 * APPID：绑定支付的APPID（必须配置，开户邮件中可查看）
-	 * 
-	 * MCHID：商户号（必须配置，开户邮件中可查看）
-	 * 
-	 * KEY：商户支付密钥，参考开户邮件设置（必须配置，登录商户平台自行设置）
-	 * 设置地址：https://pay.weixin.qq.com/index.php/account/api_cert
-	 * 
-	 * APPSECRET：公众帐号secert（仅JSAPI支付的时候需要配置， 登录公众平台，进入开发者中心可设置），
-	 * 获取地址：https://mp.weixin.qq.com/advanced/advanced?action=dev&t=advanced/dev&token=2005451881&lang=zh_CN
-	 * @var string
-	 */
-	
-	//const APPID = 'wx8552bab4d7b239bb';
-	//const MCHID = '1295560601';
-	//const KEY = 'd549acc8e8c08a850076fe1dbc97a67b';
-	//const APPSECRET = 'd549acc8e8c08a850076fe1dbc97a67b';
-	
-	// 公众平台id, 给公众号用
-	const MP_APPID = 'wx72146d9976a01133';
-	const MP_MCHID = '1295560601';
-	const MP_KEY = '9d2a97ab531d932125182d0d03f154ea';
-	const MP_APPSECRET = '9d2a97ab531d932125182d0d03f154ea';
-	 
-	// 开放平台id,给移动端用
-	const OP_APPID = 'wx78857bec93bf5cf3';
-	const OP_MCHID = '1322375701';
-	const OP_KEY = '5631df61838b1c00c144e815e7474029';
-	const OP_APPSECRET = '5631df61838b1c00c144e815e7474029';
+//=======【基本信息设置】=====================================
+//
+/**
+ * TODO: 修改这里配置为您自己申请的商户信息
+ * 微信公众号信息配置
+ * 
+ * APPID：绑定支付的APPID（必须配置，开户邮件中可查看）
+ * 
+ * MCHID：商户号（必须配置，开户邮件中可查看）
+ * 
+ * KEY：商户支付密钥，参考开户邮件设置（必须配置，登录商户平台自行设置）
+ * 设置地址：https://pay.weixin.qq.com/index.php/account/api_cert
+ * 
+ * APPSECRET：公众帐号secert（仅JSAPI支付的时候需要配置， 登录公众平台，进入开发者中心可设置），
+ * 获取地址：https://mp.weixin.qq.com/advanced/advanced?action=dev&t=advanced/dev&token=2005451881&lang=zh_CN
+ * @var string
+ */
+
+//const APPID = 'wx8552bab4d7b239bb';
+//const MCHID = '1295560601';
+//const KEY = 'd549acc8e8c08a850076fe1dbc97a67b';
+//const APPSECRET = 'd549acc8e8c08a850076fe1dbc97a67b';
+
+	const APPID = 'wx78857bec93bf5cf3';
+	const MCHID = '1322375701';
+	const KEY = '5631df61838b1c00c144e815e7474029';
+	const APPSECRET = '5631df61838b1c00c144e815e7474029';
 	
 	//=======【证书路径设置】=====================================
 	/**

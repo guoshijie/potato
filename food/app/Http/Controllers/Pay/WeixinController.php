@@ -32,10 +32,19 @@ class WeixinController extends ApiController
 		 */
 		$param = Request::all();
 		$param['user_id'] = $this->loginUser->id;
-		$param['notify_url'] = Request::url().'/callback';
+		$param['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 
 		header('Content-type: text/html');
-		return $this->payServer->post('/weixin/pay', $param);
+
+		// 微信公众号支付
+		if(Request::has('platform') && Request::get('platform')=='mp'){
+			$param['notify_url'] = Request::url().'/callback-mp';
+			return $this->payServer->post('/weixinmp/pay', $param);
+		}else{ // 微信移动支付
+			$param['notify_url'] = Request::url().'/callback';
+			return $this->payServer->post('/weixin/pay', $param);
+		}
+
 		//return $this->payServer->weixinPay($out_trade_no,$goods_name,$total_fee,$payment_type,$user_id);
 	}
 
@@ -45,8 +54,24 @@ class WeixinController extends ApiController
 		if(isset($GLOBALS["HTTP_RAW_POST_DATA"])){
 			$param['HTTP_RAW_POST_DATA'] = $GLOBALS["HTTP_RAW_POST_DATA"];
 		}
-		$param    =   Request::all();
 		$data =  $this->payServer->post('/weixin/callback', $param);
+		header('Content-type: text/html');
+		if($data == 'fail'){
+			return 'fail';
+		}elseif($data == 'success'){
+			return 'success';
+		}else{
+			return Response::json($this->response(0));
+		}
+	}
+
+
+	public function anyCallbackMp(){
+		$param    =   Request::all();
+		if(isset($GLOBALS["HTTP_RAW_POST_DATA"])){
+			$param['HTTP_RAW_POST_DATA'] = $GLOBALS["HTTP_RAW_POST_DATA"];
+		}
+		$data =  $this->payServer->post('/weixinmp/callback', $param);
 		header('Content-type: text/html');
 		if($data == 'fail'){
 			return 'fail';
@@ -62,6 +87,6 @@ class WeixinController extends ApiController
 	 */
 	public function anySign(){
 		$param    =   Request::all();
-		return $this->payServer->post('/weixin/sign', $param);
+		return $this->payServer->post('/weixinmp/sign', $param);
 	}
 }

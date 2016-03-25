@@ -85,7 +85,7 @@ class CartModel extends Model{
 			Log::error($e);
 			return false;
 		}
-
+/*
 		//检测虚假商品
 		$check_nums  =   DB::table('goods')->whereIn('id',$infput_goods_ids)->select('id','goods_num')->where('is_down',0)->get();
 
@@ -107,7 +107,7 @@ class CartModel extends Model{
 		if($limit_cart > 30){
 			return array('code'=>40003,'msg'=>'购物车已满30笔，请先删除多余订单','data'=>$limit_cart);
 		}
-
+ */
 /*
 		$look_cart = DB::table('cart')->where('user_id',$user_id)->whereIn('goods_id',$infput_goods_ids)->where('is_delete',0)->get();
 		//debug($look_cart);

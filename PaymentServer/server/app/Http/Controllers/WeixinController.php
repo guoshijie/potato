@@ -19,13 +19,24 @@ use App\Http\Controllers\ApiController;//导入基类
 use Illuminate\Http\Request;            //输入输出类
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use App\Libraries\WxPayApi;
 use App\Libraries\Curl;
+// -- 微信移动端支付
+use App\Libraries\WxPayApi;
 use App\Libraries\WxPayConfig;
 use App\Libraries\WxPayUnifiedOrder;
 use App\Libraries\WxPayDataBase;
 use App\Libraries\WxPayNotifyReply;
 use App\Libraries\WxPayOrderQuery;
+
+/*
+// -- 微信公众号支付
+use App\Libraries\Weixin\WxPayApi		AS WxPayApi_mp;
+use App\Libraries\Weixin\WxPayConfig	AS WxPayConfig_mp;
+use App\Libraries\Weixin\WxPayUnifiedOrder AS WxPayUnifiedOrder_mp;
+use App\Libraries\Weixin\WxPayDataBase AS WxPayDataBase_mp;
+use App\Libraries\Weixin\WxPayNotifyReply AS WxPayNotifyReply_mp;
+use App\Libraries\Weixin\WxPayOrderQuery AS WxPayOrderQuery_mp;
+ */
 use App\Http\Models\WeixinModel;
 use App\Http\Models\AlipayModel;
 
@@ -85,7 +96,6 @@ class  WeixinController extends  ApiController {
 		$input->SetGoods_tag("test_goods");
 		$input->SetAttach($payment_type);
 		$input->SetNotify_url($notify_url);
-		Log::info('----callback url:'.$notify_url);
 		$input->SetTrade_type("APP");
 		//浏览器测试记得注释掉   $inputObj->SetSpbill_create_ip("1.1.1.1");
 		$order = WxPayApi::unifiedOrder($input);
@@ -135,14 +145,9 @@ class  WeixinController extends  ApiController {
 	 * 回调
 	 */
 	public function callback(Request $request){
-		$this->init($request);
 		Log:info('--------Weixin callback  ---- ');
-		if( !$request->has('HTTP_RAW_POST_DATA')){
-			Log::info('未获得 HTTP_RAW_POST_DATA');
-		}else{
-			Log::info($request->get('HTTP_RAW_POST_DATA'));
-		}
-		//获取回调通知xml,  独立服务不能从外放访问，从被访问的前端用参数传过来
+		//获取回调通知xml
+		//$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
 		$xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : $request->get('HTTP_RAW_POST_DATA');
 		Log::info('--- $xml ----');
 		Log::info(var_export($xml, true), array(__CLASS__));
@@ -229,9 +234,9 @@ class  WeixinController extends  ApiController {
 
 				try {
 					if ($flag) {
-
 						$alipayM = new AlipayModel();
 						$data = $alipayM->payCallbackUpdateJnl($out_trade_no, $pay_amount , $redpacket);
+						//$data = $this->_model->payCallbackUpdateJnl($out_trade_no, $pay_amount , $redpacket);
 
 						if(!$data){
 							return "fail";
